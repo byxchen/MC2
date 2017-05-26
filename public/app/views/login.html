@@ -1,0 +1,25 @@
+<div class="login-box">
+  <div class="login-logo">
+    <a href><b>iCE</b>Chat<small></small></a>
+  </div><!-- /.login-logo -->
+  <div class="login-box-body">
+    <h4 class="login-box-msg">Sign in to get started...</h4>
+    <form>
+    	<div class="form-group errGroup">
+    	</div>
+	    <div ng-class="{'form-group':true, 'has-feedback':true, 'has-error':isErrorReq}">	      	
+	        <input type="text" class="form-control" placeholder="Choose a Nickname..." ng-model="username" ng-change="isErrorReq=isErrorNick=false" focus-me="true"/>
+	        <span ng-hide="isErrorNick"class="glyphicon glyphicon-user form-control-feedback"></span>
+	        <span ng-hide="!isErrorNick" class="glyphicon glyphicon-remove form-control-feedback errText"></span>
+	    </div>
+	    <br><br><br>
+        <div class="row">
+	        <div class="col-xs-12">
+	          <button type="submit" class="btn btn-primary btn-block btn-flat" ng-click="redirect()">Start</button>
+	        </div><!-- /.col -->
+    	</div><!-- /.row -->
+      </div><!-- /.login-box-body -->
+    </form><!-- / form -->
+  </div><!-- /.login-box-body -->
+</div><!-- /.login-box -->
+
