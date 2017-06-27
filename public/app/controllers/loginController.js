@@ -19,6 +19,7 @@ angular.module('Controllers',[])
 	$scope.isErrorReq = false;
 	$scope.isErrorNick = false;
 	$scope.username = "";
+	$scope.initials = "";
 
 	// redirection if user logged in.
 	if($rootScope.loggedIn){
@@ -29,12 +30,13 @@ angular.module('Controllers',[])
 	$scope.redirect = function(){
 		if ($scope.username.length <= 20) {
 			if($scope.username){
-				$socket.emit('new user',{username : $scope.username, userAvatar : $scope.userAvatar},function(data){
+				$socket.emit('new user',{username : $scope.username, userAvatar : $scope.userAvatar, initials : $scope.initials},function(data){
 					if(data.success == true){	// if nickname doesn't exists	
 						$rootScope.username = $scope.username;
+						$rootScope.initials = $scope.initials;
 						$rootScope.userAvatar = $scope.userAvatar;
 						$rootScope.loggedIn = true;
-						$location.path('/v1/ChatRoom');					
+						$location.path('/v1/ChatRoom');
 					}else{		// if nickname exists
 						$scope.errMsg = "Use different nickname.";
 						$scope.isErrorNick = true;
