@@ -42,8 +42,9 @@ methodDraw.addExtension("mathsymbols", function() {
   var library = {
     'basic': {
       data: {
-        'root': 'm39.71071,344.57253l5.44504,31.89999l19.96522,-342.2l470.08975,-5.79999l-468.27475,2.89998l-21.78022,336.40001l-5.44504,-23.19998z',
+        'root': 'M911.70019,540.0704L926.61712,569.06727L931.85522,483.46418L1055.18856,481.99751L932.33141,482.73084L926.61712,566.40215L925.18855,560.53549L925.18855,562.39596z',
         'sum' : 'm126.45467,174.437l-113.5001,134.29466c-2.49984,2.87774 -3,3.35722 -3,4.79624c0,3.35722 3,3.35722 8.99999,3.35722l263.99986,0l27.50014,-76.26003l-7.99999,0c-7.99999,23.02194 -28.99998,41.72712 -56.50014,50.36034c-4.99999,1.91849 -26.99998,9.113 -73.99996,9.113l-135.49978,0l110.99995,-131.41692c2,-2.87774 2.49984,-3.35752 2.49984,-4.79624c0,-1.43902 0,-1.43902 -2,-4.31676l-103.49978,-136.21315l125.99993,0c36.49982,0 109.99995,1.91849 131.99994,58.99388l7.99999,0l-27.50014,-71.46411l-263.99986,0c-8.99999,0 -8.99999,0.47977 -8.99999,9.59248l116.5001,153.95939l0,-0.00001zm0,0',
+        'integral' : 'm57.64048,207.76384c-3.17348,37.02398 -11.2835,47.24965 -23.97743,47.24965c-2.82087,0 -9.87306,-0.70522 -14.45698,-4.93653c6.69958,-0.70522 8.46262,-5.99436 8.46262,-9.16784c0,-6.34697 -4.93653,-9.52045 -9.16784,-9.52045c-4.58392,0 -9.52045,3.17348 -9.52045,9.87306c0,10.57828 11.2835,18.68829 24.68265,18.68829c21.50917,0 32.08745,-19.74612 37.02398,-39.84485c2.82087,-11.63611 10.93089,-77.22144 13.04654,-102.2567l4.23131,-56.06488c3.17348,-41.25529 10.57828,-46.89704 20.80395,-46.89704c2.11566,0 9.16784,0.35261 14.10437,4.58392c-6.34697,1.05783 -8.11001,6.34697 -8.11001,9.52045c0,6.34697 4.93653,9.16784 9.16784,9.16784c4.58392,0 9.52045,-2.82087 9.52045,-9.52045c0,-10.93089 -11.2835,-18.68829 -25.03526,-18.68829c-21.15656,0 -29.97179,21.86178 -33.8505,38.78703c-2.82087,12.34133 -10.93089,75.811 -12.69394,103.31453zm-4.23131,55.71227',
         'lbracket' : 'm139.61088,304.82804c0,-0.93416 0,-1.40123 -5.23987,-6.53906c-37.63175,-37.36608 -47.63513,-93.88227 -47.63513,-139.65571c0,-51.84543 11.43243,-103.69086 49.06419,-140.58985c3.81081,-3.7366 3.81081,-4.20369 3.81081,-5.13783c0,-2.33537 -0.9527,-3.26953 -2.85811,-3.26953c-3.33446,0 -30.48648,20.55134 -48.58784,58.38449c-15.24325,32.69532 -19.05406,65.85771 -19.05406,90.61273c0,23.3538 3.33446,59.31865 20.00676,93.41518c18.57771,36.43192 44.30067,56.04912 47.63513,56.04912c1.90541,0 2.85811,-0.93416 2.85811,-3.26953l0.00001,-0.00001zm0,0',
         'rbracket' : 'm224.40576,160.40921c0,-23.08137 -3.52365,-59.35211 -21.14188,-93.73865c-19.12838,-36.74178 -46.81417,-56.52582 -49.83444,-56.52582c-2.01352,0 -3.52365,1.41315 -3.52365,3.29734c0,0.9421 0,1.41315 6.04054,7.06573c31.71283,29.67605 49.83444,77.25195 49.83444,139.90141c0,51.81534 -11.5777,104.57277 -51.34458,142.25665c-4.53041,3.76839 -4.53041,4.23944 -4.53041,5.18154c0,1.88419 1.51014,3.29734 3.52365,3.29734c3.02027,0 32.21621,-20.72614 50.84121,-58.88106c16.61148,-32.9734 20.13513,-66.41784 20.13513,-91.85446l-0.00001,0l0,-0.00002zm0,0',
         'fraction' : 'm20,160l270,0',
@@ -147,7 +148,7 @@ methodDraw.addExtension("mathsymbols", function() {
     var y = start_y = bb_min_y;
     var cur_style = canv.getStyle();
     var sw = 1;
-    if (cur_shape_id == 'root' || cur_shape_id == 'fraction' ) sw=3;
+    if (cur_shape_id == 'root' || cur_shape_id == 'fraction' ) sw=5;
     cur_shape = canv.addSvgElementFromJson({
       "element": "path",
       "curStyles": true,
@@ -158,7 +159,7 @@ methodDraw.addExtension("mathsymbols", function() {
         "stroke": 'black',
         "cursor": 'move',
       //  "style": 'pointer-events:all',
-        "id": canv.getNextId(),
+        "id": canv.getNextId() + "_" + cur_shape_id,
         "opacity": cur_style.opacity / 2,
         "style": "pointer-events:inherit"
       }
@@ -257,12 +258,7 @@ methodDraw.addExtension("mathsymbols", function() {
   canv.runExtensions('elementChanged', {
     elems: [cur_shape]
   });
-
   canv.addToSelection([cur_shape]);
-
-
-
-
   }
 
 
@@ -295,12 +291,8 @@ methodDraw.addExtension("mathsymbols", function() {
 
       // Do mouseup on parent element rather than each button
       $('#math_buttons').mouseup(function(evt) {
-
-
         var btn = $(evt.target).closest('div.tool_button');
-
         if(!btn.length) return;
-
         var copy = btn.children().clone().attr({width: 24, height: 24});
         //**MDP  COMMENTED OUT TO STOP SWITCHING BUTTON
         // shower.children(':not(.flyout_arrow_horiz)').remove();
@@ -308,50 +300,47 @@ methodDraw.addExtension("mathsymbols", function() {
         //   .append(copy)
         //   .attr('data-curopt', '#' + btn[0].id) // This sets the current mode
         //   .mouseup();
-         canv.setMode(mode_id);
-
+        canv.setMode(mode_id);
         cur_shape_id = btn[0].id.substr((mode_id+'_').length);
         current_d = cur_lib.data[cur_shape_id];
 
-//**MDP(
+        //MDP(
         var selectedElements = canv.getSelectedElems();
-
-        if ((cur_shape_id == "root" ||  cur_shape_id == "sum" || cur_shape_id == "lbracket" || cur_shape_id == "fraction") && selectedElements.length > 0) {
-
-              var selectedBBoxes = new Array(1);;
-              var bb_min_x = 10000;
-              var bb_min_y = 10000;
+        if ((cur_shape_id == "root" || cur_shape_id == "integral" || cur_shape_id == "sum" || cur_shape_id == "lbracket" || cur_shape_id == "fraction") && selectedElements.length > 0) {
+              var bb_min_x = Infinity;
+              var bb_min_y = Infinity;
               var bb_max_x = 0;
               var bb_max_y = 0;
-
-
-
-
-              var i = selectedElements.length;
+              var i = 0;
               for (i=0; i < selectedElements.length; i++) {
-                var selected = selectedElements[i];
-                if (selected != null) {
-                  var selectedBB = svgedit.utilities.getBBox(selected);
-                  if (bb_min_x > selectedBB.x) bb_min_x = selectedBB.x;
-                  if (bb_min_y > selectedBB.y) bb_min_y = selectedBB.y;
-                  if (bb_max_x < selectedBB.x + selectedBB.width) bb_max_x = selectedBB.x+selectedBB.width;
-                  if (bb_max_y < selectedBB.y + selectedBB.height) bb_max_y = selectedBB.y+selectedBB.height;
-                }
+                var selected = selectedElements[i].getBBox();
+                if (bb_min_x > selected.x) bb_min_x = selected.x;
+                if (bb_min_y > selected.y) bb_min_y = selected.y;
+                if (bb_max_x < selected.x + selected.width) bb_max_x = selected.x + selected.width;
+                if (bb_max_y < selected.y + selected.height) bb_max_y = selected.y + selected.height;
               }
 
               if (cur_shape_id == "root") {
-                bb_min_x = bb_min_x*0.95;
-                bb_min_y = bb_min_y-5;
-                bb_max_x = bb_max_x+5;
-                bb_max_y = bb_max_y+5;
+                bb_min_x = bb_min_x - 10;
+                bb_min_y = bb_min_y - 10;
+                bb_max_x = bb_max_x + 10;
+                bb_max_y = bb_max_y + 10;
               }
 
               if (cur_shape_id == "sum") {
                 bb_max_x = bb_min_x-5;
                 bb_min_x = bb_min_x-40;
                 var y_midpoint = (bb_max_y+bb_min_y)/2;
-                bb_min_y = y_midpoint - 30;
-                bb_max_y = y_midpoint + 30;
+                bb_min_y = bb_min_y - 5;
+                bb_max_y = bb_max_y + 5;
+              }
+
+              if (cur_shape_id == "integral") {
+                bb_max_x = bb_min_x-5;
+                bb_min_x = bb_min_x-25;
+                var y_midpoint = (bb_max_y + bb_min_y)/2;
+                bb_min_y = bb_min_y - 5;
+                bb_max_y = bb_max_y + 5;
               }
 
               if (cur_shape_id == "fraction") {
@@ -362,19 +351,17 @@ methodDraw.addExtension("mathsymbols", function() {
               }
 
               if (cur_shape_id == "lbracket") {
-
-
                 bbmaxx = bb_min_x-5;
                 bbminx = bbmaxx-10;
-                bbminy = bb_min_y-10;
-                bbmaxy = bb_max_y+10;
+                bbminy = bb_min_y-5;
+                bbmaxy = bb_max_y+5;
 
                 groupSymbol(cur_shape_id, current_d, bbminx, bbminy, bbmaxx, bbmaxy);
 
                 bb_min_x = bb_max_x+5;
                 bb_max_x = bb_min_x+10;
-                bb_min_y = bb_min_y-10;
-                bb_max_y = bb_max_y+10;
+                bb_min_y = bb_min_y-5;
+                bb_max_y = bb_max_y+5;
 
                 cur_shape_id = "rbracket";
                 current_d = cur_lib.data[cur_shape_id];
@@ -383,13 +370,9 @@ methodDraw.addExtension("mathsymbols", function() {
               groupSymbol(cur_shape_id, current_d, bb_min_x, bb_min_y, bb_max_x, bb_max_y);
               canv.setMode('select');
               document.getElementById("tool_select").click();
-
         }
-
-//**MDP)
-
+        //MDP)
         $('.tools_flyout').fadeOut();
-
       });
 
 //
@@ -443,14 +426,14 @@ methodDraw.addExtension("mathsymbols", function() {
         "curStyles": true,
         "attr": {
           "d": current_d,
-          "id": canv.getNextId(),
+          "id": canv.getNextId() + "_" + cur_shape_id,
           "opacity": cur_style.opacity / 2,
           "cursor": 'move',
-          "style": "pointer-events:inherit"
+          "style": "pointer-events:inherit",
         }
       });
       cur_shape.setAttribute("d", current_d);
-      if (cur_shape_id == 'fraction' || cur_shape_id == 'root') cur_shape.setAttribute("stroke-width", 3); //**MDP
+      if (cur_shape_id == 'fraction' || cur_shape_id == 'root') cur_shape.setAttribute("stroke-width", 5); //**MDP
       if (cur_shape_id == 'sum' || cur_shape_id == 'lbracket' || cur_shape_id == 'rbracket') cur_shape.setAttribute("fill", 'black'); //**MDP
 
       // Make sure shape uses absolute values

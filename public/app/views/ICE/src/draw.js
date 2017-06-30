@@ -100,7 +100,7 @@ svgedit.draw.Drawing = function(svgElem, opt_idPrefix) {
    * The prefix to prepend to each element id in the drawing.
    * @type {String}
    */
-  this.idPrefix = opt_idPrefix || "svg_";
+  this.idPrefix = opt_idPrefix || "svg_eqn_";
   
   /**
    * An array of released element ids to immediately reuse.

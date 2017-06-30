@@ -12,7 +12,6 @@
   <link rel="stylesheet" href="lib/jgraduate/css/jgraduate.css" type="text/css"/>
   <link rel="stylesheet" href="css/method-draw.css" type="text/css"/>
   <link rel="stylesheet" href="css/fonts.css" type="text/css"/>
-  <link rel="stylesheet" href="css/cEmoji.css" type="text/css"/>
 <!--{endif}-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -57,8 +56,17 @@
   <script type="text/javascript" src="lib/requestanimationframe.js"></script>
   <script type="text/javascript" src="lib/taphold.js"></script>
   <script type="text/javascript" src="lib/filesaver.js"></script>
-  <script type="text/javascript" src="src/cEmoji.js"></script>
-  <script type="text/javascript" src="../../js/ifrm.js"></script>
+  <script type="text/javascript" src="../recognition/recognizer.js"></script>
+  <script type="text/javascript" src="../recognition/expression.js"></script>
+  <script type="text/javascript" src="../recognition/symbol.js"></script>
+  <script type="text/javascript" src="../recognition/alphanumericSymbol.js"></script>
+  <script type="text/javascript" src="../recognition/bracketSymbol.js"></script>
+  <script type="text/javascript" src="../recognition/constant.js"></script>
+  <script type="text/javascript" src="../recognition/expression.js"></script>
+  <script type="text/javascript" src="../recognition/fractionSymbol.js"></script>
+  <script type="text/javascript" src="../recognition/limitSymbol.js"></script>
+  <script type="text/javascript" src="../recognition/rootSymbol.js"></script>
+  <script type="text/javascript" src="../recognition/operatorSymbol.js"></script>
 <!--{endif}-->
 
 
@@ -145,9 +153,9 @@
   <div class="menu">
     <div class="menu_title">Chat</div>
     <div class="menu_list" id="file_menu">
-      <div id="tool_chat" onclick="swapParentFrame()" class="menu_item">Chat Window</div>
-      <div id="tool_stc" class="menu_item">Send Canvas</div>
+      <div id="tool_chat" class="menu_item">Create new Share</div>
       <div class="separator"></div>
+      <div id="tool_chat" onclick="alert('Action Locked - Log into Chat to continue');" class="menu_item">Send Selected to Chat</div>
       <div id="tool_chat" onclick="alert('Use $$ math $$ to type mathematically in chat');" class="menu_item">Help<span class="shortcut">⌘H</span></div>
     </div>
   </div>
@@ -530,7 +538,6 @@
   <div class="tool_button" id="tool_select" title="Select Tool [V]"></div>
   <div class="tool_button" id="tool_fhpath" title="Pencil Tool [P]"></div>
   <div class="tool_button" id="tool_line" title="Line Tool [L]"></div>
-
   <div id="color_tools">
         <div id="tool_switch" title="Switch stroke and fill colors [X]"></div>
         <div class="color_tool active" id="tool_fill">
@@ -548,9 +555,8 @@
             <div id="stroke_color" class="color_block" title="Change stroke color"></div>
           </div>
         </div>
-  </div> 
-
-  <div class="tool_button" id="tool_onscreenkeyboard" title="On-Screen Keyboard [K]"></div>
+  </div>
+  <div class="tool_button" id="tool_convert" title="Convert Tool [C]"></div>
 </div> <!-- tools_left -->
   <div class="tool_button" id="tool_rect" title="Square/Rect Tool [R]" style="visibility: hidden"></div>
   <div class="tool_button" id="tool_ellipse" title="Ellipse/Circle Tool [C]" style="visibility: hidden"></div>
@@ -588,84 +594,13 @@
   </div>
 
   <div id="tools_bottom_3">
-    <div id="panel">
-      <span style="font-color: black; font-size: 13px">
-        <div class="tab">
-          <table>
-            <tr>
-              <td class="entry">
-                <ul>
-                  <li><input class="tablinks" value="Greek 1" type="button" onclick="openTab(event, 'Emoj');"></li>
-                  <li><input class="tablinks" value="Greek 2" type="button" onclick="openTab(event, 'Math');"></li>
-                  <li><input class="tablinks" value="[0-9+-/]" type="button" onclick="openTab(event, 'Form');"></li>
-                  <li><input class="tablinks" value="Symbols" type="button" onclick="openTab(event, 'Form');"></li>
-                </ul>
-              </td>
-              <td class="entry" style="background-color: #b3b3b3">
-                <div id="Emoj" class="tabcontent">
-                  <input value="α" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="β" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="γ" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="δ" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="ε" class="emojibutton" type="button" onclick="input(this);" />
-                  <br />
-                  <input value="ζ" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="η" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="θ" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="ι" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="λ" class="emojibutton" type="button" onclick="input(this);" />
-                  <br />
-                  <input value="A" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="B" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="Γ" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="Δ" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="E" class="emojibutton" type="button" onclick="input(this);" />
-                  <br />
-                  <input value="Z" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="H" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="Θ" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="Ι" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="Λ" class="emojibutton" type="button" onclick="input(this);" />
-                  <br />
-                </div>
-                <div id="Math" class="tabcontent">
-                  <input value="😃" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="😆" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="🙁" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="😋" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="😣" class="emojibutton" type="button" onclick="input(this);" />
-                  <br />
-                  <input value="😃" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="😆" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="🙁" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="😋" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="😣" class="emojibutton" type="button" onclick="input(this);" />
-                  <br />
-                  <input value="😃" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="😆" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="🙁" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="😋" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="😣" class="emojibutton" type="button" onclick="input(this);" />
-                  <br />
-                  <input value="😃" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="😆" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="🙁" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="😋" class="emojibutton" type="button" onclick="input(this);" />
-                  <input value="😣" class="emojibutton" type="button" onclick="input(this);" />
-                  <br />
-                </div>
-              </td>
-            </tr>
-          </table>
-        </div>
-      <span>
-</div>
+    <div id="palette" title="Click to change fill color, shift-click to change stroke color"></div>
   </div>
 </div>
 
 <!-- hidden divs -->
 <div id="color_picker"></div>
-  
+
 </div> <!-- svg_editor -->
 
 <div id="svg_source_editor">
@@ -724,7 +659,7 @@
 <!-- http://tools.seochat.com/tools/floating-layer//?tool=59 -->
 
 <script language="JavaScript1.2">
-<!--
+
 isIE=document.all;
 isNN=!document.all&&document.getElementById;
 isN4=document.layers;
@@ -793,7 +728,7 @@ function ToggleFloatingLayer(DivID, iState) // 1 visible, 0 hidden
 ToggleFloatingLayer('FloatingLayer',0);
 document.onmousedown=MoveInit;
 document.onmouseup=Function("MoveEnabled=false");
-// -->
+
 </script>
 
 

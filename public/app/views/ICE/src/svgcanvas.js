@@ -61,7 +61,6 @@ if(window.opera) {
         } else if($.isArray(key)) {
           // Getting attributes from array
           var j = key.length, obj = {};
-
           while(j--) {
             var aname = key[j];
             var attr = elem.getAttribute(aname);
@@ -72,7 +71,6 @@ if(window.opera) {
             obj[aname] = attr;
           }
           return obj;
-
         } else if(typeof key === "object") {
           // Setting attributes form object
           for(var v in key) {
@@ -117,7 +115,7 @@ var svgns = "http://www.w3.org/2000/svg",
 var curConfig = {
   show_outside_canvas: true,
   selectNew: true,
-  dimensions: [640, 480]
+  //dimensions: [640, 480]7
 };
 
 // Update config with new one if given
@@ -259,6 +257,7 @@ keyHash["="] = ['=', '2260', '2261', '2243', '2248', '2245', '221D'];
 keyHash["~"] = ['~', '2243', '2248', '2245'];
 keyHash["+"] = ['+', 'B1', '2213', '2295'];
 keyHash["-"] = ['-', 'B1', '2213', '2296'];
+keyHash["189"] = ['-', 'B1', '2213', '2296'];
 keyHash["*"] = ['+', 'D7', '2297'];
 keyHash["/"] = ['/', 'F7', '2298'];
 keyHash["."] = ['.', '95', '2218', '2235', '2234'];
@@ -267,6 +266,10 @@ keyHash["|"] = ['|', '2224', '2225', '2226'];
 keyHash["["] = ['[', '230A', '2309'];
 keyHash["]"] = [']', '230B', '2308'];
 
+var down_x;
+var down_y;
+var cursor_x;
+var cursor_y;
 
 
 // Current shape style properties
@@ -321,7 +324,6 @@ var addSvgElementFromJson = this.addSvgElementFromJson = function(data) {
   if (data.textContent != null) {    //**MDP Hack to set text Content
 			shape.textContent=data.textContent; //**MDP
 		} //**MDP
-
   return shape;
 };
 
@@ -680,6 +682,8 @@ var getIntersectionList = this.getIntersectionList = function(rect) {
   //    if (svgedit.math.rectsIntersect(rubberBBox, curBBoxes[i].bbox))  {//**MDP
       if (svgedit.math.rectContained(rubberBBox, curBBoxes[i].bbox))  {
         if(curBBoxes[i].elem.id=="math_cursor") continue; //**MDP Don't select Cursor
+        if(curBBoxes[i].elem.id.substring(0, 4) === "snap") continue; // dont select snap
+        removeSnapPoints();
         resultList.push(curBBoxes[i].elem);
       }
     }
@@ -2419,13 +2423,11 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
   {
     if (canvas.spaceKey) return;
     var right_click = evt.button === 2;
-
     root_sctm = svgcontent.querySelector("g").getScreenCTM().inverse();
 
     var pt = transformPoint( evt.pageX, evt.pageY, root_sctm ),
       mouse_x = pt.x * current_zoom,
       mouse_y = pt.y * current_zoom;
-
 
     evt.preventDefault();
 
@@ -2437,6 +2439,14 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
     var x = mouse_x / current_zoom,
       y = mouse_y / current_zoom,
       mouse_target = getMouseTarget(evt);
+  
+    down_x = mouse_x;
+    down_y = mouse_y
+    var math_cursor = svgCanvas.getElem('math_cursor');
+    if (math_cursor) {
+      cursor_x = math_cursor.getAttribute("x");
+      cursor_y = math_cursor.getAttribute("y");
+    }
 
     if(mouse_target.tagName === 'a' && mouse_target.childNodes.length === 1) {
       mouse_target = mouse_target.firstChild;
@@ -2814,6 +2824,57 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
 
     var real_x = x = mouse_x / current_zoom;
     var real_y = y = mouse_y / current_zoom;
+
+    if (!selected) {
+      var math_cursor = svgCanvas.getElem('math_cursor');
+      if(math_cursor) {
+        var expression = getExpression();
+        var new_x = Number(cursor_x) + Number(real_x) - Number(down_x);
+        var new_y = Number(cursor_y) + Number(real_y) - Number(down_y);
+        
+        /* var snapped = false;
+        var allElements = svgcontent.querySelectorAll('[id^="svg_eqn_"]');
+        for (var i = allElements.length - 1; i >= 0 ; i--) {
+          var height = allElements[i].getBBox().height;
+          var width = allElements[i].getBBox().width;
+          var minX = allElements[i].getBBox().x;
+          var minY = allElements[i].getBBox().y;
+          var maxX = minX + width;
+          var maxY = maxX + height;
+          var cx = minX + (width/2);
+          var cy = minY + (height/2);
+          var diffx = new_x - cx + 5.5;
+          var diffy = new_y - cy + 2;
+          var dist = Math.sqrt((diffx * diffx) + (diffy * diffy));
+          if(dist < Math.max(35, height + 10)) {
+            var destX, destY;
+            destX = minX;
+            destY = cy;
+            if (diffx >= 0.4 * width) {
+              destX = maxX + 5;
+            }
+            if (diffx <= -0.4 * width) {
+              destX = minX;
+            }
+            if (diffy >= 0.4 * height) {
+              destY = minY + 6 + height;
+            }
+            if (diffy <= -0.4 * height) {
+              destY = minY + 16 - Math.min(40, height);
+            }
+            placeMathCursor(destX, destY);
+            snapped = true;
+            break;
+          }
+          
+        }
+        if(!snapped) {
+          placeMathCursor(new_x, new_y);
+        } */
+        placeSnapPoints();
+        placeMathCursor(new_x, new_y);
+      }
+    }
 
     if(curConfig.gridSnapping){
     //  x = snapToGrid(x);
@@ -3342,6 +3403,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
 
             // This shouldn't be necessary as it was done on mouseDown...
 //              call("selected", [selected]);
+            
           }
           // always recalculate dimensions to strip off stray identity transforms
           recalculateAllSelectedDimensions();
@@ -3386,28 +3448,32 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
               });
             }
           }
+          if(selected)
+            placeMathCursor(Number(selected.getAttribute('x')), Number(selected.getAttribute('y') - 20));
         }
         else { //MDP -- Math Cursor Mode on click and swipe to move cursor
-          if (Math.abs(real_x -r_start_x) < 10 && Math.abs(real_y - r_start_y) < 10) {
+          if (Math.abs(real_x -r_start_x) < 5 && Math.abs(real_y - r_start_y) < 5) {
+            placeSnapPoints();
+            var snaps = document.querySelectorAll('[id^="snap_"]');
+            for(var i = 0; i < snaps.length; i++) {
+              var snap = snaps[i];
+              var snapX = snap.getBBox().x;
+              var snapY = snap.getBBox().y;
+              if(snapX <= real_x && real_x <= snapX + snap.getBBox().width && snapY <= real_y && real_y <= snapY + snap.getBBox().height) {
+                placeMathCursor(snapX, snapY);
+                removeSnapPoints();
+                return;
+              }
+                
+            }
+            removeSnapPoints();
 						placeMathCursor(real_x, real_y);
             lastMouseDown_x = real_x;
             lastMouseDown_y = real_y;
 		  		}
-          else if (real_y < r_start_y && Math.abs(real_y - r_start_y) > 5*Math.abs(real_x - r_start_x)) {
-            moveCursor(0, -1);
-          }
-          else if (real_y > r_start_y && Math.abs(real_y - r_start_y) > 5*Math.abs(real_x - r_start_x)) {
-            moveCursor(0, 1);
-          }
-          else if (real_x < r_start_x && Math.abs(real_x - r_start_x) > 5*Math.abs(real_y - r_start_y)) {
-            moveCursor(-1, 0);
-          }
-          else if (real_x > r_start_x && Math.abs(real_x - r_start_x) > 5*Math.abs(real_y - r_start_y)) {
-            moveCursor(1, 0);
-          }
+          removeSnapPoints();
 		  	} //MDP -- END
         return;
-        break;
       case "zoom":
         if (rubberBox != null) {
           rubberBox.setAttribute("display", "none");
@@ -9211,7 +9277,7 @@ var moveCursor = function(dx,dy) {
   }
 };
 
-	var placeMathCursor = function (x, y) {
+	var placeMathCursor = this.placeMathCursor = function (x, y) {
 		var w=svgCanvas.getElem('math_cursor');
 		if (w==null) {
 			svgCanvas.addSvgElementFromJson({
@@ -9220,10 +9286,11 @@ var moveCursor = function(dx,dy) {
 				attr: {
 					'x': x,
 					'y': y,
-					'width': 10,
-					'height': 10,
+					'width': 2,
+					'height': 20,
 					'id': 'math_cursor',
-					'fill': 'black',
+          'last_item': 'math_cursor',
+					'fill': 'grey',
 					'stroke': 1,
 					'stroke-width': 1,
 					'stroke-dasharray': null,
@@ -9235,13 +9302,114 @@ var moveCursor = function(dx,dy) {
 					'style': 'pointer-events:none'
 				}
 			});
+      if (!blinking) {startBlinking();};
+      w=svgCanvas.getElem('math_cursor');
+      
 		} else {
 			w.setAttribute('x',x);
 			w.setAttribute('y',y);
 			w.setAttribute('style', 'pointer-events:none');
 			if (!blinking) {startBlinking();};
+      w=svgCanvas.getElem('math_cursor');
 		};
 	};
+
+  var snap_count = 0;
+  var removeSnapPoints = this.removeSnapPoints = function() {
+    var snaps = document.querySelectorAll('[id^="snap_"]');
+    for (var i = 0; i < snaps.length; i ++) {
+      snaps[i].parentNode.removeChild(snaps[i]);
+      //element && element.parentNode && element.parentNode.removeChild(element);
+    }
+  };
+
+
+  var placeSnapPoints = this.placeSnapPoints = function () {
+    var expression = getExpression();
+    var index = 0;
+    for (var i = 0; i < expression.symbols.length; i++) {
+      var symbol = expression.symbols[i];
+      svgCanvas.addSvgElementFromJson({
+        element: 'rect',
+        attr: {
+                'x': Number(symbol.minX),
+                'y': symbol.minY,
+                'width': symbol.maxX - symbol.minX,
+                'height': symbol.maxY - symbol.minY,
+                'id': 'snap_' + index,
+                'fill': 'grey',
+                'stroke': 1,
+                'stroke-width': 1,
+                'stroke-dasharray': null,
+                'stroke-linejoin': null,
+                'stroke-linecap': null,
+                'stroke-opacity': 0.8,
+                'fill-opacity': 0.8,
+                'opacity': 0.8,
+                'style': 'pointer-events:none'
+              }
+      });
+      index++;
+      if(symbol.region.tleft) {
+        var x = symbol.region.above.wall.left;
+        var y = symbol.region.above.wall.bottom - 30;
+        var height = 25;
+        var width = symbol.region.above.wall.right - x;
+        placeSnapPoint(x, y, width, height, index);
+        index++;
+      } 
+      else if(symbol.region.above) {
+        var x = symbol.region.supers.wall.left;
+        var y = symbol.region.supers.wall.bottom - 30;
+        var height = 25;
+        var width = Math.min(25, symbol.region.supers.wall.right - x);
+        placeSnapPoint(x, y, width, height, index);
+        index++;
+      }
+
+      if(symbol.region.bleft) {
+        var x = symbol.region.below.wall.left;
+        var y = symbol.region.below.wall.top + 5;
+        var height = 25;
+        var width = symbol.region.below.wall.right - x;
+        placeSnapPoint(x, y, width, height, index);
+        index++;
+      } else if (symbol.region.below) {
+        var x = symbol.region.subsc.wall.left;
+        var y = symbol.region.subsc.wall.top + 5;
+        var height = 25;
+        var width = Math.min(25, symbol.region.subsc.wall.right - x);
+        placeSnapPoint(x, y, width, height, index);
+        index++;
+      }
+      
+    }
+    snap_count = index;
+    
+	};
+
+  var placeSnapPoint = function(x, y, width, height, index) {
+    svgCanvas.addSvgElementFromJson({
+      element: 'rect',
+      attr: {
+              'x': x,
+              'y': y,
+              'width': width,
+              'height': height,
+              'id': 'snap_' + index,
+              'fill': '#00FFFF',
+              'stroke': 1,
+              'stroke-width': 1,
+              'stroke-dasharray': null,
+              'stroke-linejoin': null,
+              'stroke-linecap': null,
+              'stroke-opacity': 0.2,
+              'fill-opacity': 0.2,
+              'opacity': 0.2,
+              'style': 'pointer-events:none'
+            }
+    });
+  }
 
 
 	var newText;
@@ -9321,16 +9489,21 @@ var moveCursor = function(dx,dy) {
     placeMathCursor(lastMouseDown_x, lastMouseDown_y);
   }
 
-
 	this.keyPressed = function (key) {
     if (key=="\u21e6") {
-      moveCursor(-2, 0);
+      moveCursor(-.25, 0);
       return;
     }
     if (key=="\u21e8") {
-      moveCursor(2, 0);
+      moveCursor(.25, 0);
       return;
     }
+
+    if (key == " ") {
+      moveCursor(1, 0);
+      return;
+    }
+
     if (key=="\u21e7") {
       moveCursor(0, -1);
       return;
@@ -9344,7 +9517,6 @@ var moveCursor = function(dx,dy) {
       lastKeyPress = '';
       return;
     }
-
     var shortcuts = keyHash[key];
     var newChar = false;
     var shortcutsVisible = document.getElementById("FloatingLayer").style.visibility;
@@ -9396,17 +9568,16 @@ var moveCursor = function(dx,dy) {
 
     var math_cursor = svgCanvas.getElem('math_cursor');
     var x = Number(math_cursor.getAttribute('x'));
-    var y = Number(math_cursor.getAttribute('y'));
+    var y = Number(math_cursor.getAttribute('y')) + Number(math_cursor.getAttribute('height') - 2);
 
     if (newChar) {
-
     	newText = addSvgElementFromJson({
       element: 'text',
     	curStyles: true,
     	textContent: key,
     	attr: {
-    		'x': x,
-    		'y': y+10,
+    		'x': Number(x),
+    		'y': Number(y),
     	  'id': getNextId(),
     		'fill': cur_text.fill,
     	  'stroke-width': cur_text.stroke_width,
@@ -9419,21 +9590,23 @@ var moveCursor = function(dx,dy) {
     		'style': "pointer-events:inherit",
     				//'textContent': 'a'
     		}
-    	}
-    )} else {
-        if (shortcuts[shortcutIndex].length == 1) {newText.textContent = shortcuts[shortcutIndex];}
-        else {newText.textContent = String.fromCharCode("0x"+shortcuts[shortcutIndex]); }
+    	});
+    } else {
+        if (shortcuts[shortcutIndex].length == 1) {
+          newText.textContent = shortcuts[shortcutIndex];
+        } else {1
+          newText.textContent = String.fromCharCode("0x"+shortcuts[shortcutIndex]); 
+        }
     }
 
     svgCanvas.runExtensions('elementChanged', {
       elems: [newText]
     });
 
-		var bbox = newText.getBBox();
-		var width = bbox.width;
-		x = bbox.x;
-
-		math_cursor.setAttribute('x', x+width);
+		
+    var bbox = document.getElementById(newText.id).getBBox();
+    math_cursor.setAttribute('x', bbox.x + bbox.width + 1)
+    
 		//selectOnly([newText]);
 		//clearSelection();
 		//addToSelection([newText]);

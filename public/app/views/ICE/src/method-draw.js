@@ -28,8 +28,8 @@
     var is_ready = false;
     curConfig = {
       canvas_expansion: 1,
-      dimensions: [1024,768],
-      initFill: {color: 'fff', opacity: 1},
+      dimensions: [screen.availWidth,screen.availHeight],
+      initFill: {color: '000', opacity: 1},
       initStroke: {width: 1.5, color: '000', opacity: 1},
       initOpacity: 1,
       imgPath: 'images/',
@@ -46,7 +46,7 @@
   //    showRulers: (svgedit.browser.isTouch()) ? false : true,
       showRulers: false,
       show_outside_canvas: false,
-      no_save_warning: true,
+      no_save_warning: false,
       initFont: 'Helvetica, Arial, sans-serif'
     },
       uiStrings = Editor.uiStrings = {
@@ -152,6 +152,7 @@
       $("body").toggleClass("touch", svgedit.browser.isTouch());
       $("#canvas_width").val(curConfig.dimensions[0]);
       $("#canvas_height").val(curConfig.dimensions[1]);
+      
 
       var extFunc = function() {
         $.each(curConfig.extensions, function() {
@@ -184,7 +185,6 @@
           'select':'select.png',
           'select_node':'select_node.png',
           'pencil':'pencil.png',
-          'keyboard':'keyboard.png',
           'pen':'line.png',
           'rect':'square.png',
           'ellipse':'ellipse.png',
@@ -208,7 +208,6 @@
           '#logo':'logo',
           '#tool_select':'select',
           '#tool_fhpath':'pencil',
-          '#tool_onscreenkeyboard':'keyboard',
           '#tool_line':'pen',
           '#tool_rect,#tools_rect_show':'rect',
           '#tool_ellipse,#tools_ellipse_show':'ellipse',
@@ -288,6 +287,7 @@
         });
 
       Editor.canvas = svgCanvas = new $.SvgCanvas(document.getElementById("svgcanvas"), curConfig);
+      
       Editor.show_save_warning = false;
       Editor.paintBox = {fill: null, stroke:null, canvas:null};
       var palette = ["#444444", "#482816", "#422C10", "#3B2F0E", "#32320F",
@@ -2080,10 +2080,6 @@
         }
       };
 
-      var clickOSK = function(){
-        openPanel();
-      }
-
       var clickLine = function() {
         if (toolButtonClick('#tool_line')) {
           svgCanvas.setMode('line');
@@ -2154,6 +2150,12 @@
       var clickPath = function(){
         if (toolButtonClick('#tool_path')) {
           svgCanvas.setMode('path');
+        }
+      };
+
+      var clickConvert = function(){
+        if (toolButtonClick('#tool_convert')) {
+          getBST();
         }
       };
 
@@ -3231,10 +3233,10 @@
         var tool_buttons = [
           {sel:'#tool_select', fn: clickSelect, evt: 'click', kAy: ['V', true]},
           {sel:'#tool_fhpath', fn: clickFHPath, evt: 'click', kAy: ['Q', true]},
-          {sel:'#tool_onscreenkeyboard', fn: clickOSK, evt: 'click', kAy: ['K', true]},
           {sel:'#tool_line', fn: clickLine, evt: 'click', kAy: ['L', true]},
           {sel:'#tool_rect', fn: clickRect, evt: 'click', kAy: ['R', true], icon: 'rect'},
           {sel:'#tool_ellipse', fn: clickEllipse, evt: 'mouseup', kAy: ['C', true], icon: 'ellipse'},
+          {sel:'#tool_convert', fn: getBST, evt: 'click', kAy: ['L', true]},
           //{sel:'#tool_circle', fn: clickCircle, evt: 'mouseup', icon: 'circle'},
           //{sel:'#tool_fhellipse', fn: clickFHEllipse, evt: 'mouseup', parent: '#tools_ellipse', icon: 'fh_ellipse'},
           {sel:'#tool_path', fn: clickPath, evt: 'click', kAy: ['P', true]},
@@ -3243,7 +3245,6 @@
           {sel:'#tool_zoom', fn: clickZoom, evt: 'mouseup', kAy: ['Z', true]},
           {sel:'#tool_clear', fn: clickClear, evt: 'mouseup', kAy: [modKey + 'N', true]},
           {sel:'#tool_save', fn: function() { editingsource ? saveSourceEditor(): clickSave() }, evt: 'mouseup', key: [modKey + 'S', true]},
-          {sel:'#tool_stc', fn: function() { editingsource ? saveSourceEditor(): clickSave() }, evt: 'mouseup', key: [modKey + 'S', true]},
           {sel:'#tool_export', fn: clickExport, evt: 'mouseup'},
           {sel:'#tool_open', fn: clickOpen, evt: 'mouseup'},
           {sel:'#tool_import', fn: clickImport, evt: 'mouseup'},
@@ -3390,6 +3391,7 @@
   					{key: '.', fn: function(){svgCanvas.keyPressed('.');}},
   					{key: 'space', fn: function(){svgCanvas.keyPressed(' ');}},
   					{key: '-', fn: function(){svgCanvas.keyPressed('-');}},
+            {key: String.fromCharCode(189), fn: function(){svgCanvas.keyPressed('-');}},
   					{key: 'shift+(', fn: function(){svgCanvas.keyPressed('(');}},
   					{key: 'shift+)', fn: function(){svgCanvas.keyPressed(')');}},
   					{key: '[', fn: function(){svgCanvas.keyPressed('[');}},
@@ -3830,7 +3832,7 @@
         w = Math.max(w_orig, svgCanvas.contentW * zoom * multi);
         h = Math.max(h_orig, svgCanvas.contentH * zoom * multi);
 
-        if(w == w_orig && h == h_orig) {
+        if(true || w == w_orig && h == h_orig) {
           workarea.css('overflow','hidden');
         } else {
           workarea.css('overflow','scroll');
@@ -4225,11 +4227,16 @@
       });
     };
 
+    Editor.placeMathCursor = function() {
+      svgCanvas.placeMathCursor(200, 200);
+    };
+
     return Editor;
   }(jQuery);
 
   // Run init once DOM is loaded
   $(methodDraw.init);
+
 
 
 })();
