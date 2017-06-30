@@ -1,0 +1,38 @@
+#editorframe{
+	width:70%; 
+	height: auto; 
+	float: left;
+}
+
+#chatframe{
+	width:30%; 
+	height: 100%; 
+	float: left;
+}
+
+#swapButton{
+	text-decoration:none;
+	display:none;
+}
+
+@media only screen and (max-device-width: 600px) {
+ 	#editorframe{
+ 		display:none;
+		width:100%;
+		height: auto; 
+		float: left;
+	}
+
+	#chatframe{
+		display:inline;
+		width:100%;
+		height: 100%; 
+		float: left;
+	}
+
+	#swapButton{
+		text-decoration:none;
+		display: inline;
+	}
+}
+
