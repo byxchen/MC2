@@ -592,11 +592,15 @@ canvas.clipBoard = [];
 var runExtensions = this.runExtensions = function(action, vars, returnArray) {
   var result = false;
   if(returnArray) result = [];
+  console.log(extensions);
+  
   $.each(extensions, function(name, opts) {
     if(action in opts) {
       if(returnArray) {
         result.push(opts[action](vars))
       } else {
+        console.log(vars);
+        console.log(opts[action]);
         result = opts[action](vars);
       }
     }
@@ -9598,7 +9602,7 @@ var moveCursor = function(dx,dy) {
           newText.textContent = String.fromCharCode("0x"+shortcuts[shortcutIndex]); 
         }
     }
-
+    //console.log(newText);
     svgCanvas.runExtensions('elementChanged', {
       elems: [newText]
     });
