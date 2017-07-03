@@ -91,6 +91,5 @@ typings/
 # dotenv environment variables file
 .env
 
-._*
 
 .DS_Store
