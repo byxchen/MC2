@@ -257,7 +257,10 @@ keyHash["="] = ['=', '2260', '2261', '2243', '2248', '2245', '221D'];
 keyHash["~"] = ['~', '2243', '2248', '2245'];
 keyHash["+"] = ['+', 'B1', '2213', '2295'];
 keyHash["-"] = ['-', 'B1', '2213', '2296'];
+<<<<<<< HEAD
 keyHash["189"] = ['-', 'B1', '2213', '2296'];
+=======
+>>>>>>> 1385518c86330211fa4bfae1b87390ed2a16326a
 keyHash["*"] = ['+', 'D7', '2297'];
 keyHash["/"] = ['/', 'F7', '2298'];
 keyHash["."] = ['.', '95', '2218', '2235', '2234'];
@@ -592,15 +595,22 @@ canvas.clipBoard = [];
 var runExtensions = this.runExtensions = function(action, vars, returnArray) {
   var result = false;
   if(returnArray) result = [];
+<<<<<<< HEAD
   console.log(extensions);
+=======
+
+>>>>>>> 1385518c86330211fa4bfae1b87390ed2a16326a
   
   $.each(extensions, function(name, opts) {
     if(action in opts) {
       if(returnArray) {
         result.push(opts[action](vars))
       } else {
+<<<<<<< HEAD
         console.log(vars);
         console.log(opts[action]);
+=======
+>>>>>>> 1385518c86330211fa4bfae1b87390ed2a16326a
         result = opts[action](vars);
       }
     }
@@ -687,7 +697,10 @@ var getIntersectionList = this.getIntersectionList = function(rect) {
       if (svgedit.math.rectContained(rubberBBox, curBBoxes[i].bbox))  {
         if(curBBoxes[i].elem.id=="math_cursor") continue; //**MDP Don't select Cursor
         if(curBBoxes[i].elem.id.substring(0, 4) === "snap") continue; // dont select snap
+<<<<<<< HEAD
         removeSnapPoints();
+=======
+>>>>>>> 1385518c86330211fa4bfae1b87390ed2a16326a
         resultList.push(curBBoxes[i].elem);
       }
     }
@@ -2432,7 +2445,11 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
     var pt = transformPoint( evt.pageX, evt.pageY, root_sctm ),
       mouse_x = pt.x * current_zoom,
       mouse_y = pt.y * current_zoom;
+<<<<<<< HEAD
 
+=======
+    placeSnapPoints();
+>>>>>>> 1385518c86330211fa4bfae1b87390ed2a16326a
     evt.preventDefault();
 
     if(right_click) {
@@ -2835,6 +2852,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
         var expression = getExpression();
         var new_x = Number(cursor_x) + Number(real_x) - Number(down_x);
         var new_y = Number(cursor_y) + Number(real_y) - Number(down_y);
+<<<<<<< HEAD
         
         /* var snapped = false;
         var allElements = svgcontent.querySelectorAll('[id^="svg_eqn_"]');
@@ -2876,6 +2894,8 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
           placeMathCursor(new_x, new_y);
         } */
         placeSnapPoints();
+=======
+>>>>>>> 1385518c86330211fa4bfae1b87390ed2a16326a
         placeMathCursor(new_x, new_y);
       }
     }
@@ -3362,6 +3382,10 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
     // TODO: Make true when in multi-unit mode
     var useUnit = false; // (curConfig.baseUnit !== 'px');
     started = false;
+<<<<<<< HEAD
+=======
+    removeSnapPoints();
+>>>>>>> 1385518c86330211fa4bfae1b87390ed2a16326a
     switch (current_mode)
     {
       // intentionally fall-through to select here
