@@ -2396,10 +2396,24 @@
 
       //BRIANCHEN
       var sendToChat = function(){
-        var img = svgCanvas.getSVGBlob();
-        var ts = document.getElementById("ts");
-        ts.style.backgroundImage = img;
-        alert("all done!");
+        //var canvas = document.getElementById('testcanvas');
+        //var ctx = canvas.getContext('2d');
+
+        var DOMURL = window.URL || window.webkitURL || window;
+
+        var img = new Image();
+        var svg = svgCanvas.getSVGBlob();
+        var url = DOMURL.createObjectURL(svg);
+
+        /**alert(url);
+
+        img.onload = function() {
+          ctx.drawImage(img, 0, 0);
+          DOMURL.revokeObjectURL(url);
+        }**/
+
+        img.src = url;
+        uploadToChat(img);
       }
       // by default, svgCanvas.open() is a no-op.
       // it is up to an extension mechanism (opera widget, etc)

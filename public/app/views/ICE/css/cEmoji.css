@@ -132,3 +132,24 @@ li input.active{
 .entry{
   padding: 10px;
 }
+
+.tools_flyout .tool_button, .tools_flyout .tool_flyout{
+  height:25px;
+  width:25px;
+  
+}
+
+.tools_flyout{
+  max-width:400px;
+  width:85%;
+  opacity:0.5;
+}
+
+#tools_shapelib{
+  background-color: #eee;
+}
+
+#shape_buttons{
+  margin-left:4%;
+  padding: 2.5%;
+}

@@ -23,6 +23,7 @@ methodDraw.addExtension("shapes", function() {
     basic: '[a-z]',
     symbols: 'Symbols',
     greek: 'Greek',
+    greek2: 'Greek 2',
     numerical: '[0-9]+-()',
 //    arrow: 'Arrows',
 //    flowchart: 'Flowchart',
@@ -146,6 +147,36 @@ methodDraw.addExtension("shapes", function() {
       },
       buttons: []
     },
+    'greek 2': {
+      data: {
+        "alpha": "\u03B1,R,300,10,300", //**MDP char, Resizeable, height, x, y
+        "beta": "\u03B2,R,300,10,300",
+        "gamma": "\u03B3,R,300,10,300",
+        "delta": "\u03B4,R,300,10,300",
+        "epsilon": "\u03B5,R,300,10,300", //**MDP char, Resizeable, height, x, y
+        "zeta": "\u03B6,R,300,10,300",
+        "eta": "\u03B7,R,300,10,300",
+        "theta": "\u03B8,R,300,10,300",
+        "iota": "\u03B9,R,300,10,300", //**MDP char, Resizeable, height, x, y
+        "kappa": "\u03Ba,R,300,10,300",
+        "lamda": "\u03Bb,R,300,10,300",
+        "mu": "\u03Bc,R,300,10,300",
+        "nu": "\u03Bd,R,300,10,300", //**MDP char, Resizeable, height, x, y
+        "xi": "\u03Be,R,300,10,300",
+        "omicron": "\u03Bf,R,300,10,300",
+        "pi": "\u03c0,R,300,10,300",
+        "rho": "\u03c1,R,300,10,300",
+        "sigma": "\u03c3,R,300,10,300", //**MDP char, Resizeable, height, x, y
+        "tau": "\u03c4,R,300,10,300",
+        "upsilon": "\u03c5,R,300,10,300",
+        "phi": "\u03c6,R,300,10,300",
+        "chi": "\u03c7,R,300,10,300", //**MDP char, Resizeable, height, x, y
+        "psi": "\u03c8,R,300,10,300",
+        "omega": "\u03c9,R,300,10,300",
+
+      },
+      buttons: []
+    },
     'numerical': {
       data: {
         "0": "0,N,250,75,225", //**MDP char, Resizeable, height, x, y
@@ -221,8 +252,8 @@ methodDraw.addExtension("shapes", function() {
        '<svg xmlns="http://www.w3.org/2000/svg"><svg viewBox="' + vb + '"><text id="mb" font-family="monospace" font-size="300" y="300" x="20" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">O</text><\/svg><\/svg>',
        'text/xml');
 
-    var width = 40;
-    var height = 40;
+    var width = 25;
+    var height = 25;
     shape_icon.documentElement.setAttribute('width', width);
     shape_icon.documentElement.setAttribute('height', height);
     var svg_elem = $(document.importNode(shape_icon.documentElement,true));
@@ -321,10 +352,10 @@ methodDraw.addExtension("shapes", function() {
       //canv.setMode('select');
       });
 
-//
+//    
+      var tab = $('<input id="tabulator" onclick="toggleCats();">-</input><br><br>');
       var shape_cats = $('<div id="shape_cats">');
       var cat_str = '';
-
       $.each(categories, function(id, label) {
         cat_str += '<div data-cat=' + id + '>' + label + '</div>';
       });
@@ -343,7 +374,7 @@ methodDraw.addExtension("shapes", function() {
       shape_cats.children().eq(0).addClass('current');
 
       $('#tools_shapelib').prepend(shape_cats);
-
+      $('#tools_shapelib').prepend(tab);
       shower.mouseup(function() {
     //    canv.setMode(current_d ? mode_id : 'select');
     //    canv.setMode('select'); //**MDP

@@ -11,3 +11,7 @@ function swapParentFrame(){
 	editor.style.display = "none";
 	chat.style.display = "inline";
 }
+
+function uploadToChat(img){
+	alert("UPLOAD!");
+}
