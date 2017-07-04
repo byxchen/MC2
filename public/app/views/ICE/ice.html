@@ -44,6 +44,7 @@
   <script type="text/javascript" src="src/path.js"></script>
   <script type="text/javascript" src="src/dialog.js"></script>
   <script type="text/javascript" src="src/method-draw.js"></script>
+  <script type="text/javascript" src="src/cEmoji.js"></script>
   <script type="text/javascript" src="lib/jquery-draginput.js"></script>
   <script type="text/javascript" src="lib/contextmenu.js"></script>
   <!-- <script type="text/javascript" src="lib/jgraduate/jpicker.min.js"></script> -->
@@ -69,6 +70,7 @@
   <script type="text/javascript" src="../recognition/rootSymbol.js"></script>
   <script type="text/javascript" src="../recognition/operatorSymbol.js"></script>
   <script type="text/javascript" src="../../js/ifrm.js"></script>
+
 <!--{endif}-->
 
 
@@ -557,7 +559,8 @@
           </div>
         </div>
   </div>
-  <div class="tool_button" id="tool_convert" title="Convert Tool [C]"></div>
+  <!--<div class="tool_button" id="tool_convert" title="Convert Tool [C]"></div> -->
+  <div class="tool_button" id="tool_onscreenkeyboard" title="On-Screen Keyboard [K]"></div>
 </div> <!-- tools_left -->
   <div class="tool_button" id="tool_rect" title="Square/Rect Tool [R]" style="visibility: hidden"></div>
   <div class="tool_button" id="tool_ellipse" title="Ellipse/Circle Tool [C]" style="visibility: hidden"></div>
@@ -595,7 +598,115 @@
   </div>
 
   <div id="tools_bottom_3">
-    <div id="palette" title="Click to change fill color, shift-click to change stroke color"></div>
+    <div id="panel">
+      <span style="font-color: black; font-size: 13px">
+        <div class="tab">
+          <table>
+            <tr>
+              <input type="button" value="-" style="margin: 3px 3px 3px 3px;" id="tabulator" onclick="toggleTabs();"></input>
+              <td class="entry" id="kbselects">
+                <ul>
+
+                  <li><input class="tablinks" value="Standard" type="button" onclick="openTab(event, 'Emoj');"></li>
+                  <li><input class="tablinks" value="Greek I" type="button" onclick="openTab(event, 'Math');"></li>
+                  <li><input class="tablinks" value="Greek II" type="button" onclick="openTab(event, 'Form');"></li>
+                  <li><input class="tablinks" value="[0-9+-/]" type="button" onclick="openTab(event, 'Form');"></li>
+                  <li><input class="tablinks" value="Symbols" type="button" onclick="openTab(event, 'Form');"></li>
+                </ul>
+              </td>
+              <td class="entry" id="kbcontent" style="background-color: #b3b3b3">
+                <div id="Emoj" class="tabcontent">
+                  <input value="q" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="w" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="e" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="r" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="t" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="y" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="u" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="i" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="o" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="p" class="emojibutton" type="button" onclick="input(this);" />
+                  <br />
+                  <input value="a" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="s" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="d" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="f" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="g" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="h" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="j" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="k" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="l" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value=";" class="emojibutton" type="button" onclick="input(this);" />
+                  <br />
+                  <input value="z" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="x" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="c" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="v" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="b" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="n" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="m" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="," class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="." class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="/" class="emojibutton" type="button" onclick="input(this);" />
+                  <br />
+                </div>
+                <div id="Form" class="tabcontent">
+                  <input value="α" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="β" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="γ" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="δ" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="ε" class="emojibutton" type="button" onclick="input(this);" />
+                  <br />
+                  <input value="ζ" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="η" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="θ" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="ι" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="λ" class="emojibutton" type="button" onclick="input(this);" />
+                  <br />
+                  <input value="A" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="B" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="Γ" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="Δ" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="E" class="emojibutton" type="button" onclick="input(this);" />
+                  <br />
+                  <input value="Z" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="H" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="Θ" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="Ι" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="Λ" class="emojibutton" type="button" onclick="input(this);" />
+                  <br />
+                </div>
+                <div id="Math" class="tabcontent">
+                  <input value="😃" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="😆" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="🙁" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="😋" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="😣" class="emojibutton" type="button" onclick="input(this);" />
+                  <br />
+                  <input value="😃" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="😆" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="🙁" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="😋" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="😣" class="emojibutton" type="button" onclick="input(this);" />
+                  <br />
+                  <input value="😃" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="😆" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="🙁" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="😋" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="😣" class="emojibutton" type="button" onclick="input(this);" />
+                  <br />
+                  <input value="😃" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="😆" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="🙁" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="😋" class="emojibutton" type="button" onclick="input(this);" />
+                  <input value="😣" class="emojibutton" type="button" onclick="input(this);" />
+                  <br />
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      <span>
   </div>
 </div>
 

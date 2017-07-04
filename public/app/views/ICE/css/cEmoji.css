@@ -4,6 +4,10 @@ div.tab {
   background-color: transparent;
 }
 
+.tabulator{
+  margin: 3px 3px 3px 3px;
+}
+
 .emojibutton{
   height:10%;
   margin-bottom: 2%;
@@ -34,7 +38,7 @@ button.accordion.active, button.accordion:hover {
 }
 
 div#panel {
-    top:-445%;
+    top:-600%;
     display:none;
     position:absolute;
     z-index:99;

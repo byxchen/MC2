@@ -209,6 +209,7 @@
           '#logo':'logo',
           '#tool_swap':'swap',
           '#tool_select':'select',
+          '#tool_onscreenkeyboard':'pencil',
           '#tool_fhpath':'pencil',
           '#tool_line':'pen',
           '#tool_rect,#tools_rect_show':'rect',
@@ -2082,6 +2083,10 @@
         }
       };
 
+      var clickOSK = function(){
+        openPanel();
+      }
+
       var clickLine = function() {
         if (toolButtonClick('#tool_line')) {
           svgCanvas.setMode('line');
@@ -3243,6 +3248,7 @@
           {sel:'#tool_swap'},
           {sel:'#tool_select', fn: clickSelect, evt: 'click', kAy: ['V', true]},
           {sel:'#tool_fhpath', fn: clickFHPath, evt: 'click', kAy: ['Q', true]},
+          {sel:'#tool_onscreenkeyboard', fn: clickOSK, evt: 'click', kAy: ['K', true]},
           {sel:'#tool_line', fn: clickLine, evt: 'click', kAy: ['L', true]},
           {sel:'#tool_rect', fn: clickRect, evt: 'click', kAy: ['R', true], icon: 'rect'},
           {sel:'#tool_ellipse', fn: clickEllipse, evt: 'mouseup', kAy: ['C', true], icon: 'ellipse'},
