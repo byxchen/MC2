@@ -63,3 +63,19 @@ function typeset(e){
   document.getElementById("previewArea").innerHTML = e.placeholder + "<br>" + e.value;
   MathJax.Hub.Typeset();
 }
+
+var iFrequency = 3000; // expressed in miliseconds
+var myInterval = 0;
+
+
+function startLoop() {
+    if(myInterval > 0) clearInterval(myInterval);  // stop
+    myInterval = setInterval( "doSomething()", iFrequency );  // run
+}
+
+function doSomething()
+{
+    MathJax.Hub.Typeset();
+}
+
+startLoop();

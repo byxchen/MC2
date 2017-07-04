@@ -2389,6 +2389,13 @@
         }
       }
 
+      //BRIANCHEN
+      var sendToChat = function(){
+        var img = svgCanvas.getSVGBlob();
+        var ts = document.getElementById("ts");
+        ts.style.backgroundImage = img;
+        alert("all done!");
+      }
       // by default, svgCanvas.open() is a no-op.
       // it is up to an extension mechanism (opera widget, etc)
       // to call setCustomHandlers() which will make it do something
@@ -3248,6 +3255,7 @@
           {sel:'#tool_zoom', fn: clickZoom, evt: 'mouseup', kAy: ['Z', true]},
           {sel:'#tool_clear', fn: clickClear, evt: 'mouseup', kAy: [modKey + 'N', true]},
           {sel:'#tool_save', fn: function() { editingsource ? saveSourceEditor(): clickSave() }, evt: 'mouseup', key: [modKey + 'S', true]},
+          {sel:'#tool_STC', fn: sendToChat, evt: 'mouseup'},
           {sel:'#tool_export', fn: clickExport, evt: 'mouseup'},
           {sel:'#tool_open', fn: clickOpen, evt: 'mouseup'},
           {sel:'#tool_import', fn: clickImport, evt: 'mouseup'},
