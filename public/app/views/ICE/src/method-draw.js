@@ -2166,6 +2166,12 @@
         }
       };
 
+      var clickSwap = function(){
+        if (toolButtonClick('#tool_swap')) {
+          swapParentFrame();
+        }
+      };
+
       // Delete is a contextual tool that only appears in the ribbon if
       // an element has been selected
       var deleteSelected = function() {
@@ -3259,7 +3265,7 @@
       var Actions = function() {
         // sel:'selector', fn:function, evt:'event', key:[key, preventDefault, NoDisableInInput]
         var tool_buttons = [
-          {sel:'#tool_swap'},
+          {sel:'#tool_swap', fn: clickSwap, evt: 'click', key: [modKey + 'return', true]},
           {sel:'#tool_select', fn: clickSelect, evt: 'click', kAy: ['V', true]},
           {sel:'#tool_fhpath', fn: clickFHPath, evt: 'click', kAy: ['Q', true]},
           {sel:'#tool_onscreenkeyboard', fn: clickOSK, evt: 'click', kAy: ['K', true]},
