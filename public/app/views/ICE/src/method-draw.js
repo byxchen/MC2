@@ -182,6 +182,7 @@
         fallback_path: curConfig.imgPath,
         fallback:{
           'logo':'logo.png',
+          'swap':'swap.png',
           'select':'select.png',
           'select_node':'select_node.png',
           'pencil':'pencil.png',
@@ -206,6 +207,7 @@
         },
         placement: {
           '#logo':'logo',
+          '#tool_swap':'swap',
           '#tool_select':'select',
           '#tool_fhpath':'pencil',
           '#tool_line':'pen',
@@ -3231,6 +3233,7 @@
       var Actions = function() {
         // sel:'selector', fn:function, evt:'event', key:[key, preventDefault, NoDisableInInput]
         var tool_buttons = [
+          {sel:'#tool_swap'},
           {sel:'#tool_select', fn: clickSelect, evt: 'click', kAy: ['V', true]},
           {sel:'#tool_fhpath', fn: clickFHPath, evt: 'click', kAy: ['Q', true]},
           {sel:'#tool_line', fn: clickLine, evt: 'click', kAy: ['L', true]},

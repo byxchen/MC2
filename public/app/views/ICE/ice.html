@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="lib/jgraduate/css/jgraduate.css" type="text/css"/>
   <link rel="stylesheet" href="css/method-draw.css" type="text/css"/>
   <link rel="stylesheet" href="css/fonts.css" type="text/css"/>
+  <link rel="stylesheet" href="css/cEmoji.css" type="text/css"/>
 <!--{endif}-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -67,6 +68,7 @@
   <script type="text/javascript" src="../recognition/limitSymbol.js"></script>
   <script type="text/javascript" src="../recognition/rootSymbol.js"></script>
   <script type="text/javascript" src="../recognition/operatorSymbol.js"></script>
+  <script type="text/javascript" src="../../js/ifrm.js"></script>
 <!--{endif}-->
 
 
@@ -151,13 +153,7 @@
 
 
   <div class="menu">
-    <div class="menu_title">Chat</div>
-    <div class="menu_list" id="file_menu">
-      <div id="tool_chat" class="menu_item">Create new Share</div>
-      <div class="separator"></div>
-      <div id="tool_chat" onclick="alert('Action Locked - Log into Chat to continue');" class="menu_item">Send Selected to Chat</div>
-      <div id="tool_chat" onclick="alert('Use $$ math $$ to type mathematically in chat');" class="menu_item">Help<span class="shortcut">⌘H</span></div>
-    </div>
+    <div class="menu_title" onclick="alert('SENDING IMAGE!');">Send</div>
   </div>
   <!-- <div class="menu" style="visibility: hidden">
     <div class="menu_title">V</div>
@@ -535,6 +531,7 @@
 
 
 <div id="tools_left" class="tools_panel">
+  <div class="tool_button" id="swap_button" style="background-image: url('images/swap.png');" title="Select Tool [V]" onclick="swapParentFrame();"></div>
   <div class="tool_button" id="tool_select" title="Select Tool [V]"></div>
   <div class="tool_button" id="tool_fhpath" title="Pencil Tool [P]"></div>
   <div class="tool_button" id="tool_line" title="Line Tool [L]"></div>

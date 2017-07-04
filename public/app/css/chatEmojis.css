@@ -34,7 +34,7 @@ button.accordion.active, button.accordion:hover {
 }
 
 div#panel {
-    top: 6%;
+    top: 65%;
     display:none;
     position:absolute;
     z-index:99;
