@@ -5716,6 +5716,25 @@ this.save = function(opts) {
   }
 };
 
+this.getSVGBlob = function(opts) {
+  // remove the selected outline before serializing
+  clearSelection();
+  // Update save options if provided
+  if(opts) $.extend(save_options, opts);
+  save_options.apply = true;
+
+  // no need for doctype, see http://jwatt.org/svg/authoring/#doctype-declaration
+  var str = this.svgCanvasToString();
+  if (svgedit.browser.supportsBlobs()) {
+    var blob = new Blob([ str ], {type: "image/svg+xml;charset=utf-8"});
+    var dropAutoBOM = true;
+    return blob;
+  }
+  else {
+    alert("no blob supported");
+  }
+};
+
 // Function: rasterExport
 // Generates a PNG Data URL based on the current image, then calls "exported"
 // with an object including the string and any issues found
