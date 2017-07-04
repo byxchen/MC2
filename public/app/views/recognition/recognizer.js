@@ -5,17 +5,12 @@ var CENTRED = ["a", "c", "e", "j", "m", "n", "o", "r", "s", "u", "v", "w", "x", 
 var DECENDING = ["g", "p", "q", "y"];
 
 function getExpression(eqns) {
-<<<<<<< HEAD
-    if(!eqns)
-        eqns = document.querySelectorAll('[id^="svg_eqn_"]');
-=======
     if(!eqns) {
         eqns = svgCanvas.getSelectedElems().slice(0);
         if(eqns.__proto__.length == 0) {
             eqns = document.querySelectorAll('[id^="svg_eqn_"]');
         }
     }
->>>>>>> 1385518c86330211fa4bfae1b87390ed2a16326a
 
     var items = [];
     for (i = 0; i < eqns.length; i++) {
@@ -66,11 +61,7 @@ function getExpression(eqns) {
 
 function getBST() {
     var bst = getExpression();
-<<<<<<< HEAD
-    console.log(bst);
-=======
     //console.log(bst);
->>>>>>> 1385518c86330211fa4bfae1b87390ed2a16326a
     var tex = getTex(bst);
     alert(tex);
 };
@@ -250,13 +241,7 @@ function overlap(index, wall, ls) {
             i -= 1;
         }
     }
-<<<<<<< HEAD
-    console.log(ls[index], "\t\t");
     while (i < n && ls[i].minX < ls[index].maxX) {
-        console.log(ls[i].type, ls[i].y, top, bottom);
-=======
-    while (i < n && ls[i].minX < ls[index].maxX) {
->>>>>>> 1385518c86330211fa4bfae1b87390ed2a16326a
         if (!ls[i].marked && 
         ls[i].type === "fraction" &&
         ls[i].y > top &&
