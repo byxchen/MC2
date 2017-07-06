@@ -2,6 +2,7 @@
   "name": "chatRoom",
   "version": "0.0.1",
   "description": "NodeJS based Text, Image, File Real Time Chat Room",
+  "main": "app.js",
   "keywords": [
     "NodeJS",
     "AngularJS",
