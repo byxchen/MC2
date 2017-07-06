@@ -64,8 +64,8 @@ function getBST() {
     //console.log(bst);
     var tex = getTex(bst);
     //alert(tex);
-    parent.document.getElementById('textarea').value = tex;
-    sendMsg ();
+    parent.document.getElementById('textArea').value = tex;
+    
 };
 
 function parse(ls){

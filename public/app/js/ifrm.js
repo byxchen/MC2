@@ -13,5 +13,5 @@ function swapParentFrame(){
 }
 
 function uploadToChat(img){
-
+	
 }
