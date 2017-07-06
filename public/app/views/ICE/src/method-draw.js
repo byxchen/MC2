@@ -2402,8 +2402,9 @@
 
       //BRIANCHEN
       var sendToChat = function(){
-        //var canvas = document.getElementById('testcanvas');
-        //var ctx = canvas.getContext('2d');
+        var canvas = document.getElementById('testcanvas');
+        document.getElementById("ts").style.display="inline";
+        var ctx = canvas.getContext('2d');
 
         var DOMURL = window.URL || window.webkitURL || window;
 
@@ -2411,12 +2412,10 @@
         var svg = svgCanvas.getSVGBlob();
         var url = DOMURL.createObjectURL(svg);
 
-        /**alert(url);
-
         img.onload = function() {
           ctx.drawImage(img, 0, 0);
           DOMURL.revokeObjectURL(url);
-        }**/
+        }
 
         img.src = url;
         uploadToChat(img);
