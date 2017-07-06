@@ -3419,8 +3419,21 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
               var snap = snaps[i];
               var snapX = snap.getBBox().x;
               var snapY = snap.getBBox().y;
-              if(snapX <= real_x && real_x <= snapX + snap.getBBox().width && snapY <= real_y && real_y <= snapY + snap.getBBox().height) {
-                placeMathCursor(snapX, snapY);
+              var type = snap.getAttribute('type');
+              var diffX = real_x - snapX;
+              var diffY = real_y - snapY; 
+              if(0 <= diffX && diffX < snap.getBBox().width && 0 <= diffY && diffY < snap.getBBox().height) {
+                var x = snapX, y = snapY;
+                if (type == 'contains') {
+                  y = snapY + snap.getBBox().height/2 - 10;
+                  x = snapX + 10 + ((snap.getBBox().width - 20)/11);
+                }
+                if (type == 'contains' || type == 'below' || type == 'above') {
+                  if (diffX > snap.getBBox().width/3) {
+                    x += snap.getBBox().width/3;
+                  }
+                }
+                placeMathCursor(x, y);
                 removeSnapPoints();
                 return;
               }
@@ -3434,6 +3447,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
           removeSnapPoints();
 		  	} //MDP -- END
         return;
+  
       case "zoom":
         if (rubberBox != null) {
           rubberBox.setAttribute("display", "none");
@@ -9308,33 +9322,20 @@ var moveCursor = function(dx,dy) {
     var index = 0;
     for (var i = 0; i < expression.symbols.length; i++) {
       var symbol = expression.symbols[i];
-      svgCanvas.addSvgElementFromJson({
-        element: 'rect',
-        attr: {
-                'x': Number(symbol.minX),
-                'y': symbol.minY,
-                'width': symbol.maxX - symbol.minX,
-                'height': symbol.maxY - symbol.minY,
-                'id': 'snap_' + index,
-                'fill': 'grey',
-                'stroke': 1,
-                'stroke-width': 1,
-                'stroke-dasharray': null,
-                'stroke-linejoin': null,
-                'stroke-linecap': null,
-                'stroke-opacity': 0.8,
-                'fill-opacity': 0.8,
-                'opacity': 0.8,
-                'style': 'pointer-events:none'
-              }
-      });
-      index++;
+      if(symbol.region.contains) {
+        var x = symbol.region.contains.wall.left;
+        var y = symbol.region.contains.wall.top;
+        var height = symbol.region.contains.wall.bottom - y;
+        var width = symbol.region.above.wall.right - x;
+        placeSnapPoint(x, y, width, height, index, "contains");
+        index++;
+      }
       if(symbol.region.tleft) {
         var x = symbol.region.above.wall.left;
         var y = symbol.region.above.wall.bottom - 30;
         var height = 25;
         var width = symbol.region.above.wall.right - x;
-        placeSnapPoint(x, y, width, height, index);
+        placeSnapPoint(x, y, width, height, index, "above");
         index++;
       } 
       else if(symbol.region.above) {
@@ -9342,7 +9343,7 @@ var moveCursor = function(dx,dy) {
         var y = symbol.region.supers.wall.bottom - 30;
         var height = 25;
         var width = Math.min(25, symbol.region.supers.wall.right - x);
-        placeSnapPoint(x, y, width, height, index);
+        placeSnapPoint(x, y, width, height, index, "supers");
         index++;
       }
 
@@ -9351,14 +9352,14 @@ var moveCursor = function(dx,dy) {
         var y = symbol.region.below.wall.top + 5;
         var height = 25;
         var width = symbol.region.below.wall.right - x;
-        placeSnapPoint(x, y, width, height, index);
+        placeSnapPoint(x, y, width, height, index, "below");
         index++;
       } else if (symbol.region.below) {
         var x = symbol.region.subsc.wall.left;
         var y = symbol.region.subsc.wall.top + 5;
         var height = 25;
         var width = Math.min(25, symbol.region.subsc.wall.right - x);
-        placeSnapPoint(x, y, width, height, index);
+        placeSnapPoint(x, y, width, height, index, "subsc");
         index++;
       }
       
@@ -9367,7 +9368,7 @@ var moveCursor = function(dx,dy) {
     
 	};
 
-  var placeSnapPoint = function(x, y, width, height, index) {
+  var placeSnapPoint = function(x, y, width, height, index, type) {
     svgCanvas.addSvgElementFromJson({
       element: 'rect',
       attr: {
@@ -9385,7 +9386,8 @@ var moveCursor = function(dx,dy) {
               'stroke-opacity': 0.2,
               'fill-opacity': 0.2,
               'opacity': 0.2,
-              'style': 'pointer-events:none'
+              'style': 'pointer-events:none',
+              'type': type
             }
     });
   }
