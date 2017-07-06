@@ -64,6 +64,7 @@ function getBST() {
     //console.log(bst);
     var tex = getTex(bst);
     alert(tex);
+    parent.document.getElementById('textarea').value = tex;
 };
 
 function parse(ls){
@@ -296,8 +297,14 @@ function getTex(bst) {
     //}
     //console.log(bst);
     if (bst.symbols){
+        if (bst.region_name == 'root') {
+            result += "$$";
+        }
         for (var i = 0; i < bst.symbols.length; i++) {
             result += getTex(bst.symbols[i]);
+        }
+        if (bst.region_name == 'root') {
+            result += "$$";
         }
         return result;
     }
