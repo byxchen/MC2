@@ -63,8 +63,9 @@ function getBST() {
     var bst = getExpression();
     //console.log(bst);
     var tex = getTex(bst);
-    alert(tex);
+    //alert(tex);
     parent.document.getElementById('textarea').value = tex;
+    sendMsg ();
 };
 
 function parse(ls){
