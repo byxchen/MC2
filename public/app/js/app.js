@@ -1,5 +1,5 @@
 const PORT = process.env.PORT || 8080;
-const BUrl =  process.env.BaseUrl || 'https://ice-mc2.herokuapp.com/';
+const BUrl =  process.env.BaseUrl || 'https://ice-mc2.herokuapp.com';
 
 const FUrl = BUrl + ":" + PORT;
 
