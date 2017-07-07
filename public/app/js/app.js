@@ -1,9 +1,11 @@
+const PORT = process.env.PORT || 3000;
+
 var App = angular.module('ChatRoom',['ngResource','ngRoute','ngStorage','socket.io','ngFileUpload','Controllers','Services'])
 .run(["$rootScope", function ($rootScope){
-	$rootScope.baseUrl = 'https://localhost:8080/'; //Application URL
+	$rootScope.baseUrl = ''; //Application URL
 }]);
 App.config(function ($routeProvider, $socketProvider){
-	$socketProvider.setConnectionUrl('https://localhost:8080/'); // Socket URL
+	$socketProvider.setConnectionUrl(''); // Socket URL
 
 	$routeProvider	// AngularJS Routes
 	.when('/v1/', {
