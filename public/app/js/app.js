@@ -1,14 +1,9 @@
-const PORT = process.env.PORT || 8080;
-const BUrl =  process.env.BaseUrl || 'https://ice-mc2.herokuapp.com';
-
-const FUrl = BUrl + ":" + PORT;
-
 var App = angular.module('ChatRoom',['ngResource','ngRoute','ngStorage','socket.io','ngFileUpload','Controllers','Services'])
 .run(["$rootScope", function ($rootScope){
-	$rootScope.baseUrl = FUrl; //Application URL
+	$rootScope.baseUrl = 'https://ice-mc2.herokuapp.com:8080'; //Application URL
 }]);
 App.config(function ($routeProvider, $socketProvider){
-	$socketProvider.setConnectionUrl(FUrl); // Socket URL
+	$socketProvider.setConnectionUrl('https://ice-mc2.herokuapp.com:8080'); // Socket URL
 
 	$routeProvider	// AngularJS Routes
 	.when('/v1/', {
