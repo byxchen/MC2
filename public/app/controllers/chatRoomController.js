@@ -110,12 +110,20 @@ angular.module('Controllers')
 
 // ====================================== Messege Sending Code ============================
 	// sending text message function
+	var textarea = document.getElementById("textArea");
 	$scope.sendMsg = function(){
-		if ($scope.chatMsg) {
+		if ($scope.chatMsg || textarea.value) {
+			var message = "";
+			if(!$scope.chatMsg){
+				message = textarea.value;
+			}
+			else{
+				message = $scope.chatMsg;
+			}
 			$scope.isFileSelected = false;
 			$scope.isMsg = true;
 			var dateString = formatAMPM(new Date());
-			$socket.emit("send-message",{ username : $rootScope.username, userAvatar : $rootScope.userAvatar, msg : $scope.chatMsg, hasMsg : $scope.isMsg , hasFile : $scope.isFileSelected , msgTime : dateString, initials : $rootScope.initials}, function(data){
+			$socket.emit("send-message",{ username : $rootScope.username, userAvatar : $rootScope.userAvatar, msg : message, hasMsg : $scope.isMsg , hasFile : $scope.isFileSelected , msgTime : dateString, initials : $rootScope.initials}, function(data){
 				//delivery report code goes here
 				if (data.success == true) {
 					$scope.chatMsg = "";
@@ -125,7 +133,6 @@ angular.module('Controllers')
 		}else{
 			$scope.isMsgBoxEmpty = true;
 		}
-		
 	}
 
 	// recieving new text message
