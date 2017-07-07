@@ -795,7 +795,7 @@
 
           // Clicking the "show" icon should set the current mode
           shower.mousedown(function(evt) {
-            $('#workarea').one("mousedown", function(){$('#tools_shapelib').hide()})
+            //$('#workarea').one("mousedown", function(){$('#tools_shapelib').hide()})
             $('#workarea').one("mousedown", function(){$('#tools_mathlib').hide()})
             if ($('#tools_shapelib').is(":visible")) toolButtonClick(show_sel, false);
             if ($('#tools_mathlib').is(":visible")) toolButtonClick(show_sel, false);
@@ -825,7 +825,7 @@
               return;
             }
             if (toolButtonClick(show_sel) && (opt in flyout_funcs)) {
-              flyout_funcs[opt]();
+               flyout_funcs[opt]();
             }
           });
 
@@ -1890,7 +1890,7 @@
 
       $('.menu_title')
         .on('mousedown', function() {
-          $("#tools_shapelib").hide()
+          //$("#tools_shapelib").hide()
           $("#tools_mathlib").hide();  //**MDP
           $("#menu_bar").toggleClass('active');
           menus.removeClass('open');

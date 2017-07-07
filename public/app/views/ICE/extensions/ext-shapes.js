@@ -147,7 +147,7 @@ methodDraw.addExtension("shapes", function() {
       },
       buttons: []
     },
-    'greek 2': {
+    'greek2': {
       data: {
         "alpha": "\u03B1,R,300,10,300", //**MDP char, Resizeable, height, x, y
         "beta": "\u03B2,R,300,10,300",
@@ -307,9 +307,9 @@ methodDraw.addExtension("shapes", function() {
       }
     }],
     callback: function() {
-      $('.tools_flyout').hide();
-      $("#tools_shapelib").hide();
-      $("#tools_mathlib").hide();
+      //$('.tools_flyout').hide();
+      //$("#tools_shapelib").hide();
+      //$("#tools_mathlib").hide();
 
       var btn_div = $('<div id="shape_buttons">');
       $('#tools_shapelib > *').wrapAll(btn_div);
@@ -342,11 +342,11 @@ methodDraw.addExtension("shapes", function() {
       canv.keyPressed(btn[0].mathdata.charAt(0));
     //  methodDraw.clickSelect();
     //  canv.setMode('select');
-      document.getElementById("tool_select").click();
+      //document.getElementById("tool_select").click();
 
 
 //        $('.tools_flyout').fadeOut();
-        $('.tools_flyout').hide();
+        //$('.tools_flyout').hide();
         //methodDraw.clickSelect();
 
       //canv.setMode('select');
