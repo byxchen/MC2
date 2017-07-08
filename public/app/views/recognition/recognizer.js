@@ -65,7 +65,6 @@ function getBST() {
     var tex = getTex(bst);
     //alert(tex);
     parent.document.getElementById('textArea').value = tex;
-    
 };
 
 function parse(ls){

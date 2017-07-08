@@ -75,7 +75,7 @@ function startLoop() {
 
 function doSomething()
 {
-    MathJax.Hub.Typeset();
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
 }
 
 startLoop();
