@@ -23,7 +23,7 @@ var expiryTime = 8;
 var routineTime = 1;
 
 
-server.listen(8080);		// server starting on port '8000'
+server.listen();		// server starting on port '8000'
 
 // cofiguring body-parser
 app.use(bodyParser.json({	// setting json limit 	
