@@ -43,6 +43,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/public/app/upload/images'));
 app.use(express.static(__dirname + '/public/app/upload/music'));
 app.use(express.static(__dirname + '/public/app/upload/doc'));
+app.use(express.static(__dirname + '/public/app/views/*'));
 
 // CORS Issue Fix
 app.use(function(req, res, next) {														
