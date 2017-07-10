@@ -116,6 +116,7 @@ angular.module('Controllers')
 			var message = "";
 			if(!$scope.chatMsg){
 				message = textarea.value;
+				textarea.value="";
 			}
 			else{
 				message = $scope.chatMsg;

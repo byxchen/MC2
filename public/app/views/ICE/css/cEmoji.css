@@ -143,6 +143,7 @@ li input.active{
   max-width:400px;
   width:85%;
   opacity:0.5;
+  top:0px;
 }
 
 #tools_shapelib{

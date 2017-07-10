@@ -26,7 +26,8 @@ div.tab {
 
 /* Style the buttons that are used to open and close the accordion panel */
 button.accordion {
-    transition: 0.5s;
+  padding-left:4px;
+  padding-right:4px;
 }
 
 button.accordion.active, button.accordion:hover {
@@ -34,14 +35,13 @@ button.accordion.active, button.accordion:hover {
 }
 
 div#panel {
-    top: 75%;
+    top: 68%;
     display:none;
     position:absolute;
     z-index:99;
     background-color: white;
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.5s ease-out;
     border: 1px solid gray;
 }
 

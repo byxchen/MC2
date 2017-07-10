@@ -209,12 +209,12 @@
                 <form action="" method="post">
                   <div class="input-group">
                   <span class="input-group-btn" style="position:relative">
+                    <a id="swapButton"><button type="button" class="btn btn-warning btn-flat" onclick="swapFrame();">∫∑</button></a>
                     <button type="button" class="accordion btn btn-warning btn-flat">☺+</button>
                   </span>
                     <input id="textArea" type="textarea" name="message" placeholder="Type Message ..." ng-class="{'form-control': true, 'has-error':isMsgBoxEmpty}" ng-model="chatMsg" ng-change="isMsgBoxEmpty=false" ng-enter="sendMsg()" ng-focus="setFocus" focus-me="setFocus"/>
                     <span class="input-group-btn">
                       <button type="button" class="btn btn-warning btn-flat" ng-click="sendMsg()">Send</button>
-                      <a id="swapButton"><button type="button" class="btn btn-warning btn-flat" onclick="swapFrame();">∫∑</button></a>
                     </span>
                   </div>
                 </form>
