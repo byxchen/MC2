@@ -127,6 +127,8 @@
         }
         customHandlers = opts;
       });
+      Editor.placeMathCursor();
+      console.log("cursor on");
     }
 
     Editor.randomizeIds = function() {
@@ -152,7 +154,6 @@
       $("body").toggleClass("touch", svgedit.browser.isTouch());
       $("#canvas_width").val(curConfig.dimensions[0]);
       $("#canvas_height").val(curConfig.dimensions[1]);
-      
 
       var extFunc = function() {
         $.each(curConfig.extensions, function() {
@@ -290,7 +291,7 @@
         });
 
       Editor.canvas = svgCanvas = new $.SvgCanvas(document.getElementById("svgcanvas"), curConfig);
-      
+
       Editor.show_save_warning = false;
       Editor.paintBox = {fill: null, stroke:null, canvas:null};
       var palette = ["#444444", "#482816", "#422C10", "#3B2F0E", "#32320F",
@@ -330,6 +331,7 @@
         tool_scale = 1,
         ui_context = 'toolbars',
         orig_source = '';
+        
 
 
       // This puts the correct shortcuts in the menus
@@ -2287,10 +2289,10 @@
       };
 
       //**MDP[ - Move Cursor with Arrow Keys
-			var moveCursor = function(dx,dy) {
+/*			var moveCursor = function(dx,dy) {
         svgCanvas.keyPressed('');
 			  var w = svgCanvas.getElem('math_cursor');
-			 	if (w != null) {
+			 	if (w) {
 			 		if (curConfig.gridSnapping) {
 			// 			// Use grid snap value regardless of zoom level
 						var multi = svgCanvas.getZoom() * curConfig.snappingStep;
@@ -2302,7 +2304,7 @@
 					w.setAttribute('x', x+dx);
 					w.setAttribute('y', y+dy);
 			 	}
-			};
+			};*/
 			//**MDP]
 
       var linkControlPoints = function() {
@@ -3330,10 +3332,10 @@
           {key: 'shift+P', fn: selectNext},
           {key: [modKey+'+', true], fn: function(){zoomImage(2);}},
           {key: [modKey+'-', true], fn: function(){zoomImage(.5);}},
-          {key: ['up', true], fn: function(){moveCursor(0,-1);}}, //**MDP
-          {key: ['down', true], fn: function(){moveCursor(0,1);}},  //**MDP
-          {key: ['left', true], fn: function(){moveCursor(-1,0);}},  //**MDP
-          {key: ['right', true], fn: function(){moveCursor(1,0);}},  //**MDP
+          {key: ['up', true], fn: function(){svgCanvas.moveCursor(0,-1);}}, //**MDP
+          {key: ['down', true], fn: function(){svgCanvas.moveCursor(0,1);}},  //**MDP
+          {key: ['left', true], fn: function(){svgCanvas.moveCursor(-1,0);}},  //**MDP
+          {key: ['right', true], fn: function(){svgCanvas.moveCursor(1,0);}},  //**MDP
           {key: 'shift+up', fn: function(){moveSelected(0,-10)}},
           {key: 'shift+down', fn: function(){moveSelected(0,10)}},
           {key: 'shift+left', fn: function(){moveSelected(-10,0)}},
@@ -3608,6 +3610,7 @@
         }
 
         $('#rulers').toggle(!!curConfig.showRulers);
+        Editor.placeMathCursor();
       });
 
 
@@ -4272,6 +4275,8 @@
 
   // Run init once DOM is loaded
   $(methodDraw.init);
+ 
+  //methodDraw.placeMathCursor();
 
 
 

@@ -102,67 +102,69 @@ if(window.opera) {
 // config - An object that contains configuration data
 $.SvgCanvas = function(container, config)
 {
-// Namespace constants
-var svgns = "http://www.w3.org/2000/svg",
-  xlinkns = "http://www.w3.org/1999/xlink",
-  xmlns = "http://www.w3.org/XML/1998/namespace",
-  xmlnsns = "http://www.w3.org/2000/xmlns/", // see http://www.w3.org/TR/REC-xml-names/#xmlReserved
-  se_ns = "http://svg-edit.googlecode.com",
-  htmlns = "http://www.w3.org/1999/xhtml",
-  mathns = "http://www.w3.org/1998/Math/MathML";
+  // Namespace constants
+  var svgns = "http://www.w3.org/2000/svg",
+      xlinkns = "http://www.w3.org/1999/xlink",
+      xmlns = "http://www.w3.org/XML/1998/namespace",
+      xmlnsns = "http://www.w3.org/2000/xmlns/", // see http://www.w3.org/TR/REC-xml-names/#xmlReserved
+      se_ns = "http://svg-edit.googlecode.com",
+      htmlns = "http://www.w3.org/1999/xhtml",
+      mathns = "http://www.w3.org/1998/Math/MathML";
 
 // Default configuration options
-var curConfig = {
-  show_outside_canvas: true,
-  selectNew: true,
-  //dimensions: [640, 480]7
-};
+  var curConfig = {
+    //show_outside_canvas: true,
+    selectNew: true,
+    //dimensions: [640, 480]7
+  };
 
 // Update config with new one if given
-if(config) {
-  $.extend(curConfig, config);
-}
+  if(config) {
+    $.extend(curConfig, config);
+  }
 
-// Array with width/height of canvas
-var dimensions = curConfig.dimensions;
+  // Array with width/height of canvas
+  var dimensions = curConfig.dimensions;
 
-var canvas = this;
+  var canvas = this;
 
-// "document" element associated with the container (same as window.document using default svg-editor.js)
-// NOTE: This is not actually a SVG document, but a HTML document.
-var svgdoc = container.ownerDocument;
+  // "document" element associated with the container (same as window.document using default svg-editor.js)
+  // NOTE: This is not actually a SVG document, but a HTML document.
+  var svgdoc = container.ownerDocument;
 
-// This is a container for the document being edited, not the document itself.
-var svgroot = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-svgroot.setAttribute("width", dimensions[0]);
-svgroot.setAttribute("height", dimensions[1]);
-svgroot.id = "svgroot";
-svgroot.setAttribute("xlinkns", xlinkns);
-container.appendChild(svgroot);
+  // This is a container for the document being edited, not the document itself.
+  var svgroot = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svgroot.setAttribute("width", dimensions[0]);
+  svgroot.setAttribute("height", dimensions[1]);
+  svgroot.id = "svgroot";
+  svgroot.setAttribute("xlinkns", xlinkns);
+  container.appendChild(svgroot);
 
-// The actual element that represents the final output SVG element
-var svgcontent = svgdoc.createElementNS(svgns, "svg");
+  // The actual element that represents the final output SVG element
+  var svgcontent = svgdoc.createElementNS(svgns, "svg");
 
-// This function resets the svgcontent element while keeping it in the DOM.
-var clearSvgContentElement = canvas.clearSvgContentElement = function() {
-  while (svgcontent.firstChild) { svgcontent.removeChild(svgcontent.firstChild); }
+  // This function resets the svgcontent element while keeping it in the DOM.
+  var clearSvgContentElement = canvas.clearSvgContentElement = function() {
+    while (svgcontent.firstChild) { 
+      svgcontent.removeChild(svgcontent.firstChild); 
+    }
 
-  // TODO: Clear out all other attributes first?
-  $(svgcontent).attr({
-    id: 'svgcontent',
-    width: dimensions[0],
-    height: dimensions[1],
-    x: dimensions[0],
-    y: dimensions[1],
-    overflow: curConfig.show_outside_canvas ? 'visible' : 'hidden',
-    xmlns: svgns,
-    "xmlns:se": se_ns,
-    "xmlns:xlink": xlinkns
-  }).appendTo(svgroot);
+    // TODO: Clear out all other attributes first?
+    $(svgcontent).attr({
+      id: 'svgcontent',
+      width: dimensions[0],
+      height: dimensions[1],
+      x: dimensions[0],
+      y: dimensions[1],
+      overflow: curConfig.show_outside_canvas ? 'visible' : 'hidden',
+      xmlns: svgns,
+      "xmlns:se": se_ns,
+      "xmlns:xlink": xlinkns
+    }).appendTo(svgroot);
 
-  // TODO: make this string optional and set by the client
-  var comment = svgdoc.createComment(" iCE: interactive Collaborative Editor ");
-  svgcontent.appendChild(comment);
+    // TODO: make this string optional and set by the client
+    var comment = svgdoc.createComment(" iCE: interactive Collaborative Editor ");
+    svgcontent.appendChild(comment);
 };
 clearSvgContentElement();
 
@@ -275,8 +277,8 @@ var cursor_y;
 var cur_shape = all_properties.shape;
 
 // Array with all the currently selected elements
-// default size of 1 until it needs to grow bigger
-var selectedElements = new Array(1);
+// default size of 0 until it needs to grow bigger
+var selectedElements = new Array(0);
 
 // Function: addSvgElementFromJson
 // Create a new SVG element based on the given object keys/values and add it to the current layer
@@ -706,7 +708,6 @@ var getIntersectionList = this.getIntersectionList = function(rect) {
 getStrokedBBox = this.getStrokedBBox = function(elems) {
   if(!elems) elems = getVisibleElements();
   if(!elems.length) return false;
-
   // Make sure the expected BBox is returned if the element is a group
   var getCheckedBBox = function(elem) {
 
@@ -9253,24 +9254,26 @@ this.getPrivateMethods = function() {
 // Below are Functions to Support Mathematics
 
 // Duplicated moveCursor from mathod-draw.js
-var moveCursor = function(dx,dy) {
+this.moveCursor = function(dx,dy) {
   svgCanvas.keyPressed('');
   var w = getElem('math_cursor');
   if (w != null) {
     if (curConfig.gridSnapping) {
 // 			// Use grid snap value regardless of zoom level
       var multi = svgCanvas.getZoom() * curConfig.snappingStep;
-      dx *= (multi/2);
+      dx *= multi;
       dy *= multi;
     }
     var x = Number(w.getAttribute('x'));
     var y = Number(w.getAttribute('y'));
-    w.setAttribute('x', x+dx);
+    w.setAttribute('x', x + dx);
     w.setAttribute('y', y+dy);
   }
 };
 
-	var placeMathCursor = this.placeMathCursor = function (x, y) {
+var moveCursor = this.moveCursor;
+
+	this.placeMathCursor = function (x, y) {
 		var w=svgCanvas.getElem('math_cursor');
 		if (w==null) {
 			svgCanvas.addSvgElementFromJson({
@@ -9306,6 +9309,10 @@ var moveCursor = function(dx,dy) {
       w=svgCanvas.getElem('math_cursor');
 		};
 	};
+
+  var placeMathCursor = this.placeMathCursor;
+
+
 
   var snap_count = 0;
   var removeSnapPoints = this.removeSnapPoints = function() {
