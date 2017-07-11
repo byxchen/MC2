@@ -57,6 +57,9 @@ function del() {
 function input(e){
   var tbInput = document.getElementById("textArea");
   tbInput.value = tbInput.value + e.value;
+  var panel = document.getElementById("panel");
+  panel.style.display = "none";
+  panel.style.maxHeight = null;
 }
 
 function typeset(e){

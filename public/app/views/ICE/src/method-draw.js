@@ -793,7 +793,7 @@
           var timer;
 
           var pos = $(show_sel).position();
-          $(hold_sel).css({'left': pos.left+34, 'top': pos.top+77});
+          $(hold_sel).css({'left': pos.left+34, 'top': pos.top+157});
 
           // Clicking the "show" icon should set the current mode
           shower.mousedown(function(evt) {
@@ -851,7 +851,7 @@
           var shower = $('#' + this.id + '_show');
           var pos = shower.offset();
           var w = shower.outerWidth();
-          $(this).css({left: (pos.left + w)*tool_scale, top: pos.top});
+          $(this).css({left: (pos.left + w)*tool_scale, top: (pos.top+70)});
         });
       }
 

@@ -11,7 +11,6 @@ function getExpression(eqns) {
             eqns = document.querySelectorAll('[id^="svg_eqn_"]');
         }
     }
-
     var items = [];
     for (i = 0; i < eqns.length; i++) {
         if (eqns[i].textContent == " " || eqns[i].tagName == "g")
@@ -45,6 +44,7 @@ function getExpression(eqns) {
             default:
                 break;
         }
+        items[items.length - 1].id = eqns[i].id;
     }
     items.sort(function(a, b) {
         var result = a.minX - b.minX;
@@ -54,7 +54,7 @@ function getExpression(eqns) {
         return result;
     });
     var bst = parse(items);
-
+    console.log(bst);
     return bst;
 }
 
