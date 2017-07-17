@@ -3428,7 +3428,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
               var diffX = real_x - snapX;
               var diffY = real_y - snapY; 
               if(0 <= diffX && diffX < snap.getBBox().width && 0 <= diffY && diffY < snap.getBBox().height) {
-                var x = snapX + 3, y = snapY;
+                var x = snapX, y = snapY;
                 if (type == 'contains') {
                   y = snapY + snap.getBBox().height/2 - 10;
                   x = snapX + 10 + ((snap.getBBox().width - 20)/11);
@@ -9495,7 +9495,7 @@ var moveCursorAbs = this.moveCursorAbs;
     placeMathCursor(lastMouseDown_x, lastMouseDown_y);
   }
 
-  /*this.pushAllAtCursor = function(width, excl) {
+  this.pushAllAtCursor = function(width, excl) {
     var spacing = width;
       if(!width) {
         width = 0;
@@ -9521,52 +9521,9 @@ var moveCursorAbs = this.moveCursorAbs;
         addCommandToHistory(batchCmd);
       }
 
-  } */
+  } 
 
-  this.pushAllAtCursor2 = function(width, excl) {
-    var spacing = width;
-    if(!width) {
-      width = 0;
-      spacing = 10;
-    }
-    var eqns = document.querySelectorAll('[id^="svg_eqn_"]');
-    var cursor = document.getElementById('math_cursor');
-    var cursor_x = cursor.getAttribute('x');
-    var cursor_y = Number(cursor.getAttribute('y'));
-    cursor_x = Number(cursor_x) - width;
-
-    var regionCondFunc = function(region) {
-      console.log('region', region.region_name, 'wall', region.wall, 'cursorx, y', cursor_x + 1, cursor_y + 10);
-      var res = (region.wall.left <= cursor_x + 1 && cursor_x + 1 < region.wall.right
-              && region.wall.top <= cursor_y + 10 && cursor_y + 10 < region.wall.bottom);
-      return res;
-    }.bind(this);
-    var pushElems = [];
-    canvas.undoMgr.beginUndoableChange('x', pushElems);
-    var func = function(symbol) {
-      symbol = document.getElementById(symbol.id);
-      pushElems.push(symbol);
-      var newX = Number(symbol.getAttribute('x')) + spacing;
-      symbol.setAttribute('x', newX);
-    }.bind(this);
-
-    var condFunc = function(symbol) {
-      symbol = document.getElementById(symbol.id);
-      var eqnX = Number(symbol.getAttribute('x'));
-      var res = (eqnX >= Math.floor(cursor_x) && symbol != excl);
-      console.log(symbol.id, res, eqnX, cursor_x);
-      return res;
-    }.bind(this);
-
-    var Expression = getExpression();
-    Expression.apply(func, regionCondFunc, condFunc);
-    var batchCmd = canvas.undoMgr.finishUndoableChange();
-      if (!batchCmd.isEmpty()) {
-        addCommandToHistory(batchCmd);
-    }
-  }
-
-  var pushAllAtCursor = this.pushAllAtCursor2;
+  var pushAllAtCursor = this.pushAllAtCursor;
 
 	this.keyPressed = function (key) {
     if (key=="\u21e6") {

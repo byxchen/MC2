@@ -46,19 +46,3 @@ Symbol.prototype.getWallCopy = function() {
         'right': this.wall.right,
     };
 }
-
-/**
- * This calls applies for each regions with func and condFunc.
- */
-Symbol.prototype.apply = function(func, regionCondFunc, condFunc) {
-    for (var region_name in this.region){
-        if (this.region[region_name].hasElement()) {
-            var b = regionCondFunc(this.region[region_name]);
-            var combinedCondFunc = function(symbol) {
-                var res = b && condFunc(symbol);
-                return res;
-            };
-            this.region[region_name].apply(func, regionCondFunc, combinedCondFunc);
-        }
-    }
-}
