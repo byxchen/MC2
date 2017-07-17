@@ -54,7 +54,7 @@ function getExpression(eqns) {
         return result;
     });
     var bst = parse(items);
-    console.log(bst);
+    //console.log(bst);
     return bst;
 }
 
