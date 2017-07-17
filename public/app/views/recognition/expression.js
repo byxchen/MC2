@@ -20,7 +20,6 @@ function Expression(region_name) {
     this.symbols = [];
 };
 
-
 Expression.prototype.addSymbol = function(symbol) {
     this.symbols.push(symbol);
 };
@@ -47,4 +46,27 @@ Expression.prototype.setWall = function(left, top, right, bottom) {
 
 Expression.prototype.hasElement = function() {
     return this.symbols.length > 0;
+}
+/**
+ * this calls apply on symbol when this region satisfies regoinConsfunc.
+ * 
+ */
+Expression.prototype.apply = function(func, regionCondFunc, condFunc) {
+    if(!condFunc) {
+        condFunc = function() {
+            return true;
+        }
+    }
+    if(!regionCondFunc) {
+        regionCondFunc = function() {
+            return true;
+        }
+    }
+
+    for (var i = 0; i < this.symbols.length; i++) {
+        if (condFunc(this.symbols[i])) {
+            func(this.symbols[i]);
+        }
+        this.symbols[i].apply(func, regionCondFunc, condFunc);
+    }
 }
