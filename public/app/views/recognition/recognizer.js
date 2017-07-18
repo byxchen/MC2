@@ -232,7 +232,7 @@ function overlap(index, wall, ls) {
     if (ls[index].type === "fraction") {
         maxLength = ls[index].width;
     } else {
-        maxLength = -1;
+        maxLength = ls[index].width;
     }
 
     var mainLine = -1;
