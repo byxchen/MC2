@@ -24,7 +24,7 @@ function getExpression(eqns) {
         var type = getSymbolType(value);
         switch (type) {
             case SYMBOL_TYPES.BRACKET:
-                items.push(new BracketSymbol(x, y, height, value));
+                items.push(new BracketSymbol(x, y, width, height, value));
                 break;
             case SYMBOL_TYPES.FRACTION:
                 items.push(new FractionSymbol(x, y, width, height, value));
@@ -53,6 +53,7 @@ function getExpression(eqns) {
         }
         return result;
     });
+    //console.log(items);
     var bst = parse(items);
     //console.log(bst);
     return bst;
@@ -247,7 +248,7 @@ function overlap(index, wall, ls) {
         ls[i].type === "fraction" &&
         ls[i].y > top &&
         ls[i].y <= bottom && 
-        ls[i].minX <= ls[index].minX &&
+        ls[i].minX <= ls[index].x &&
         ls[i].width > maxLength) {
             maxLength = ls[i].width;
             mainLine = i;
@@ -264,7 +265,7 @@ function overlap(index, wall, ls) {
 }
 
 function hor(ls, s) {
-    if (ls[s].type === "fraction" || ls[s].type === "bracket") {
+    if (ls[s].type === "fraction" || (ls[s].type === "bracket" && ls[s].bracketType == BRACKET_TYPES.OPEN)) {
         var wall = ls[s].getWallCopy();
         var newWall = wall;
         newWall.left = ls[s].maxX;
@@ -343,6 +344,9 @@ function getTex(bst) {
         if (symbol.bracketType == BRACKET_TYPES.CLOSE) {
             if (bst.region.supers.hasElement()) {
                 result += "^{" + getTex(bst.region.supers) +"}";
+            }
+            if (bst.region.subsc.hasElement()) {
+                result += "_{" + getTex(bst.region.subsc) +"} ";
             }
         }
     } else if (type == "operator") {
