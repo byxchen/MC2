@@ -2180,7 +2180,7 @@
         //   **MDP(  -- TOOO: UNDO -- Fix the cursor/Undo thing
         if (selectedElement == null && !multiselected && !path.getNodePoint() && undoMgr.getUndoStackSize() > 0) {
           undoMgr.undo();
-          svgCanvas.moveCursor(-1.9,0);
+          moveCursor(-1.9,0);
         }
         // **MDP)
         if (selectedElement != null || multiselected) {

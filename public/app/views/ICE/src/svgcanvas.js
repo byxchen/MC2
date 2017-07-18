@@ -9495,7 +9495,7 @@ var moveCursorAbs = this.moveCursorAbs;
     placeMathCursor(lastMouseDown_x, lastMouseDown_y);
   }
 
-  /*this.pushAllAtCursor = function(width, excl) {
+  this.pushAllAtCursor = function(width, excl) {
     var spacing = width;
       if(!width) {
         width = 0;
@@ -9521,7 +9521,7 @@ var moveCursorAbs = this.moveCursorAbs;
         addCommandToHistory(batchCmd);
       }
 
-  } */
+  } 
 
   this.pushAllAtCursor2 = function(width, excl) {
     var spacing = width;
@@ -9574,6 +9574,7 @@ var moveCursorAbs = this.moveCursorAbs;
   }
 
   var pushAllAtCursor = this.pushAllAtCursor2;
+
 
 	this.keyPressed = function (key) {
     if (key=="\u21e6") {
