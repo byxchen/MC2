@@ -3428,7 +3428,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
               var diffX = real_x - snapX;
               var diffY = real_y - snapY; 
               if(0 <= diffX && diffX < snap.getBBox().width && 0 <= diffY && diffY < snap.getBBox().height) {
-                var x = snapX, y = snapY;
+                var x = snapX + 1, y = snapY;
                 if (type == 'contains') {
                   y = snapY + snap.getBBox().height/2 - 10;
                   x = snapX + 10 + ((snap.getBBox().width - 20)/11);
@@ -9523,7 +9523,58 @@ var moveCursorAbs = this.moveCursorAbs;
 
   } 
 
-  var pushAllAtCursor = this.pushAllAtCursor;
+  this.pushAllAtCursor2 = function(width, excl) {
+    var spacing = width;
+    if(!width) {
+      if (width == 0) {
+        return;
+      }
+      width = 0;
+      spacing = 10;
+    }
+    var eqns = document.querySelectorAll('[id^="svg_eqn_"]');
+    var cursor = document.getElementById('math_cursor');
+    var cursor_x = cursor.getAttribute('x');
+    var cursor_y = Number(cursor.getAttribute('y'));
+    cursor_x = Number(cursor_x);
+
+    var regionCondFunc = function(region) {
+      //console.log('region', region.region_name, 'wall', region.wall, 'cursorx, y', cursor_x + 1, cursor_y + 10);
+      var res = (region.wall.left <= cursor_x + 1 && cursor_x + 1 < region.wall.right
+              && region.wall.top <= cursor_y + 10 && cursor_y + 10 < region.wall.bottom);
+      return res;
+    }.bind(this);
+    var pushElems = [];
+    var func = function(symbol) {
+      symbol = document.getElementById(symbol.id);
+      pushElems.push(symbol);
+      //var newX = Number(symbol.getAttribute('x')) + spacing;
+      //symbol.setAttribute('x', newX);
+    }.bind(this);
+
+    var condFunc = function(symbol) {
+      symbol = document.getElementById(symbol.id);
+      var eqnX = Number(symbol.getAttribute('x'));
+      var res = (eqnX >= Math.floor(cursor_x) && symbol != excl);
+      //console.log(symbol.id, res, eqnX, cursor_x);
+      return res;
+    }.bind(this);
+
+    var Expression = getExpression();
+    Expression.apply(func, regionCondFunc, condFunc);
+    canvas.undoMgr.beginUndoableChange('x', pushElems);
+    for (var i = 0; i < pushElems.length; i++) {
+        var newX = Number(pushElems[i].getAttribute('x')) + spacing;
+        pushElems[i].setAttribute('x', newX);
+      }
+    var batchCmd = canvas.undoMgr.finishUndoableChange();
+      if (!batchCmd.isEmpty()) {
+        addCommandToHistory(batchCmd);
+    }
+  }
+
+  var pushAllAtCursor = this.pushAllAtCursor2;
+
 
 	this.keyPressed = function (key) {
     if (key=="\u21e6") {
@@ -9613,8 +9664,8 @@ var moveCursorAbs = this.moveCursorAbs;
     	curStyles: true,
     	textContent: key,
     	attr: {
-    		'x': Number(x),
-    		'y': Number(y),
+    		'x': x.toString(),
+    		'y': y.toString(),
     	  'id': getNextId(),
     		'fill': cur_text.fill,
     	  'stroke-width': cur_text.stroke_width,
@@ -9627,28 +9678,32 @@ var moveCursorAbs = this.moveCursorAbs;
     		'style': "pointer-events:inherit",
     				//'textContent': 'a'
     		}
-    	});
+      });
     } else {
         if (shortcuts[shortcutIndex].length == 1) {
           newText.textContent = shortcuts[shortcutIndex];
-        } else {1
+        } else {
           newText.textContent = String.fromCharCode("0x"+shortcuts[shortcutIndex]); 
         }
     }
     //console.log(newText);
+    
+
+    var parentNewText = newText.parentNode;
+    var bbox = newText.getBBox();
+    var diffWidth = Number(bbox.x) + Number(bbox.width) - Number(math_cursor.getAttribute('x')) + 1;
+    var cloneNewText = newText.cloneNode(true);
+    parentNewText.removeChild(newText);
+    pushAllAtCursor(diffWidth);
+    parentNewText.appendChild(cloneNewText);
+    newText = cloneNewText;
+    math_cursor.setAttribute('x', bbox.x + bbox.width + 1)
+		//selectOnly([newText]);
+		//clearSelection();
+    //addToSelection([newText]);
     svgCanvas.runExtensions('elementChanged', {
       elems: [newText]
     });
-
-		
-    var bbox = document.getElementById(newText.id).getBBox();
-    var diffWidth = bbox.x + bbox.width - Number(math_cursor.getAttribute('x'));
-    math_cursor.setAttribute('x', bbox.x + bbox.width)
-    pushAllAtCursor(diffWidth, document.getElementById(newText.id));
-    
-		//selectOnly([newText]);
-		//clearSelection();
-		//addToSelection([newText]);
 		addCommandToHistory(new svgedit.history.InsertElementCommand(newText));
 		//call('changed', newText);
 	//	canvas.setMode('select');

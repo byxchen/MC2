@@ -82,3 +82,15 @@
     font-weight: normal;
     font-style: italic;
 }
+
+@font-face {
+    font-family: 'DejaVu Sans Mono';
+    src: url('font-files/dejavu-sans-mono.woff') format("woff");
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Unifont';
+    src: url('font-files/UnifontMedium.woff') format("woff");
+    font-weight: normal;
+}
