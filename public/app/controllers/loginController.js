@@ -33,7 +33,7 @@ angular.module('Controllers',[])
 				$socket.emit('new user',{username : $scope.username, userAvatar : $scope.userAvatar, initials : $scope.initials},function(data){
 					if(data.success == true){	// if nickname doesn't exists	
 						$rootScope.username = $scope.username;
-						$rootScope.initials = $scope.initials;
+						$rootScope.initials = document.getElementById("nickname").value;
 						$rootScope.userAvatar = $scope.userAvatar;
 						$rootScope.loggedIn = true;
 						$location.path('/v1/ChatRoom');
