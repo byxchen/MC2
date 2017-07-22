@@ -99,7 +99,7 @@ methodDraw.addExtension("mathsymbols", function() {
   }
 
   function makeButtons(cat, shapes) {
-    var size = cur_lib.size || 300;
+    var size = cur_lib.size || 500;
     var fill = cur_lib.fill || false;
     var off = size * .05;
     var vb = [-off, -off, size + off*2, size + off*2].join(' ');
