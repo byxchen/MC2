@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>MC² Chatroom</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-
+    <meta name="mobile-web-app-capable" content="yes">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="app/css/emoji.css" rel="stylesheet">
     <!-- Chatroom Emoji support -->
@@ -33,7 +33,7 @@
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body class="skin-blue layout-top-nav login-page">
+  <body class="skin-blue layout-top-nav login-page" style="overflow-y:hidden">
     <div ng-view>
     
     </div>
@@ -89,5 +89,40 @@
     <script src="app/js/chatroomPlus.js"></script>
     <!-- Services -->
     <script src="app/services/sendImageService.js" type="text/javascript"></script>
+
+    <script type="text/javascript">         //<![CDATA[
+     window.addEventListener('load', function() {
+          var maybePreventPullToRefresh = false;
+          var lastTouchY = 0;
+          var touchstartHandler = function(e) {
+            if (e.touches.length != 1) return;
+            lastTouchY = e.touches[0].clientY;
+            // Pull-to-refresh will only trigger if the scroll begins when the
+            // document's Y offset is zero.
+            maybePreventPullToRefresh =
+                window.pageYOffset == 0;
+          }
+
+          var touchmoveHandler = function(e) {
+            var touchY = e.touches[0].clientY;
+            var touchYDelta = touchY - lastTouchY;
+            lastTouchY = touchY;
+
+            if (maybePreventPullToRefresh) {
+              // To suppress pull-to-refresh it is sufficient to preventDefault the
+              // first overscrolling touchmove.
+              maybePreventPullToRefresh = false;
+              if (touchYDelta > 0) {
+                e.preventDefault();
+                return;
+              }
+            }
+          }
+
+          document.addEventListener('touchstart', touchstartHandler, false);
+          document.addEventListener('touchmove', touchmoveHandler, false);      });
+            //]]>    
+    </script>
+
   </body>
 </html>
