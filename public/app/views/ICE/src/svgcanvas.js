@@ -2829,10 +2829,11 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
     if (!selected) {
       var math_cursor = svgCanvas.getElem('math_cursor');
       if(math_cursor) {
-        var expression = getExpression();
+        //var expression = getExpression();
         var new_x = Number(cursor_x) + Number(real_x) - Number(down_x);
         var new_y = Number(cursor_y) + Number(real_y) - Number(down_y);
         placeMathCursor(new_x, new_y);
+        svgCanvas.keyPressed("");
       }
     }
 
@@ -3411,9 +3412,10 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
           }
           if(selected)
           {
-            var newX = Number(selected.getAttribute('x')) + selected.getBBox().width;
+            var newX = Number(selected.getAttribute('x')) + selected.getBBox().width + 1;
             var newY = Number(selected.getAttribute('y')) - 20;
             placeMathCursor(newX, newY);
+            svgCanvas.keyPressed("");
           }
         }
         else { //MDP -- Math Cursor Mode on click and swipe to move cursor
@@ -3439,15 +3441,73 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
                   }
                 }
                 placeMathCursor(x, y);
+                svgCanvas.keyPressed("");
                 removeSnapPoints();
                 return;
               }
                 
             }
+            var x = real_x;
+            var y = real_y - 10;
+            var targetX = x;
+            var targetY = y;
+
+            var pushXElems = [];
+            var func = function(symbol) {
+              symbol = getBBox(document.getElementById(symbol.id));
+              pushXElems.push({
+                "x": symbol.x,
+                "y": symbol.y + 2});
+              pushXElems.push({
+                "x": symbol.x + symbol.width + 1,
+                "y": symbol.y + 2});
+              //var newX = Number(symbol.getAttribute('x')) + spacing;
+              //symbol.setAttribute('x', newX);
+            }.bind(this);
+            
+            var Expression = getExpression();
+            Expression.apply(func);
+            pushXElems.sort(function(a, b) {
+              return Math.abs(b.x - x) - Math.abs(a.x - x);
+            });
+           // console.log(x, 1, pushXElems);
+            if (pushXElems.length > 0 && Math.abs(x - pushXElems[0].x) < 20) {
+              targetX = pushXElems[0].x;
+              //w.setAttribute('y', pushElems[0].y);
+            }
+
+
+            var pushYElems = [];
+            var func = function(symbol) {
+              symbol = getBBox(document.getElementById(symbol.id));
+              pushYElems.push({
+                "x": symbol.x,
+                "y": symbol.y + 2});
+              pushYElems.push({
+                "x": symbol.x,
+                "y": symbol.y + 22});
+              pushYElems.push({
+                "x": symbol.x,
+                "y": symbol.y - 18});
+              //var newX = Number(symbol.getAttribute('x')) + spacing;
+              //symbol.setAttribute('x', newX);
+            }.bind(this);
+            
+            var Expression = getExpression();
+            Expression.apply(func);
+            pushYElems.sort(function(a, b) {
+              return Math.abs(b.y - y) - Math.abs(a.y - y);
+            });
+            //console.log(y, 2, pushYElems);
+            if (pushYElems.length > 0 && Math.abs(y - pushYElems[0].y) < 25) {
+              //w.setAttribute('x', pushElems[0].y);
+              targetY = pushYElems[0].y;
+            }
             removeSnapPoints();
-						placeMathCursor(real_x, real_y);
-            lastMouseDown_x = real_x;
-            lastMouseDown_y = real_y;
+            placeMathCursor(targetX, targetY);
+            svgCanvas.keyPressed("");
+            lastMouseDown_x = targetX;
+            lastMouseDown_y = targetY;
 		  		}
           removeSnapPoints();
 		  	} //MDP -- END
@@ -8886,7 +8946,7 @@ this.moveUpDownSelected = function(dir) {
 //
 // Returns:
 // Batch command for the move
-this.moveSelectedElements = function(dx, dy, undoable) {
+this.moveSelectedElements = function(dx, dy, undoable, elements) {
   // if undoable is not sent, default to true
   // if single values, scale them to the zoom
   if (dx.constructor != Array) {
@@ -8894,10 +8954,15 @@ this.moveSelectedElements = function(dx, dy, undoable) {
     dy /= current_zoom;
   }
   var undoable = undoable || true;
+  var elementIn = true;
   var batchCmd = new BatchCommand("position");
-  var i = selectedElements.length;
+  if (!elements) {
+    elementIn = false;
+    elements = selectedElements;
+  }
+  var i = elements.length;
   while (i--) {
-    var selected = selectedElements[i];
+    var selected = elements[i];
     if (selected != null) {
 //      if (i==0)
 //        selectedBBoxes[0] = svgedit.utilities.getBBox(selected);
@@ -8934,14 +8999,14 @@ this.moveSelectedElements = function(dx, dy, undoable) {
       if (cmd) {
         batchCmd.addSubCommand(cmd);
       }
-
-      selectorManager.requestSelector(selected).resize();
+      if (!elementIn)
+        selectorManager.requestSelector(selected).resize();
     }
   }
   if (!batchCmd.isEmpty()) {
     if (undoable)
       addCommandToHistory(batchCmd);
-    call("changed", selectedElements);
+    call("changed", elements);
     return batchCmd;
   }
 };
@@ -9258,8 +9323,10 @@ this.getPrivateMethods = function() {
 // Below are Functions to Support Mathematics
 
 // Duplicated moveCursor from mathod-draw.js
-this.moveCursor = function(dx,dy) {
+this.moveCursor = function(dx, dy) {
   svgCanvas.keyPressed('');
+  var isLeft = dx < 0 ? 1 : -1;
+  var isTop = dy < 0 ? 1 : -1;
   var w = getElem('math_cursor');
   if (w != null) {
     if (curConfig.gridSnapping) {
@@ -9268,10 +9335,79 @@ this.moveCursor = function(dx,dy) {
       dx *= multi;
       dy *= multi;
     }
+    if (dy > 0) {
+      dy = 20;
+    }
+    else if (dy < 0) {
+      dy = -20;
+    }
     var x = Number(w.getAttribute('x'));
     var y = Number(w.getAttribute('y'));
+    if(dx != 0) {
+      var pushElems = [];
+      var func = function(symbol) {
+        symbol = getBBox(document.getElementById(symbol.id));
+        if(Math.abs(y - (symbol.y + 2)) > 18)
+          return;
+        if(isLeft * x > isLeft * symbol.x)
+          pushElems.push({
+            "x": symbol.x,
+            "y": symbol.y + 2});
+        if(isLeft * x > isLeft * (symbol.x + symbol.width + 1))
+          pushElems.push({
+            "x": symbol.x + symbol.width + 1,
+            "y": symbol.y + 2});
+        //var newX = Number(symbol.getAttribute('x')) + spacing;
+        //symbol.setAttribute('x', newX);
+      }.bind(this);
+      
+      var Expression = getExpression();
+      Expression.apply(func);
+      pushElems.sort(function(a, b) {
+        return isLeft * (b.x - x) - isLeft * (a.x - x);
+      });
+      if (pushElems.length > 0 && isLeft * (x - pushElems[0].x) < 25) {
+        w.setAttribute('x', pushElems[0].x);
+        //w.setAttribute('y', pushElems[0].y);
+        return;
+      }
+    }
+
+    if(dy != 0) {
+      var pushElems = [];
+      var func = function(symbol) {
+        symbol = getBBox(document.getElementById(symbol.id));
+        if(Math.abs(x - (symbol.x)) > 25)
+          return;
+        if(isTop * y > isTop * (symbol.y + 2))
+          pushElems.push({
+            "x": symbol.x,
+            "y": symbol.y + 2});
+        if(isTop * y > isTop * (symbol.y + 22))
+          pushElems.push({
+            "x": symbol.x,
+            "y": symbol.y + 22});
+        if(isTop * y > isTop * (symbol.y - 18))
+          pushElems.push({
+            "x": symbol.x,
+            "y": symbol.y - 18});
+        //var newX = Number(symbol.getAttribute('x')) + spacing;
+        //symbol.setAttribute('x', newX);
+      }.bind(this);
+      
+      var Expression = getExpression();
+      Expression.apply(func);
+      pushElems.sort(function(a, b) {
+        return isTop * (b.y - y) - isTop * (a.y - y);
+      });
+      if (pushElems.length > 0 && isTop * (y - pushElems[0].y) < 25) {
+        //w.setAttribute('x', pushElems[0].y);
+        w.setAttribute('y', pushElems[0].y);
+        return;
+      }
+    }
     w.setAttribute('x', x + dx);
-    w.setAttribute('y', y+dy);
+    w.setAttribute('y', y + dy);
   }
 };
 
@@ -9492,38 +9628,11 @@ var moveCursorAbs = this.moveCursorAbs;
 
   this.returnPressed = function () {
     lastMouseDown_y = lastMouseDown_y + 20;
+    svgCanvas.keyPressed("");
     placeMathCursor(lastMouseDown_x, lastMouseDown_y);
   }
 
   this.pushAllAtCursor = function(width, excl) {
-    var spacing = width;
-      if(!width) {
-        width = 0;
-        spacing = 10;
-      }
-      var eqns = document.querySelectorAll('[id^="svg_eqn_"]');
-      var cursor_x = document.getElementById('math_cursor').getAttribute('x');
-      cursor_x = Number(cursor_x) - width;
-      var pushElems = [];
-      for (var i = 0; i < eqns.length; i++) {
-        var eqnX = Number(eqns[i].getAttribute('x'));
-        if (eqnX >= cursor_x && eqns[i] != excl) {
-          pushElems.push(eqns[i]);
-        }
-      }
-      canvas.undoMgr.beginUndoableChange('x', pushElems);
-      for (var i = 0; i < pushElems.length; i++) {
-        var newX = Number(pushElems[i].getAttribute('x')) + spacing;
-        pushElems[i].setAttribute('x', newX);
-      }
-      var batchCmd = canvas.undoMgr.finishUndoableChange();
-      if (!batchCmd.isEmpty()) {
-        addCommandToHistory(batchCmd);
-      }
-
-  } 
-
-  this.pushAllAtCursor2 = function(width, excl) {
     var spacing = width;
     if(!width) {
       if (width == 0) {
@@ -9554,7 +9663,7 @@ var moveCursorAbs = this.moveCursorAbs;
 
     var condFunc = function(symbol) {
       symbol = document.getElementById(symbol.id);
-      var eqnX = Number(symbol.getAttribute('x'));
+      var eqnX = Number(symbol.getBBox().x);//.getAttribute('x'));
       var res = (eqnX >= Math.floor(cursor_x) && symbol != excl);
       //console.log(symbol.id, res, eqnX, cursor_x);
       return res;
@@ -9562,7 +9671,7 @@ var moveCursorAbs = this.moveCursorAbs;
 
     var Expression = getExpression();
     Expression.apply(func, regionCondFunc, condFunc);
-    canvas.undoMgr.beginUndoableChange('x', pushElems);
+    /** canvas.undoMgr.beginUndoableChange('x', pushElems);
     for (var i = 0; i < pushElems.length; i++) {
         var newX = Number(pushElems[i].getAttribute('x')) + spacing;
         pushElems[i].setAttribute('x', newX);
@@ -9570,10 +9679,12 @@ var moveCursorAbs = this.moveCursorAbs;
     var batchCmd = canvas.undoMgr.finishUndoableChange();
       if (!batchCmd.isEmpty()) {
         addCommandToHistory(batchCmd);
-    }
+    } */
+    //console.log(pushElems);
+    canvas.moveSelectedElements(spacing, 0, true, pushElems);
   }
 
-  var pushAllAtCursor = this.pushAllAtCursor2;
+  var pushAllAtCursor = this.pushAllAtCursor;
 
 
 	this.keyPressed = function (key) {

@@ -68,7 +68,9 @@ Expression.prototype.apply = function(func, regionCondFunc, condFunc) {
     for (var i = 0; i < this.symbols.length; i++) {
         if (condFunc(this.symbols[i])) {
             func(this.symbols[i]);
+            this.symbols[i].apply(func, function(region) {return true;}, condFunc);
+        } else{
+            this.symbols[i].apply(func, regionCondFunc, condFunc);
         }
-        this.symbols[i].apply(func, regionCondFunc, condFunc);
     }
 }

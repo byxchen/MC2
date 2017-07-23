@@ -69,6 +69,7 @@ methodDraw.addExtension("shapes", function() {
         "up": "\u21e7,N,250,75,225",
         "right": "\u21e8,N,250,75,225",
         "down": "\u21e9,N,250,75,225",
+        "space": " ,N,250,75,225",
         "U": "\u238c,N,250,75,225",
 
 
