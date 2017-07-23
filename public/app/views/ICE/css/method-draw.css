@@ -196,6 +196,7 @@ html, body {
   height: 480px;
   position: relative;
   background: #3F3F3C;
+  cursor: text;
 }
 
 #rulers > div {
