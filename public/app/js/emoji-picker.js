@@ -135,5 +135,3 @@
   })();
 
 }).call(this);
-
-//# sourceMappingURL=emoji-picker.js.map
