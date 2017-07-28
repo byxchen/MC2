@@ -9686,6 +9686,41 @@ var moveCursorAbs = this.moveCursorAbs;
 
   var pushAllAtCursor = this.pushAllAtCursor;
 
+  this.addToSVG = function(selectedSymbol){
+    var math_cursor = svgCanvas.getElem('math_cursor');
+    // Undoes the most recently inserted element
+    if (canvas.undoMgr.getUndoStackSize() > 0) {
+      canvas.undoMgr.undo();
+    }
+    var x = Number(math_cursor.getAttribute('x')) - 12;
+    var y = Number(math_cursor.getAttribute('y')) + Number(math_cursor.getAttribute('height'));
+    newText = addSvgElementFromJson({
+      element: 'text',
+      curStyles: true,
+      textContent: selectedSymbol,
+      attr: {
+        'x': x.toString(),
+        'y': y.toString(),
+        'id': getNextId(),
+        'fill': cur_text.fill,
+        'stroke-width': cur_text.stroke_width,
+        'font-size': cur_text.font_size,
+        //    'font-family': cur_text.font_family,
+        'font-family': 'Monspace',
+        'text-anchor': 'left',
+        'xml:space': 'preserve',
+        'opacity': cur_shape.opacity,
+        'style': "pointer-events:inherit",
+            //'textContent': 'a'
+        }
+      });
+    // Closes the suggestion bar after element is inserted
+    clearTimeout(shortcutTimer);
+      ToggleFloatingLayer('FloatingLayer',1);
+      shortcutTimer = setTimeout(function(){
+        ToggleFloatingLayer('FloatingLayer',0);
+    }, 2);
+  }
 
 	this.keyPressed = function (key) {
     if (key=="\u21e6") {
@@ -9738,23 +9773,23 @@ var moveCursorAbs = this.moveCursorAbs;
       ToggleFloatingLayer('FloatingLayer',1);
       shortcutTimer = setTimeout(function(){
         ToggleFloatingLayer('FloatingLayer',0);
-      }, 3500);
+      }, 4000);
 
      var shortcutText = "";
      for (var i = 0; i < shortcuts.length; i++) {
        if (i == shortcutIndex) {
          if (shortcuts[i].length == 1) {
-            shortcutText += '<div class="suggest"> ' + '<font color=orange>' + shortcuts[i] + '</font></div>';
+            shortcutText += '<div class="suggest" onclick="svgCanvas.addToSVG(' + "'"+shortcuts[i]+"'" + ');"> ' + '<font color=orange>' + shortcuts[i] + '</font></div>';
          }
           else {
-            shortcutText += '<div class="suggest"><font color=orange>' + ' &#x' + shortcuts[i] + '</font></div>';
+            shortcutText += '<div class="suggest" onclick="svgCanvas.addToSVG(' + "'&#x"+shortcuts[i]+"'" + ');"> ' + '<font color=orange>' + ' &#x' + shortcuts[i] + '</font></div>';
           }
        } else {
          if (shortcuts[i].length == 1) {
-            shortcutText += '<div class="suggest"> ' + shortcuts[i] + "</div>";
+            shortcutText += '<div class="suggest" onclick="svgCanvas.addToSVG(' + "'"+shortcuts[i]+"'" + ');"> ' + shortcuts[i] + "</div>";
          }
           else {
-            shortcutText += '<div class="suggest"> &#x' + shortcuts[i] + "</div>";
+            shortcutText += '<div class="suggest" onclick="svgCanvas.addToSVG(' + "'&#x"+shortcuts[i]+"'" + ');"> ' + ' &#x' + shortcuts[i] + "</div>";
           }
        }
     }
