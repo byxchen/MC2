@@ -9744,23 +9744,22 @@ var moveCursorAbs = this.moveCursorAbs;
      for (var i = 0; i < shortcuts.length; i++) {
        if (i == shortcutIndex) {
          if (shortcuts[i].length == 1) {
-            shortcutText += ' ' + '<font color=red>' + shortcuts[i] + '</font>';
+            shortcutText += '<div class="suggest"> ' + '<font color=orange>' + shortcuts[i] + '</font></div>';
          }
           else {
-            shortcutText += '<font color=red>' + ' &#x' + shortcuts[i] + '</font>';
+            shortcutText += '<div class="suggest"><font color=orange>' + ' &#x' + shortcuts[i] + '</font></div>';
           }
        } else {
          if (shortcuts[i].length == 1) {
-            shortcutText += ' ' + shortcuts[i];
+            shortcutText += '<div class="suggest"> ' + shortcuts[i] + "</div>";
          }
           else {
-            shortcutText += ' &#x' + shortcuts[i];
+            shortcutText += '<div class="suggest"> &#x' + shortcuts[i] + "</div>";
           }
        }
     }
-
       document.getElementById('floatingContent').innerHTML =
-			"<h1> " + shortcutText + "</h1>";
+			"<h1> " + shortcutText + " </h1>";
     }
 
 		lastKey = key;

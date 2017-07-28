@@ -19,6 +19,13 @@
 	display:none;
 }
 
+.suggest{
+	background-color:white;
+	display: inline;
+	border-style: outset;
+	margin: 1px 1px 1px 1px;
+}
+
 @media only screen and (max-device-width: 600px) {
  	#editorframe{
  		display:none;
