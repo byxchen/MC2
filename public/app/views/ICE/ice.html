@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="css/method-draw.css" type="text/css"/>
   <link rel="stylesheet" href="css/fonts.css" type="text/css"/>
   <link rel="stylesheet" href="css/cEmoji.css" type="text/css"/>
+  <link rel="stylesheet" href="../../css/ifrm.css" type="text/css"/>
 <!--{endif}-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -537,12 +538,11 @@
 
 
 <div id="tools_left" class="tools_panel">
-  <div class="tool_button" id="tool_undobutton" style="background-image: url('images/t_undo.png');" title="Undo Tool[U]"></div>
-  <div class="tool_button" id="tool_deletebutton" style="background-image: url('images/t_delete.png');" title="Delete Tool[U]"></div>
   <div class="tool_button" id="tool_select" title="Select Tool [V]"></div>
   <!-- merge into one tool! -->
   <div class="tool_button" id="tool_fhpath" title="Pencil Tool [P]"></div>
-
+  <div class="tool_button" id="tool_selectpath" style="background-image: url('images/t_select.png');" title="Select/Path Tool[U]"></div>
+  <div class="tool_button" id="tool_deletebutton" style="background-image: url('images/t_undo2.png');" title="Undo/Delete Tool[U]"></div>
   <!--
   <div class="tool_button" id="tool_line" title="Line Tool [L]"></div>
   -->
@@ -576,7 +576,6 @@
 
 
 <div id="tools_bottom" class="tools_panel">
-
     <!-- Zoom buttons -->
   <div id="zoom_panel" class="toolset" title="Change zoom level"  style="visibility: hidden">
     <div class="draginput select" id="zoom_label">
@@ -603,6 +602,13 @@
   </div>
 
   <div id="tools_bottom_3">
+    <!--
+
+        <div id="palette" title="Click to change fill color, shift-click to change stroke color"></div>
+
+    --> 
+
+    
     <div id="panel">
       <span style="font-color: black; font-size: 13px">
         <div class="tab">

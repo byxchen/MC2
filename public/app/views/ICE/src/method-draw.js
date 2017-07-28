@@ -16,6 +16,8 @@
 // 2) browser.js
 // 3) svgcanvas.js
 
+var SOTG = 0;
+
 (function() {
   document.addEventListener("touchstart", touchHandler, true);
   document.addEventListener("touchmove", touchHandler, true);
@@ -2085,6 +2087,21 @@
         }
       };
 
+      var clickSwapCursor = function(){
+          if(SOTG == 0){
+            var iconForSwap = document.getElementById("tool_selectpath");
+            iconForSwap.style.backgroundImage = "url('images/t_pencil.png')";
+            clickFHPath();
+            SOTG = 1;
+          }
+          else{
+            var iconForSwap = document.getElementById("tool_selectpath");
+            iconForSwap.style.backgroundImage = "url('images/t_select.png')";
+            clickSelect();
+            SOTG = 0;
+          }
+      }
+
       var clickOSK = function(){
         openPanel();
       }
@@ -3266,6 +3283,7 @@
         var tool_buttons = [
           {sel:'#tool_swap', fn: clickSwap, evt: 'click', key: [modKey + 'return', true]},
           {sel:'#tool_select', fn: clickSelect, evt: 'click', kAy: ['V', true]},
+          {sel:'#tool_selectpath', fn: clickSwapCursor, evt: 'click', kAy: ['V', true]},
           {sel:'#tool_undobutton', fn: clickUndo, evt: 'click', kAy: ['U', true]},
           {sel:'#tool_deletebutton', fn: deleteSelected, evt: 'click', kAy: ['U', true]},
           {sel:'#tool_fhpath', fn: clickFHPath, evt: 'click', kAy: ['Q', true]},

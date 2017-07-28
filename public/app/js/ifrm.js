@@ -1,3 +1,5 @@
+var state = 0;
+
 function swapFrame(){
 	var chat = document.getElementById("chatframe");
 	var editor = document.getElementById("editorframe");
@@ -10,6 +12,18 @@ function swapParentFrame(){
 	var editor = parent.document.getElementById("editorframe");
 	editor.style.display = "none";
 	chat.style.display = "inline";
+}
+
+function swapTool(){
+	var SP = document.getElementById("tool_selectpath");
+	if(state == 0){
+		alert(5);
+		state = 1;
+	}
+	else{
+		alert(6);
+		state = 0;
+	}
 }
 
 function uploadToChat(img){
