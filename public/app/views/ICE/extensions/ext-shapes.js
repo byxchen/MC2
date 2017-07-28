@@ -8,6 +8,7 @@
  *
  */
 
+var isOpen = false;
 methodDraw.addExtension("shapes", function() {
 
 
@@ -301,6 +302,7 @@ methodDraw.addExtension("shapes", function() {
       events: {
         "click": function() {
           $('.tools_flyout').show(); //**MDP avoids delay in panel appearing
+
           //canv.setMode(mode_id); //**MDP
           //lert("hello");
           //canv.setMode('select'); //
@@ -318,7 +320,50 @@ methodDraw.addExtension("shapes", function() {
       var shower = $('#tools_shapelib_show');
 
 
+
+
       loadLibrary('basic');
+        var isMobile = false;
+
+        if ($(window).width() <= 400) isMobile = true;
+
+      shower.on("mouseup", function () {
+          var area = $("#workarea");
+
+          if (isMobile) {
+              if (isOpen) {
+                  area.css({
+                      height: "100vh"
+                  });
+                  isOpen = false;
+                  return;
+              }
+              area.css({
+                height: "calc(100vh - 270px)"
+              });
+              $("#tools_shapelib").css({
+                  'margin-left': 0,
+                  'margin-top': 0,
+                  'top': "calc(100vh - 225px)",
+                  'opacity': "1",
+                  'width': area.width() - 10
+              });
+              isOpen = true;
+          }
+      });
+
+      $("#svgcanvas").click(function (e) {
+        if (isMobile) return;
+          var math_cursor = svgCanvas.getElem('math_cursor');
+          var x = Number(math_cursor.getAttribute('x'));
+          var y = Number(math_cursor.getAttribute('y'));
+        $("#tools_shapelib").css({
+            'margin-left': x,
+            'margin-top': 0,
+            'top': y+60
+        })
+      });
+
 
       // Do mouseup on parent element rather than each button
       $('#shape_buttons').mouseup(function(evt) {
@@ -353,7 +398,7 @@ methodDraw.addExtension("shapes", function() {
       //canv.setMode('select');
       });
 
-//    
+//
       var tab = $('<input id="tabulator" onclick="toggleCats();">-</input><br><br>');
       var shape_cats = $('<div id="shape_cats">');
       var cat_str = '';

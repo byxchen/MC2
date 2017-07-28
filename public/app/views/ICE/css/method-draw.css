@@ -2174,3 +2174,9 @@ input[readonly=readonly]:focus {
   width: 100%;
   display: block;
 }
+
+
+
+#shape_buttons .tool_button:hover {
+    background-color: #e0e0e0;
+}

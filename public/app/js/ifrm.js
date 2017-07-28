@@ -1,17 +1,19 @@
 function swapFrame(){
-	var chat = document.getElementById("chatframe");
-	var editor = document.getElementById("editorframe");
-	var ts = document.getElementById('editor-frame').contentWindow.document.getElementById('tool_swap');
-	ts.style.display = "block";
-	editor.style.display = "inline";
-	chat.style.display = "none";
+	var chat = $("#chatframe");
+	var editor = $("#editorframe");
+	//var ts = document.getElementById('editor-frame').contentWindow.document.getElementById('tool_swap');
+	editor.removeClass("hidden-xs");
+	chat.addClass("hidden-xs");
+	editor.css({
+		display: "inline"
+	})
 }
 
 function swapParentFrame(){
-	var chat = parent.document.getElementById("chatframe");
-	var editor = parent.document.getElementById("editorframe");
-	editor.style.display = "none";
-	chat.style.display = "inline";
+    var chat = $("#chatframe");
+    var editor = $("#editorframe");
+    chat.removeClass("hidden-xs");
+    editor.addClass("hidden-xs");
 }
 
 function uploadToChat(img){

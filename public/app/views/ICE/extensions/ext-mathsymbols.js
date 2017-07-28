@@ -171,6 +171,10 @@ methodDraw.addExtension("mathsymbols", function() {
       cur_shape.setAttribute('d', current_d);
       canv.pathActions.fixEnd(cur_shape);
     }
+      if (x === Infinity) {
+          x = start_x = 100;
+          y = start_y = 100;
+      }
 
     cur_shape.setAttribute('transform', "translate(" + x + "," + y + ") scale(0.005) translate(" + -x + "," + -y + ")");
 //      console.time('b');
@@ -192,21 +196,21 @@ methodDraw.addExtension("mathsymbols", function() {
   var zoom = canv.getZoom();
 //    var evt = opts.event
 
-  var x = bb_max_x/zoom;
-  var y = bb_max_y/zoom;
+  x = bb_max_x/zoom;
+  y = bb_max_y/zoom;
 
-  var tlist = canv.getTransformList(cur_shape),
+      var tlist = canv.getTransformList(cur_shape),
     box = cur_shape.getBBox(),
     left = box.x, top = box.y, width = box.width,
     height = box.height;
   var dx = (x-start_x), dy = (y-start_y);
-
   var newbox = {
     'x': Math.min(start_x,x),
     'y': Math.min(start_y,y),
     'width': Math.abs(x-start_x),
     'height': Math.abs(y-start_y)
   };
+
 
   var ts = null,
     tx = 0, ty = 0,
@@ -231,6 +235,7 @@ methodDraw.addExtension("mathsymbols", function() {
     scale = svgroot.createSVGTransform(),
     translateBack = svgroot.createSVGTransform();
 
+
   translateOrigin.setTranslate(-(left+tx), -(top+ty));
   // if(evt.shiftKey) {
   //   replaced = true
@@ -246,7 +251,13 @@ methodDraw.addExtension("mathsymbols", function() {
   // }
   totalScale.sx *= sx;
   totalScale.sy *= sy;
-  scale.setScale(sx,sy);
+
+  if (sx === Infinity || sy === Infinity)
+      scale.setScale(1, 1);
+  else
+      scale.setScale(sx, sy);
+
+
   translateBack.setTranslate(left+tx, top+ty);
   var N = tlist.numberOfItems;
   tlist.appendItem(translateBack);
@@ -273,6 +284,7 @@ methodDraw.addExtension("mathsymbols", function() {
       events: {
         "click": function() {
           canv.setMode(mode_id);
+
         }
       }
     }],
@@ -300,19 +312,27 @@ methodDraw.addExtension("mathsymbols", function() {
         //   .append(copy)
         //   .attr('data-curopt', '#' + btn[0].id) // This sets the current mode
         //   .mouseup();
-        canv.setMode(mode_id);
+
+
+
+          var math_cursor = svgCanvas.getElem('math_cursor');
+          var x = Number(math_cursor.getAttribute('x'));
+          var y = Number(math_cursor.getAttribute('y')) + Number(math_cursor.getAttribute('height'));
         cur_shape_id = btn[0].id.substr((mode_id+'_').length);
         current_d = cur_lib.data[cur_shape_id];
 
+
         //MDP(
         var selectedElements = canv.getSelectedElems();
+
         if ((cur_shape_id == "root" || cur_shape_id == "integral" || cur_shape_id == "sum" || cur_shape_id == "lbracket" || cur_shape_id == "fraction") && selectedElements.length > 0) {
+
               var bb_min_x = Infinity;
               var bb_min_y = Infinity;
               var bb_max_x = 0;
               var bb_max_y = 0;
-              var i = 0;
-              for (i=0; i < selectedElements.length; i++) {
+              for (var i=0; i < selectedElements.length; i++) {
+                if (!selectedElements[i]) break;
                 var selected = selectedElements[i].getBBox();
                 if (bb_min_x > selected.x) bb_min_x = selected.x;
                 if (bb_min_y > selected.y) bb_min_y = selected.y;
@@ -368,9 +388,51 @@ methodDraw.addExtension("mathsymbols", function() {
               }
 
               groupSymbol(cur_shape_id, current_d, bb_min_x, bb_min_y, bb_max_x, bb_max_y);
-              canv.setMode('select');
-              document.getElementById("tool_select").click();
+
+
+        } else {
+            var cur_style = canv.getStyle();
+            cur_shape = canv.addSvgElementFromJson({
+                "element": "path",
+                "curStyles": true,
+                "attr": {
+                    "d": current_d,
+                    "id": canv.getNextId() + "_" + cur_shape_id,
+                    "opacity": cur_style.opacity / 2,
+                    "cursor": 'move',
+                    "style": "pointer-events:inherit",
+                    "stroke-width": 1
+                }
+            });
+            cur_shape.setAttribute("d", current_d);
+            if (cur_shape_id == 'fraction' || cur_shape_id == 'root') cur_shape.setAttribute("stroke-width", 5); //**MDP
+            if (cur_shape_id == 'sum' || cur_shape_id == 'lbracket' || cur_shape_id == 'rbracket') cur_shape.setAttribute("fill", 'black'); //**MDP
+
+            // Make sure shape uses absolute values
+            if (/[a-z]/.test(current_d)) {
+                current_d = cur_lib.data[cur_shape_id] = canv.pathActions.convertPath(cur_shape);
+                cur_shape.setAttribute('d', current_d);
+                canv.pathActions.fixEnd(cur_shape);
+            }
+            if (x === Infinity) {
+                x = 100;
+                y = 100;
+            }
+
+            cur_shape.setAttribute('transform', "translate(" + x + "," + y + ") scale(0.12) translate(" + -x + "," + -y + ")");
+            canv.recalculateDimensions(cur_shape);
+            lastBBox = cur_shape.getBBox();
+            math_cursor.setAttribute('x', lastBBox.x + lastBBox.width + 1);
+            totalScale = {
+                sx: 1,
+                sy: 1
+            };
+
         }
+        canv.setMode('select');
+        cur_shape = null;
+        current_d = null;
+        document.getElementById("tool_select").click();
         //MDP)
         $('.tools_flyout').fadeOut();
       });
@@ -421,6 +483,7 @@ methodDraw.addExtension("mathsymbols", function() {
       var x = start_x = opts.start_x;
       var y = start_y = opts.start_y;
       var cur_style = canv.getStyle();
+
       cur_shape = canv.addSvgElementFromJson({
         "element": "path",
         "curStyles": true,
@@ -454,7 +517,7 @@ methodDraw.addExtension("mathsymbols", function() {
       };
       return {
         started: true
-      }
+      };
       // current_d
     },
     mouseMove: function(opts) {
@@ -462,7 +525,7 @@ methodDraw.addExtension("mathsymbols", function() {
       if(mode !== mode_id) return;
 
       var zoom = canv.getZoom();
-      var evt = opts.event
+      var evt = opts.event;
 
       var x = opts.mouse_x/zoom;
       var y = opts.mouse_y/zoom;
@@ -485,8 +548,8 @@ methodDraw.addExtension("mathsymbols", function() {
         sy = height ? (height+dy)/height : 1,
         sx = width ? (width+dx)/width : 1;
 
-      var sx = newbox.width / lastBBox.width;
-      var sy = newbox.height / lastBBox.height;
+      sx = newbox.width / lastBBox.width;
+      sy = newbox.height / lastBBox.height;
 
       sx = sx || 1;
       sy = sy || 1;
@@ -544,7 +607,7 @@ methodDraw.addExtension("mathsymbols", function() {
           started: false
         }
       }
-      canv.setMode("select")
+      canv.setMode("select");
       return {
         keep: true,
         element: cur_shape,

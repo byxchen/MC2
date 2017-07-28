@@ -2589,6 +2589,7 @@ table.text-center th {
   position: relative;
   overflow-x: hidden;
   padding: 0;
+  height: 100vh;
 }
 .direct-chat.chat-pane-open .direct-chat-contacts {
   -webkit-transform: translate(0, 0);
@@ -2602,7 +2603,8 @@ table.text-center th {
   -o-transform: translate(0, 0);
   transform: translate(0, 0);
   padding: 10px;
-  height: 250px;
+  height: calc(100vh - 41px - 55px) !important;
+
   overflow: auto;
 }
 .direct-chat-msg,
