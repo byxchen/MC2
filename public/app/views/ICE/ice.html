@@ -537,9 +537,16 @@
 
 
 <div id="tools_left" class="tools_panel">
+  <div class="tool_button" id="tool_undobutton" style="background-image: url('images/t_undo.png');" title="Undo Tool[U]"></div>
+  <div class="tool_button" id="tool_deletebutton" style="background-image: url('images/t_delete.png');" title="Delete Tool[U]"></div>
   <div class="tool_button" id="tool_select" title="Select Tool [V]"></div>
+  <!-- merge into one tool! -->
   <div class="tool_button" id="tool_fhpath" title="Pencil Tool [P]"></div>
+
+  <!--
   <div class="tool_button" id="tool_line" title="Line Tool [L]"></div>
+  -->
+
   <div id="color_tools">
         <div id="tool_switch" title="Switch stroke and fill colors [X]"></div>
         <div class="color_tool active" id="tool_fill">
@@ -558,9 +565,7 @@
           </div>
         </div>
   </div>
-  <div class="tool_button" id="tool_convert" style="background-image: url('images/text.png');" title="Convert Tool [C]"></div>
-  <br><br><br><br><br><br><br>
-  <div class="tool_button" id="tool_swap" style="background-image: url('images/swap.png'); display:none;" title="Select Tool [V]"></div>
+  <div class="tool_button" id="tool_convert" style="background-image: url('images/swap.png');" title="Convert Tool [C]"></div>
 </div> <!-- tools_left -->
   <div class="tool_button" id="tool_rect" title="Square/Rect Tool [R]" style="visibility: hidden"></div>
   <div class="tool_button" id="tool_ellipse" title="Ellipse/Circle Tool [C]" style="visibility: hidden"></div>

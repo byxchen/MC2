@@ -208,7 +208,7 @@
         },
         placement: {
           '#logo':'logo',
-          '#tool_swap':'swap',
+          '#tool_undo':'undo',
           '#tool_select':'select',
           '#tool_onscreenkeyboard':'pencil',
           '#tool_fhpath':'pencil',
@@ -2169,9 +2169,7 @@
       };
 
       var clickSwap = function(){
-        if (toolButtonClick('#tool_swap')) {
           swapParentFrame();
-        }
       };
 
       // Delete is a contextual tool that only appears in the ribbon if
@@ -3268,6 +3266,8 @@
         var tool_buttons = [
           {sel:'#tool_swap', fn: clickSwap, evt: 'click', key: [modKey + 'return', true]},
           {sel:'#tool_select', fn: clickSelect, evt: 'click', kAy: ['V', true]},
+          {sel:'#tool_undobutton', fn: clickUndo, evt: 'click', kAy: ['U', true]},
+          {sel:'#tool_deletebutton', fn: deleteSelected, evt: 'click', kAy: ['U', true]},
           {sel:'#tool_fhpath', fn: clickFHPath, evt: 'click', kAy: ['Q', true]},
           {sel:'#tool_onscreenkeyboard', fn: clickOSK, evt: 'click', kAy: ['K', true]},
           {sel:'#tool_line', fn: clickLine, evt: 'click', kAy: ['L', true]},
