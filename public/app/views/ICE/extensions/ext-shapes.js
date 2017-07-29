@@ -323,14 +323,14 @@ methodDraw.addExtension("shapes", function() {
 
 
       loadLibrary('basic');
-        var isMobile = false;
-
-        if ($(window).width() <= 400) isMobile = true;
 
       shower.on("mouseup", function () {
+          var isMobile = false;
+          if ($(window).width() <= 400) isMobile = true;
           var area = $("#workarea");
 
           if (isMobile) {
+            console.log($("#tools_shapelib").offsetParent());
               if (isOpen) {
                   area.css({
                       height: "100vh"
@@ -353,6 +353,9 @@ methodDraw.addExtension("shapes", function() {
       });
 
       $("#svgcanvas").click(function (e) {
+          var isMobile = false;
+
+          if ($(window).width() <= 400) isMobile = true;
         if (isMobile) return;
           var math_cursor = svgCanvas.getElem('math_cursor');
           var x = Number(math_cursor.getAttribute('x'));
