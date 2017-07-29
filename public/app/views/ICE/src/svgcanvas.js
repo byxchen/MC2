@@ -9429,6 +9429,8 @@ var moveCursorAbs = this.moveCursorAbs;
 
 	this.placeMathCursor = function (x, y) {
 		var w=svgCanvas.getElem('math_cursor');
+
+
 		if (w==null) {
 			svgCanvas.addSvgElementFromJson({
 				element: 'rect',
@@ -9452,7 +9454,13 @@ var moveCursorAbs = this.moveCursorAbs;
 					'style': 'pointer-events:none'
 				}
 			});
-      if (!blinking) {startBlinking();};
+            $("#tools_shapelib").css({
+                'margin-left': x,
+                'margin-top': 0,
+                'top': y+60
+            });
+
+            if (!blinking) {startBlinking();};
       w=svgCanvas.getElem('math_cursor');
       
 		} else {
@@ -9842,7 +9850,7 @@ var moveCursorAbs = this.moveCursorAbs;
     pushAllAtCursor(diffWidth);
     parentNewText.appendChild(cloneNewText);
     newText = cloneNewText;
-    math_cursor.setAttribute('x', bbox.x + bbox.width + 1)
+    math_cursor.setAttribute('x', bbox.x + bbox.width + 1);
 		//selectOnly([newText]);
 		//clearSelection();
     //addToSelection([newText]);

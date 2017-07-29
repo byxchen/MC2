@@ -8,10 +8,10 @@ function swapFrame(){
 }
 
 function swapParentFrame(){
-	var chat = parent.document.getElementById("chatframe");
-	var editor = parent.document.getElementById("editorframe");
-	editor.style.display = "none";
-	chat.style.display = "inline";
+    var chat = parent.document.getElementById("chatframe");
+    var editor = parent.document.getElementById("editorframe");
+    editor.style.display = "none";
+    chat.style.display = "inline";
 }
 
 function swapTool(){
