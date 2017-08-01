@@ -14,6 +14,22 @@
 	display:none;
 }
 
+#tool_selectpath{
+	text-decoration:none;
+	display:none;
+}
+
+.suggest{
+	background-color:white;
+	display: inline;
+	border-style: outset;
+	margin: 0px 3px 0px 0px;
+}
+
+#tool_swap{
+	display:none;
+}
+
 @media only screen and (max-device-width: 600px) {
  	#editorframe{
  		display:none;
@@ -33,5 +49,24 @@
 		text-decoration:none;
 		display: inline;
 	}
+
+	#tool_selectpath{
+		text-decoration:none;
+		display: block;
+	}
+
+	#tool_fhpath{
+		display:none;
+	}
+
+	#tool_select{
+		display:none;
+	}
+
+	#tool_swap{
+		display:inherit;
+	}
 }
+
+
 

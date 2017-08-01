@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="css/method-draw.css" type="text/css"/>
   <link rel="stylesheet" href="css/fonts.css" type="text/css"/>
   <link rel="stylesheet" href="css/cEmoji.css" type="text/css"/>
+  <link rel="stylesheet" href="../../css/ifrm.css" type="text/css"/>
 <!--{endif}-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -538,8 +539,14 @@
 
 <div id="tools_left" class="tools_panel">
   <div class="tool_button" id="tool_select" title="Select Tool [V]"></div>
+  <!-- merge into one tool! -->
   <div class="tool_button" id="tool_fhpath" title="Pencil Tool [P]"></div>
+  <div class="tool_button" id="tool_selectpath" style="background-image: url('images/t_select.png');" title="Select/Path Tool[U]"></div>
+  <div class="tool_button" id="tool_deletebutton" style="background-image: url('images/t_undo2.png');" title="Undo/Delete Tool[U]"></div>
+  <!--
   <div class="tool_button" id="tool_line" title="Line Tool [L]"></div>
+  -->
+
   <div id="color_tools">
         <div id="tool_switch" title="Switch stroke and fill colors [X]"></div>
         <div class="color_tool active" id="tool_fill">
@@ -558,9 +565,7 @@
           </div>
         </div>
   </div>
-  <div class="tool_button" id="tool_convert" style="background-image: url('images/text.png');" title="Convert Tool [C]"></div>
-  <br><br><br><br><br><br><br>
-  <div class="tool_button" id="tool_swap" style="background-image: url('images/swap.png'); display:none;" title="Select Tool [V]"></div>
+  <div class="tool_button" id="tool_convert" style="background-image: url('images/swap.png');" title="Convert Tool [C]"></div>
 </div> <!-- tools_left -->
   <div class="tool_button" id="tool_rect" title="Square/Rect Tool [R]" style="visibility: hidden"></div>
   <div class="tool_button" id="tool_ellipse" title="Ellipse/Circle Tool [C]" style="visibility: hidden"></div>
@@ -571,7 +576,6 @@
 
 
 <div id="tools_bottom" class="tools_panel">
-
     <!-- Zoom buttons -->
   <div id="zoom_panel" class="toolset" title="Change zoom level"  style="visibility: hidden">
     <div class="draginput select" id="zoom_label">
@@ -598,6 +602,13 @@
   </div>
 
   <div id="tools_bottom_3">
+    <!--
+
+        <div id="palette" title="Click to change fill color, shift-click to change stroke color"></div>
+
+    --> 
+
+
     <div id="panel">
       <span style="font-color: black; font-size: 13px">
         <div class="tab">
@@ -846,14 +857,14 @@ document.onmouseup=Function("MoveEnabled=false");
 
 
 <!-- Start Floating Layer -->
-<div id="FloatingLayer" style="position:absolute;width:275px;left:50px;top:30px;visibility:visible; border:solid 1px #FF6600;">
-    <div id="titleBar" style="cursor:move; width:100%; position:relative; border-bottom:solid 1px #FF6600; background-color:#FF9933;">
+<div id="FloatingLayer" style="position:absolute; left:50px;top:30px;visibility:visible;">
+    <div id="titleBar" style="cursor:move; width:100%; position:relative; background-color:transparent;">
         <div id="title" style="margin-right:30px; padding-left:3px;">
         </div>
         <div id="closeX" style="cursor:hand; position:absolute; right:5px; top:0px;">
         </div>
     </div>
-    <div id="floatingContent" style="padding:3px; background-color:#CCCCCC; color:#333333; opacity:0.6">
+    <div id="floatingContent" style="padding:3px; background-color:black; color:#333333; opacity:0.7">
         <!-- place your HTML content here-->
 
 
