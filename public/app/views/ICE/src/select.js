@@ -459,7 +459,8 @@ svgedit.select.SelectorManager.prototype.initGroup = function() {
       'y': 0,
       'stroke-width': 1,
       'stroke': '#000',
-      'fill': 'url(#checkerPattern)',
+      'fill': 'white',
+      //'fill': 'url(#checkerPattern)',
       'style': 'pointer-events:none'
     }
   });

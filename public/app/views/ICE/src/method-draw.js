@@ -130,7 +130,8 @@ var SOTG = 0;
         customHandlers = opts;
       });
       Editor.placeMathCursor();
-      console.log("cursor on");
+      undoMgr.undo();
+      undoMgr.undo();
     }
 
     Editor.randomizeIds = function() {

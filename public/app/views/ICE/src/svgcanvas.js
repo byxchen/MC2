@@ -169,7 +169,7 @@ $.SvgCanvas = function(container, config)
 clearSvgContentElement();
 
 // Prefix string for element IDs
-var idprefix = "svg_";
+var idprefix = "svg_eqn_";
 
 // Function: setIdPrefix
 // Changes the ID prefix to the given value
@@ -2868,11 +2868,11 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
             for (var i = 0; i < len; ++i) {
               var selected = selectedElements[i];
               if (selected == null) break;
-//              if (i==0) {
-//                var box = svgedit.utilities.getBBox(selected);
-//                  selectedBBoxes[i].x = box.x + dx;
-//                  selectedBBoxes[i].y = box.y + dy;
-//              }
+              /* if (i==0) {
+                var box = svgedit.utilities.getBBox(selected);
+                  selectedBBoxes[i].x = box.x + dx;
+                  selectedBBoxes[i].y = box.y + dy;
+              } */
 
               // update the dummy transform in our transform list
               // to be a translate
