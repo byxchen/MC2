@@ -3453,7 +3453,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
             var targetX = x;
             var targetY = y;
 
-            var pushXElems = [];
+            /*var pushXElems = [];
             var func = function(symbol) {
               symbol = getBBox(document.getElementById(symbol.id));
               pushXElems.push({
@@ -3469,13 +3469,17 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
             var Expression = getExpression();
             Expression.apply(func);
             pushXElems.sort(function(a, b) {
-              return Math.abs(b.x - x) - Math.abs(a.x - x);
+              var res = Math.abs(b.y - y) - Math.abs(a.y - y);
+              if(res == 0) {
+                return Math.abs(a.x - x) - Math.abs(b.x - x);
+              }
+              return res;
             });
-           // console.log(x, 1, pushXElems);
+            console.log("x", x, pushXElems);
             if (pushXElems.length > 0 && Math.abs(x - pushXElems[0].x) < 20) {
               targetX = pushXElems[0].x;
-              //w.setAttribute('y', pushElems[0].y);
-            }
+              console.log("set x");
+            }*/
 
 
             var pushYElems = [];
@@ -3483,12 +3487,21 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
               symbol = getBBox(document.getElementById(symbol.id));
               pushYElems.push({
                 "x": symbol.x,
-                "y": symbol.y + 2});
+                "y": symbol.y + 1});
+              pushYElems.push({
+                "x": symbol.x + symbol.width,
+                "y": symbol.y + 1});
               pushYElems.push({
                 "x": symbol.x,
                 "y": symbol.y + 22});
               pushYElems.push({
+                "x": symbol.x + symbol.width,
+                "y": symbol.y + 22});
+              pushYElems.push({
                 "x": symbol.x,
+                "y": symbol.y - 18});
+              pushYElems.push({
+                "x": symbol.x + symbol.width,
                 "y": symbol.y - 18});
               //var newX = Number(symbol.getAttribute('x')) + spacing;
               //symbol.setAttribute('x', newX);
@@ -3497,11 +3510,16 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
             var Expression = getExpression();
             Expression.apply(func);
             pushYElems.sort(function(a, b) {
-              return Math.abs(b.y - y) - Math.abs(a.y - y);
+              var res = Math.abs(a.x - x) - Math.abs(b.x - x);
+              if(res == 0) {
+                return Math.abs(a.y - y) - Math.abs(b.y - y);
+              }
+              return res;
             });
-            //console.log(y, 2, pushYElems);
-            if (pushYElems.length > 0 && Math.abs(y - pushYElems[0].y) < 25) {
-              //w.setAttribute('x', pushElems[0].y);
+
+            //console.log("x", x, "y", y, pushYElems);
+            if (pushYElems.length > 0 && Math.abs(x - pushYElems[0].x) < 25) {
+              //console.log("set y");
               targetY = pushYElems[0].y;
             }
             removeSnapPoints();
@@ -9335,6 +9353,12 @@ this.moveCursor = function(dx, dy) {
       var multi = svgCanvas.getZoom() * curConfig.snappingStep;
       dx *= multi;
       dy *= multi;
+    }
+    if (dx > 0) {
+      dx = 10;
+    }
+    else if (dx < 0) {
+      dx = -10;
     }
     if (dy > 0) {
       dy = 20;

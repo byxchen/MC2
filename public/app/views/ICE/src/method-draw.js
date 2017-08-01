@@ -41,7 +41,7 @@ var SOTG = 0;
       initTool: 'select',
       wireframe: false,
       colorPickerCSS: false,
-      gridSnapping: true,   //**MDP
+      gridSnapping: false,   //**MDP
       gridColor: "#000",
       baseUnit: 'px',
       snappingStep: 10,
