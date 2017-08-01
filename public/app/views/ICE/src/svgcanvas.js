@@ -2810,6 +2810,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
         : current_mode
       }
   };
+  this.mouseDown = mouseDown;
 
   // in this function we do not record any state changes yet (but we do update
   // any elements that are still being created, moved or resized on the canvas)
@@ -3412,7 +3413,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
           }
           if(selected)
           {
-            var newX = Number(selected.getAttribute('x')) + selected.getBBox().width + 1;
+            var newX = selected.getBBox().x + selected.getBBox().width + 1;
             var newY = Number(selected.getAttribute('y')) - 20;
             placeMathCursor(newX, newY);
             svgCanvas.keyPressed("");
@@ -9649,7 +9650,7 @@ var moveCursorAbs = this.moveCursorAbs;
 
     var regionCondFunc = function(region) {
       //console.log('region', region.region_name, 'wall', region.wall, 'cursorx, y', cursor_x + 1, cursor_y + 10);
-      var res = (region.wall.left <= cursor_x + 1 && cursor_x + 1 < region.wall.right
+      var res = (region.wall.left <= cursor_x && cursor_x < region.wall.right
               && region.wall.top <= cursor_y + 10 && cursor_y + 10 < region.wall.bottom);
       return res;
     }.bind(this);
@@ -9664,7 +9665,7 @@ var moveCursorAbs = this.moveCursorAbs;
     var condFunc = function(symbol) {
       symbol = document.getElementById(symbol.id);
       var eqnX = Number(symbol.getBBox().x);//.getAttribute('x'));
-      var res = (eqnX >= Math.floor(cursor_x) && symbol != excl);
+      var res = (eqnX >= cursor_x && symbol != excl);
       //console.log(symbol.id, res, eqnX, cursor_x);
       return res;
     }.bind(this);
