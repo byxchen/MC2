@@ -2212,9 +2212,12 @@ var clearSelection = this.clearSelection = function(noCall) {
     for (var i = 0; i < len; ++i) {
       var elem = selectedElements[i];
       if (elem == null) break;
-      if(elem.getAttribute("fill") == "red") {
+      if(elem.tagName == "text") {
         elem.setAttribute("fill", elem.getAttribute("backup-fill"));
         elem.removeAttribute("backup-fill");
+      } else if (elem.tagName == "path") {
+        elem.setAttribute("stroke", elem.getAttribute("backup-stroke"));
+        elem.removeAttribute("backup-stroke");
       }
       selectorManager.releaseSelector(elem);
       selectedElements[i] = null;
@@ -2258,8 +2261,14 @@ var addToSelection = this.addToSelection = function(elemsToAdd, showGrips) {
 
     // if it's not already there, add it
     if (selectedElements.indexOf(elem) == -1) {
-      elem.setAttribute("backup-fill", elem.getAttribute("fill"));
-      elem.setAttribute("fill", "red");
+      if(elem.tagName == "text") {
+        elem.setAttribute("backup-fill", elem.getAttribute("fill"));
+        elem.setAttribute("fill", "red");
+      } else if (elem.tagName == "path") {
+
+        elem.setAttribute("backup-stroke", elem.getAttribute("stroke"));
+        elem.setAttribute("stroke", "red");
+      }
 
       selectedElements[j] = elem;
 
@@ -2327,8 +2336,13 @@ var removeFromSelection = this.removeFromSelection = function(elemsToRemove) {
         j++;
       }
       else { // remove the item and its selector
-        elem.setAttribute("fill", elem.getAttribute("backup-fill"));
-        elem.removeAttribute("backup-fill");
+        if(elem.tagName == "text") {
+          elem.setAttribute("fill", elem.getAttribute("backup-fill"));
+          elem.removeAttribute("backup-fill");
+        } else if (elem.tagName == "path") {
+          elem.setAttribute("stroke", elem.getAttribute("backup-stroke"));
+          elem.removeAttribute("backup-stroke");
+        }
         selectorManager.releaseSelector(elem);
       }
     }
@@ -3354,7 +3368,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
               default:
                 cur_properties.fill = selected.getAttribute("fill") == "red" ? selected.getAttribute("backup-fill") : selected.getAttribute("fill");
                 cur_properties.fill_opacity = selected.getAttribute("fill-opacity");
-                cur_properties.stroke = selected.getAttribute("stroke");
+                cur_properties.stroke = selected.getAttribute("stroke") == "red" ? selected.getAttribute("backup-stroke") : selected.getAttribute("stroke");
                 cur_properties.stroke_opacity = selected.getAttribute("stroke-opacity");
                 cur_properties.stroke_width = selected.getAttribute("stroke-width");
                 cur_properties.stroke_dasharray = selected.getAttribute("stroke-dasharray");
