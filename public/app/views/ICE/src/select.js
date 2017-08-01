@@ -245,10 +245,10 @@ svgedit.select.Selector.prototype.resize = function() {
       'ne': [nbax+nbaw, nbay].map(Math.round),
       'sw': [nbax, nbay+nbah].map(Math.round),
       'se': [nbax+nbaw, nbay+nbah].map(Math.round),
-      'n':  [nbax + (nbaw)/2, nbay].map(Math.round),
-      'w':  [nbax, nbay + (nbah)/2].map(Math.round),
-      'e':  [nbax + nbaw, nbay + (nbah)/2].map(Math.round),
-      's':  [nbax + (nbaw)/2, nbay + nbah].map(Math.round)
+      //'n':  [nbax + (nbaw)/2, nbay].map(Math.round),
+      //'w':  [nbax, nbay + (nbah)/2].map(Math.round),
+      //'e':  [nbax + nbaw, nbay + (nbah)/2].map(Math.round),
+      //'s':  [nbax + (nbaw)/2, nbay + nbah].map(Math.round)
     };
 
     for(var dir in this.gripCoords) {

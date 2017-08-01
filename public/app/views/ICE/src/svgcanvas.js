@@ -2212,6 +2212,10 @@ var clearSelection = this.clearSelection = function(noCall) {
     for (var i = 0; i < len; ++i) {
       var elem = selectedElements[i];
       if (elem == null) break;
+      if(elem.getAttribute("fill") == "red") {
+        elem.setAttribute("fill", elem.getAttribute("backup-fill"));
+        elem.removeAttribute("backup-fill");
+      }
       selectorManager.releaseSelector(elem);
       selectedElements[i] = null;
     }
@@ -2254,6 +2258,8 @@ var addToSelection = this.addToSelection = function(elemsToAdd, showGrips) {
 
     // if it's not already there, add it
     if (selectedElements.indexOf(elem) == -1) {
+      elem.setAttribute("backup-fill", elem.getAttribute("fill"));
+      elem.setAttribute("fill", "red");
 
       selectedElements[j] = elem;
 
@@ -2321,6 +2327,8 @@ var removeFromSelection = this.removeFromSelection = function(elemsToRemove) {
         j++;
       }
       else { // remove the item and its selector
+        elem.setAttribute("fill", elem.getAttribute("backup-fill"));
+        elem.removeAttribute("backup-fill");
         selectorManager.releaseSelector(elem);
       }
     }
@@ -3344,7 +3352,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
               case "foreignObject":
                 break;
               default:
-                cur_properties.fill = selected.getAttribute("fill");
+                cur_properties.fill = selected.getAttribute("fill") == "red" ? selected.getAttribute("backup-fill") : selected.getAttribute("fill");
                 cur_properties.fill_opacity = selected.getAttribute("fill-opacity");
                 cur_properties.stroke = selected.getAttribute("stroke");
                 cur_properties.stroke_opacity = selected.getAttribute("stroke-opacity");
@@ -9835,7 +9843,7 @@ var moveCursorAbs = this.moveCursorAbs;
     var math_cursor = svgCanvas.getElem('math_cursor');
     var x = Number(math_cursor.getAttribute('x'));
     var y = Number(math_cursor.getAttribute('y')) + Number(math_cursor.getAttribute('height'));
-
+    clearSelection();
     if (newChar) {
     	newText = addSvgElementFromJson({
       element: 'text',
