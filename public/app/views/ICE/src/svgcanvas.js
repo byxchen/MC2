@@ -3024,18 +3024,18 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
         }
 
         translateOrigin.setTranslate(-(left+tx),-(top+ty));
-        if(evt.shiftKey) {
-          if(sx == 1) sx = sy
-          else sy = sx;
-        }
-        scale.setScale(sx,sy);
+        // if(evt.shiftKey) {
+        //   if(sx == 1) sx = sy;
+        //   else sy = sx;
+        // }
+        scale.setScale(sx,sx);
 
         translateBack.setTranslate(left+tx,top+ty);
         if(hasMatrix) {
           var diff = angle?1:0;
           tlist.replaceItem(translateOrigin, 2+diff);
           tlist.replaceItem(scale, 1+diff);
-          tlist.replaceItem(translateBack, 0+diff);
+          tlist.replaceItem(translateBack, diff);
         } else {
           var N = tlist.numberOfItems;
           tlist.replaceItem(translateBack, N-3);

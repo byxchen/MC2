@@ -462,7 +462,7 @@ methodDraw.addExtension("mathsymbols", function() {
       if(mode !== mode_id) return;
 
       var zoom = canv.getZoom();
-      var evt = opts.event
+      var evt = opts.event;
 
       var x = opts.mouse_x/zoom;
       var y = opts.mouse_y/zoom;
@@ -523,7 +523,7 @@ methodDraw.addExtension("mathsymbols", function() {
         sy=1.0;  // No y on horizontal lines
       } //**MDP)
 
-      scale.setScale(sx,sy);
+      scale.setScale(sx,sx);
       translateBack.setTranslate(left+tx, top+ty);
       var N = tlist.numberOfItems;
       tlist.appendItem(translateBack);

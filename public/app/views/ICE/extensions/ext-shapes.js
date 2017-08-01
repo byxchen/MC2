@@ -249,7 +249,9 @@ methodDraw.addExtension("shapes", function() {
     //  var shape_icon = new DOMParser().parseFromString(
     //    '<svg xmlns="http://www.w3.org/2000/svg"><svg viewBox="' + vb + '"><path fill="#333" stroke="transparent" stroke-width="' + stroke + '" /><\/svg><\/svg>',
     //    'text/xml');
-
+    if (cat !== "basic" && cat !== "numerical") {
+      vb = "-15 -15 240 430";
+    }
      var shape_icon = new DOMParser().parseFromString(
        '<svg xmlns="http://www.w3.org/2000/svg"><svg viewBox="' + vb + '"><text id="mb" font-family="monospace" font-size="300" y="300" x="20" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">O</text><\/svg><\/svg>',
        'text/xml');
@@ -273,6 +275,7 @@ methodDraw.addExtension("shapes", function() {
       //icon.find('path').attr('d', path_d); //**MDP
       icon.find('text').text(char_d[0]); //**MDP
       icon.find('text').attr('font-size', char_d[2]); //**MDP
+        if (cat !== "basic" && cat !== "numerical") icon.find('text').attr('font-size', 350);
       icon.find('text').attr('x', char_d[3]); //**MDP
       icon.find('text').attr('y', char_d[4]); //**MDP
 
@@ -326,7 +329,7 @@ methodDraw.addExtension("shapes", function() {
 
       shower.on("mouseup", function () {
           var isMobile = false;
-          if ($(window).width() <= 400) isMobile = true;
+          if ($(window).width() <= 479) isMobile = true;
           var area = $("#workarea");
 
           if (isMobile) {
@@ -342,11 +345,7 @@ methodDraw.addExtension("shapes", function() {
                 height: "calc(100vh - 270px)"
               });
               $("#tools_shapelib").css({
-                  'margin-left': 0,
-                  'margin-top': 0,
-                  'top': "calc(100vh - 225px)",
-                  'opacity': "1",
-                  'width': area.width() - 10
+                  'opacity': "1"
               });
               isOpen = true;
           }
@@ -355,7 +354,7 @@ methodDraw.addExtension("shapes", function() {
       $("#svgcanvas").click(function (e) {
           var isMobile = false;
 
-          if ($(window).width() <= 400) isMobile = true;
+          if ($(window).width() <= 479) isMobile = true;
         if (isMobile) return;
           var math_cursor = svgCanvas.getElem('math_cursor');
           var x = Number(math_cursor.getAttribute('x'));
