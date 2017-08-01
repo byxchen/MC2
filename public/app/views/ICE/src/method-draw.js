@@ -16,6 +16,8 @@
 // 2) browser.js
 // 3) svgcanvas.js
 
+var SOTG = 0;
+
 (function() {
   document.addEventListener("touchstart", touchHandler, true);
   document.addEventListener("touchmove", touchHandler, true);
@@ -208,7 +210,7 @@
         },
         placement: {
           '#logo':'logo',
-          '#tool_swap':'swap',
+          '#tool_undo':'undo',
           '#tool_select':'select',
           '#tool_onscreenkeyboard':'pencil',
           '#tool_fhpath':'pencil',
@@ -2085,6 +2087,21 @@
         }
       };
 
+      var clickSwapCursor = function(){
+          if(SOTG == 0){
+            var iconForSwap = document.getElementById("tool_selectpath");
+            iconForSwap.style.backgroundImage = "url('images/t_pencil.png')";
+            clickFHPath();
+            SOTG = 1;
+          }
+          else{
+            var iconForSwap = document.getElementById("tool_selectpath");
+            iconForSwap.style.backgroundImage = "url('images/t_select.png')";
+            clickSelect();
+            SOTG = 0;
+          }
+      }
+
       var clickOSK = function(){
         openPanel();
       }
@@ -2169,9 +2186,7 @@
       };
 
       var clickSwap = function(){
-        if (toolButtonClick('#tool_swap')) {
           swapParentFrame();
-        }
       };
 
       // Delete is a contextual tool that only appears in the ribbon if
@@ -3268,6 +3283,9 @@
         var tool_buttons = [
           {sel:'#tool_swap', fn: clickSwap, evt: 'click', key: [modKey + 'return', true]},
           {sel:'#tool_select', fn: clickSelect, evt: 'click', kAy: ['V', true]},
+          {sel:'#tool_selectpath', fn: clickSwapCursor, evt: 'click', kAy: ['V', true]},
+          {sel:'#tool_undobutton', fn: clickUndo, evt: 'click', kAy: ['U', true]},
+          {sel:'#tool_deletebutton', fn: deleteSelected, evt: 'click', kAy: ['U', true]},
           {sel:'#tool_fhpath', fn: clickFHPath, evt: 'click', kAy: ['Q', true]},
           {sel:'#tool_onscreenkeyboard', fn: clickOSK, evt: 'click', kAy: ['K', true]},
           {sel:'#tool_line', fn: clickLine, evt: 'click', kAy: ['L', true]},

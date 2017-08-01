@@ -207,3 +207,7 @@ html,body{height:100%;}
 	display: none;
 }
 }
+
+#editorframe {
+	height: 100vh;
+}
