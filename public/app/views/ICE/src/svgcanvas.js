@@ -9778,9 +9778,9 @@ var moveCursorAbs = this.moveCursorAbs;
 
     if(key in keyHash) {
       clearTimeout(shortcutTimer);
-      ToggleFloatingLayer('FloatingLayer',1);
+      ToggleFloatingLayer('floatingContent',1);
       shortcutTimer = setTimeout(function(){
-        ToggleFloatingLayer('FloatingLayer',0);
+        ToggleFloatingLayer('floatingContent',0);
       }, 4000);
 
      var shortcutText = "";

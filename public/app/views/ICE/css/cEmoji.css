@@ -213,9 +213,10 @@ li input.active{
         border: 0 !important;
         top: calc(100vh - 230px) !important;
         z-index: 10;
-        height: 25px !important;
+        height: 30px !important;
         width: 100% !important;
         left: 0 !important;
+        background-color: #ebf0ef !important;
     }
 
     #FloatingLayer * {
@@ -235,4 +236,14 @@ li input.active{
         margin: 0;
         line-height: 24px;
     }
+
+    #floatingContent h1>div, font {
+        width: 25px;
+        text-align: center !important;
+        background-color: #ebf0ef !important;
+        position: relative;
+        z-index: 11;
+    }
+
+
 }

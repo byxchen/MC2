@@ -327,18 +327,33 @@ methodDraw.addExtension("shapes", function() {
 
       loadLibrary('basic');
 
-      shower.on("mouseup", function () {
-          var isMobile = false;
-          if ($(window).width() <= 479) isMobile = true;
-          var area = $("#workarea");
+        var isMobile = false;
+        if ($(window).width() <= 479) isMobile = true;
+      if (isMobile) ToggleFloatingLayer('FloatingLayer',0);
 
+      $(document).on("mouseup", function (e) {
+
+          if (e.target.id.indexOf("_show") !== -1 && e.target.id !== "tools_shapelib_show"){
+              var area = $("#workarea");
+              area.css({
+                  height: "100vh"
+              });
+              isOpen = false;
+              ToggleFloatingLayer('FloatingLayer',0);
+          }
+      });
+      shower.on("mouseup", function () {
+
+          var area = $("#workarea");
+          if ($(window).width() <= 479) isMobile = true;
           if (isMobile) {
-            console.log($("#tools_shapelib").offsetParent());
+
               if (isOpen) {
                   area.css({
                       height: "100vh"
                   });
                   isOpen = false;
+                  ToggleFloatingLayer('FloatingLayer',0);
                   return;
               }
               area.css({
@@ -347,13 +362,12 @@ methodDraw.addExtension("shapes", function() {
               $("#tools_shapelib").css({
                   'opacity': "1"
               });
+              ToggleFloatingLayer('FloatingLayer',1);
               isOpen = true;
           }
       });
 
       $("#svgcanvas").click(function (e) {
-          var isMobile = false;
-
           if ($(window).width() <= 479) isMobile = true;
         if (isMobile) return;
           var math_cursor = svgCanvas.getElem('math_cursor');
