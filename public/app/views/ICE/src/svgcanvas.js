@@ -2219,7 +2219,6 @@ var clearSelection = this.clearSelection = function(noCall, revColor) {
       if (elem == null) break;
       if(revColor == null || revColor) {
         if(elem.tagName == "text") {
-          console.log(elem.getAttribute("backup-fill"));
           elem.setAttribute("fill", elem.getAttribute("backup-fill"));
           elem.removeAttribute("backup-fill");
         } else if (elem.tagName == "path") {
