@@ -8892,7 +8892,6 @@ this.ungroupSelectedElement = function(gElem, revColor) {
     }
 
     // remove the group from the selection
-    console.log(revColor);
     clearSelection(null, revColor);
 
     // delete the group element (but make undo-able)
