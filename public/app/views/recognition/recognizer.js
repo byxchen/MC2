@@ -15,7 +15,7 @@ function getExpression(eqns) {
     for (i = 0; i < eqns.length; i++) {
         if (eqns[i].textContent == " " || eqns[i].tagName == "g")
             continue;
-        var rect = eqns[i].getBBox();
+        var rect = svgedit.utilities.getBBox(eqns[i]);
         var x = rect.x;
         var y = rect.y;
         var width = rect.width;

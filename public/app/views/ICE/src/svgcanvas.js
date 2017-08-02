@@ -169,7 +169,7 @@ $.SvgCanvas = function(container, config)
 clearSvgContentElement();
 
 // Prefix string for element IDs
-var idprefix = "svg_";
+var idprefix = "svg_eqn_";
 
 // Function: setIdPrefix
 // Changes the ID prefix to the given value
@@ -279,6 +279,7 @@ var cur_shape = all_properties.shape;
 // Array with all the currently selected elements
 // default size of 0 until it needs to grow bigger
 var selectedElements = new Array(0);
+var groupedElement;
 
 // Function: addSvgElementFromJson
 // Create a new SVG element based on the given object keys/values and add it to the current layer
@@ -2206,12 +2207,26 @@ var root_sctm = null;
 // Clears the selection.  The 'selected' handler is then called.
 // Parameters:
 // noCall - Optional boolean that when true does not call the "selected" handler
-var clearSelection = this.clearSelection = function(noCall) {
+var clearSelection = this.clearSelection = function(noCall, revColor) {
+  //canvas.ungroupSelectedElement()
+  if(groupedElement) {
+    canvas.ungroupSelectedElement(groupedElement, false);
+  }
   if (selectedElements[0] != null) {
     var len = selectedElements.length;
     for (var i = 0; i < len; ++i) {
       var elem = selectedElements[i];
       if (elem == null) break;
+      if(revColor == null || revColor) {
+        if(elem.tagName == "text") {
+          elem.setAttribute("fill", elem.getAttribute("backup-fill"));
+          elem.removeAttribute("backup-fill");
+        } else if (elem.tagName == "path") {
+          elem.setAttribute("stroke", elem.getAttribute("backup-stroke"));
+          elem.removeAttribute("backup-stroke");
+        }
+      }
+
       selectorManager.releaseSelector(elem);
       selectedElements[i] = null;
     }
@@ -2254,6 +2269,17 @@ var addToSelection = this.addToSelection = function(elemsToAdd, showGrips) {
 
     // if it's not already there, add it
     if (selectedElements.indexOf(elem) == -1) {
+      if(elem.tagName == "text") {
+        if(elem.getAttribute("fill") != "red") {
+          elem.setAttribute("backup-fill", elem.getAttribute("fill"));
+          elem.setAttribute("fill", "red");
+        }
+      } else if (elem.tagName == "path") {
+        if(elem.getAttribute("stroke") != "red") {
+          elem.setAttribute("backup-stroke", elem.getAttribute("stroke"));
+          elem.setAttribute("stroke", "red");
+        }
+      }
 
       selectedElements[j] = elem;
 
@@ -2321,6 +2347,13 @@ var removeFromSelection = this.removeFromSelection = function(elemsToRemove) {
         j++;
       }
       else { // remove the item and its selector
+        if(elem.tagName == "text") {
+          elem.setAttribute("fill", elem.getAttribute("backup-fill"));
+          elem.removeAttribute("backup-fill");
+        } else if (elem.tagName == "path") {
+          elem.setAttribute("stroke", elem.getAttribute("backup-stroke"));
+          elem.removeAttribute("backup-stroke");
+        }
         selectorManager.releaseSelector(elem);
       }
     }
@@ -2810,6 +2843,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
         : current_mode
       }
   };
+  this.mouseDown = mouseDown;
 
   // in this function we do not record any state changes yet (but we do update
   // any elements that are still being created, moved or resized on the canvas)
@@ -2867,11 +2901,11 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
             for (var i = 0; i < len; ++i) {
               var selected = selectedElements[i];
               if (selected == null) break;
-//              if (i==0) {
-//                var box = svgedit.utilities.getBBox(selected);
-//                  selectedBBoxes[i].x = box.x + dx;
-//                  selectedBBoxes[i].y = box.y + dy;
-//              }
+              /* if (i==0) {
+                var box = svgedit.utilities.getBBox(selected);
+                  selectedBBoxes[i].x = box.x + dx;
+                  selectedBBoxes[i].y = box.y + dy;
+              } */
 
               // update the dummy transform in our transform list
               // to be a translate
@@ -3343,9 +3377,9 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
               case "foreignObject":
                 break;
               default:
-                cur_properties.fill = selected.getAttribute("fill");
+                cur_properties.fill = selected.getAttribute("fill") == "red" ? selected.getAttribute("backup-fill") : selected.getAttribute("fill");
                 cur_properties.fill_opacity = selected.getAttribute("fill-opacity");
-                cur_properties.stroke = selected.getAttribute("stroke");
+                cur_properties.stroke = selected.getAttribute("stroke") == "red" ? selected.getAttribute("backup-stroke") : selected.getAttribute("stroke");
                 cur_properties.stroke_opacity = selected.getAttribute("stroke-opacity");
                 cur_properties.stroke_width = selected.getAttribute("stroke-width");
                 cur_properties.stroke_dasharray = selected.getAttribute("stroke-dasharray");
@@ -3362,7 +3396,6 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
             else {//**MDP
               selectorManager.requestSelector(selected).showGrips(true);
             }//**MDP
-
             // This shouldn't be necessary as it was done on mouseDown...
 //              call("selected", [selected]);
             
@@ -3412,12 +3445,17 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
           }
           if(selected)
           {
-            var newX = Number(selected.getAttribute('x')) + selected.getBBox().width + 1;
+            var newX = selected.getBBox().x + selected.getBBox().width + 1;
             var newY = Number(selected.getAttribute('y')) - 20;
             placeMathCursor(newX, newY);
             svgCanvas.keyPressed("");
           }
+          else {
+            canvas.groupSelectedElements('g', false);
+            groupedElement = selectedElements[0];
+          }
         }
+        
         else { //MDP -- Math Cursor Mode on click and swipe to move cursor
           if (Math.abs(real_x -r_start_x) < 5 && Math.abs(real_y - r_start_y) < 5) {
             placeSnapPoints();
@@ -3452,7 +3490,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
             var targetX = x;
             var targetY = y;
 
-            var pushXElems = [];
+            /* var pushXElems = [];
             var func = function(symbol) {
               symbol = getBBox(document.getElementById(symbol.id));
               pushXElems.push({
@@ -3468,13 +3506,17 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
             var Expression = getExpression();
             Expression.apply(func);
             pushXElems.sort(function(a, b) {
-              return Math.abs(b.x - x) - Math.abs(a.x - x);
+              var res = Math.abs(b.y - y) - Math.abs(a.y - y);
+              if(res == 0) {
+                return Math.abs(a.x - x) - Math.abs(b.x - x);
+              }
+              return res;
             });
-           // console.log(x, 1, pushXElems);
+            console.log("x", x, pushXElems);
             if (pushXElems.length > 0 && Math.abs(x - pushXElems[0].x) < 20) {
               targetX = pushXElems[0].x;
-              //w.setAttribute('y', pushElems[0].y);
-            }
+              console.log("set x");
+            } */
 
 
             var pushYElems = [];
@@ -3482,12 +3524,21 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
               symbol = getBBox(document.getElementById(symbol.id));
               pushYElems.push({
                 "x": symbol.x,
-                "y": symbol.y + 2});
+                "y": symbol.y + 1});
+              pushYElems.push({
+                "x": symbol.x + symbol.width,
+                "y": symbol.y + 1});
               pushYElems.push({
                 "x": symbol.x,
                 "y": symbol.y + 22});
               pushYElems.push({
+                "x": symbol.x + symbol.width,
+                "y": symbol.y + 22});
+              pushYElems.push({
                 "x": symbol.x,
+                "y": symbol.y - 18});
+              pushYElems.push({
+                "x": symbol.x + symbol.width,
                 "y": symbol.y - 18});
               //var newX = Number(symbol.getAttribute('x')) + spacing;
               //symbol.setAttribute('x', newX);
@@ -3496,11 +3547,16 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
             var Expression = getExpression();
             Expression.apply(func);
             pushYElems.sort(function(a, b) {
-              return Math.abs(b.y - y) - Math.abs(a.y - y);
+              var res = Math.abs(a.x - x) - Math.abs(b.x - x);
+              if(res == 0) {
+                return Math.abs(a.y - y) - Math.abs(b.y - y);
+              }
+              return res;
             });
-            //console.log(y, 2, pushYElems);
-            if (pushYElems.length > 0 && Math.abs(y - pushYElems[0].y) < 25) {
-              //w.setAttribute('x', pushElems[0].y);
+
+            //console.log("x", x, "y", y, pushYElems);
+            if (pushYElems.length > 0 && Math.abs(x - pushYElems[0].x) < 25) {
+              //console.log("set y");
               targetY = pushYElems[0].y;
             }
             removeSnapPoints();
@@ -8534,8 +8590,11 @@ this.pasteElements = function(type, x, y) {
 
 // Parameters:
 // type - type of element to group into, defaults to <g>
-this.groupSelectedElements = function(type) {
+this.groupSelectedElements = function(type, revColor) {
   if(!type) type = 'g';
+  if(revColor == null) {
+    revColor == true;
+  }
   var cmd_str = '';
 
   switch ( type ) {
@@ -8584,7 +8643,8 @@ this.groupSelectedElements = function(type) {
   if (!batchCmd.isEmpty()) addCommandToHistory(batchCmd);
 
   // update selection
-  selectOnly([g], true);
+  clearSelection(true, revColor);
+  addToSelection([g], true);
 };
 
 
@@ -8778,8 +8838,12 @@ var pushGroupProperties = this.pushGroupProperties = function(g, undoable) {
 // Function: ungroupSelectedElement
 // Unwraps all the elements in a selected group (g) element. This requires
 // significant recalculations to apply group's transforms, etc to its children
-this.ungroupSelectedElement = function() {
-  var g = selectedElements[0];
+this.ungroupSelectedElement = function(gElem, revColor) {
+  var g = gElem || selectedElements[0];
+  if(revColor == null) {
+    revColor == true;
+  }
+  groupedElement = null;
   if($(g).data('gsvg') || $(g).data('symbol')) {
     // Is svg, so actually convert to group
 
@@ -8828,7 +8892,7 @@ this.ungroupSelectedElement = function() {
     }
 
     // remove the group from the selection
-    clearSelection();
+    clearSelection(null, revColor);
 
     // delete the group element (but make undo-able)
     var gNextSibling = g.nextSibling;
@@ -8838,7 +8902,7 @@ this.ungroupSelectedElement = function() {
     if (!batchCmd.isEmpty()) addCommandToHistory(batchCmd);
 
     // update selection
-    addToSelection(children);
+    addToSelection(children, revColor);
   }
 };
 
@@ -9335,6 +9399,12 @@ this.moveCursor = function(dx, dy) {
       dx *= multi;
       dy *= multi;
     }
+    if (dx > 0) {
+      dx = 10;
+    }
+    else if (dx < 0) {
+      dx = -10;
+    }
     if (dy > 0) {
       dy = 20;
     }
@@ -9657,7 +9727,7 @@ var moveCursorAbs = this.moveCursorAbs;
 
     var regionCondFunc = function(region) {
       //console.log('region', region.region_name, 'wall', region.wall, 'cursorx, y', cursor_x + 1, cursor_y + 10);
-      var res = (region.wall.left <= cursor_x + 1 && cursor_x + 1 < region.wall.right
+      var res = (region.wall.left <= cursor_x && cursor_x < region.wall.right
               && region.wall.top <= cursor_y + 10 && cursor_y + 10 < region.wall.bottom);
       return res;
     }.bind(this);
@@ -9672,7 +9742,7 @@ var moveCursorAbs = this.moveCursorAbs;
     var condFunc = function(symbol) {
       symbol = document.getElementById(symbol.id);
       var eqnX = Number(symbol.getBBox().x);//.getAttribute('x'));
-      var res = (eqnX >= Math.floor(cursor_x) && symbol != excl);
+      var res = (eqnX >= cursor_x && symbol != excl);
       //console.log(symbol.id, res, eqnX, cursor_x);
       return res;
     }.bind(this);
@@ -9810,7 +9880,9 @@ var moveCursorAbs = this.moveCursorAbs;
     var math_cursor = svgCanvas.getElem('math_cursor');
     var x = Number(math_cursor.getAttribute('x'));
     var y = Number(math_cursor.getAttribute('y')) + Number(math_cursor.getAttribute('height'));
-
+    if(selectedElements.length > 0) {
+      clearSelection();
+    }
     if (newChar) {
     	newText = addSvgElementFromJson({
       element: 'text',
