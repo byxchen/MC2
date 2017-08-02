@@ -279,6 +279,7 @@ var cur_shape = all_properties.shape;
 // Array with all the currently selected elements
 // default size of 0 until it needs to grow bigger
 var selectedElements = new Array(0);
+var groupedElement;
 
 // Function: addSvgElementFromJson
 // Create a new SVG element based on the given object keys/values and add it to the current layer
@@ -2206,19 +2207,27 @@ var root_sctm = null;
 // Clears the selection.  The 'selected' handler is then called.
 // Parameters:
 // noCall - Optional boolean that when true does not call the "selected" handler
-var clearSelection = this.clearSelection = function(noCall) {
+var clearSelection = this.clearSelection = function(noCall, revColor) {
+  //canvas.ungroupSelectedElement()
+  if(groupedElement) {
+    canvas.ungroupSelectedElement(groupedElement, false);
+  }
   if (selectedElements[0] != null) {
     var len = selectedElements.length;
     for (var i = 0; i < len; ++i) {
       var elem = selectedElements[i];
       if (elem == null) break;
-      if(elem.tagName == "text") {
-        elem.setAttribute("fill", elem.getAttribute("backup-fill"));
-        elem.removeAttribute("backup-fill");
-      } else if (elem.tagName == "path") {
-        elem.setAttribute("stroke", elem.getAttribute("backup-stroke"));
-        elem.removeAttribute("backup-stroke");
+      if(revColor == null || revColor) {
+        if(elem.tagName == "text") {
+          console.log(elem.getAttribute("backup-fill"));
+          elem.setAttribute("fill", elem.getAttribute("backup-fill"));
+          elem.removeAttribute("backup-fill");
+        } else if (elem.tagName == "path") {
+          elem.setAttribute("stroke", elem.getAttribute("backup-stroke"));
+          elem.removeAttribute("backup-stroke");
+        }
       }
+
       selectorManager.releaseSelector(elem);
       selectedElements[i] = null;
     }
@@ -2262,12 +2271,15 @@ var addToSelection = this.addToSelection = function(elemsToAdd, showGrips) {
     // if it's not already there, add it
     if (selectedElements.indexOf(elem) == -1) {
       if(elem.tagName == "text") {
-        elem.setAttribute("backup-fill", elem.getAttribute("fill"));
-        elem.setAttribute("fill", "red");
+        if(elem.getAttribute("fill") != "red") {
+          elem.setAttribute("backup-fill", elem.getAttribute("fill"));
+          elem.setAttribute("fill", "red");
+        }
       } else if (elem.tagName == "path") {
-
-        elem.setAttribute("backup-stroke", elem.getAttribute("stroke"));
-        elem.setAttribute("stroke", "red");
+        if(elem.getAttribute("stroke") != "red") {
+          elem.setAttribute("backup-stroke", elem.getAttribute("stroke"));
+          elem.setAttribute("stroke", "red");
+        }
       }
 
       selectedElements[j] = elem;
@@ -3385,7 +3397,6 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
             else {//**MDP
               selectorManager.requestSelector(selected).showGrips(true);
             }//**MDP
-
             // This shouldn't be necessary as it was done on mouseDown...
 //              call("selected", [selected]);
             
@@ -3440,7 +3451,12 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
             placeMathCursor(newX, newY);
             svgCanvas.keyPressed("");
           }
+          else {
+            canvas.groupSelectedElements('g', false);
+            groupedElement = selectedElements[0];
+          }
         }
+        
         else { //MDP -- Math Cursor Mode on click and swipe to move cursor
           if (Math.abs(real_x -r_start_x) < 5 && Math.abs(real_y - r_start_y) < 5) {
             placeSnapPoints();
@@ -3475,7 +3491,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
             var targetX = x;
             var targetY = y;
 
-            /*var pushXElems = [];
+            /* var pushXElems = [];
             var func = function(symbol) {
               symbol = getBBox(document.getElementById(symbol.id));
               pushXElems.push({
@@ -3501,7 +3517,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
             if (pushXElems.length > 0 && Math.abs(x - pushXElems[0].x) < 20) {
               targetX = pushXElems[0].x;
               console.log("set x");
-            }*/
+            } */
 
 
             var pushYElems = [];
@@ -8575,8 +8591,11 @@ this.pasteElements = function(type, x, y) {
 
 // Parameters:
 // type - type of element to group into, defaults to <g>
-this.groupSelectedElements = function(type) {
+this.groupSelectedElements = function(type, revColor) {
   if(!type) type = 'g';
+  if(revColor == null) {
+    revColor == true;
+  }
   var cmd_str = '';
 
   switch ( type ) {
@@ -8625,7 +8644,8 @@ this.groupSelectedElements = function(type) {
   if (!batchCmd.isEmpty()) addCommandToHistory(batchCmd);
 
   // update selection
-  selectOnly([g], true);
+  clearSelection(true, revColor);
+  addToSelection([g], true);
 };
 
 
@@ -8819,8 +8839,12 @@ var pushGroupProperties = this.pushGroupProperties = function(g, undoable) {
 // Function: ungroupSelectedElement
 // Unwraps all the elements in a selected group (g) element. This requires
 // significant recalculations to apply group's transforms, etc to its children
-this.ungroupSelectedElement = function() {
-  var g = selectedElements[0];
+this.ungroupSelectedElement = function(gElem, revColor) {
+  var g = gElem || selectedElements[0];
+  if(revColor == null) {
+    revColor == true;
+  }
+  groupedElement = null;
   if($(g).data('gsvg') || $(g).data('symbol')) {
     // Is svg, so actually convert to group
 
@@ -8869,7 +8893,8 @@ this.ungroupSelectedElement = function() {
     }
 
     // remove the group from the selection
-    clearSelection();
+    console.log(revColor);
+    clearSelection(null, revColor);
 
     // delete the group element (but make undo-able)
     var gNextSibling = g.nextSibling;
@@ -8879,7 +8904,7 @@ this.ungroupSelectedElement = function() {
     if (!batchCmd.isEmpty()) addCommandToHistory(batchCmd);
 
     // update selection
-    addToSelection(children);
+    addToSelection(children, revColor);
   }
 };
 
@@ -9857,7 +9882,9 @@ var moveCursorAbs = this.moveCursorAbs;
     var math_cursor = svgCanvas.getElem('math_cursor');
     var x = Number(math_cursor.getAttribute('x'));
     var y = Number(math_cursor.getAttribute('y')) + Number(math_cursor.getAttribute('height'));
-    clearSelection();
+    if(selectedElements.length > 0) {
+      clearSelection();
+    }
     if (newChar) {
     	newText = addSvgElementFromJson({
       element: 'text',

@@ -232,18 +232,18 @@ methodDraw.addExtension("mathsymbols", function() {
     translateBack = svgroot.createSVGTransform();
 
   translateOrigin.setTranslate(-(left+tx), -(top+ty));
-  // if(evt.shiftKey) {
-  //   replaced = true
-  //   var max = Math.min(Math.abs(sx), Math.abs(sy));
-  //   sx = max * (sx < 0 ? -1 : 1);
-  //   sy = max * (sy < 0 ? -1 : 1);
-  //   if (totalScale.sx != totalScale.sy) {
-  //     var multiplierX = (totalScale.sx > totalScale.sy) ? 1 : totalScale.sx/totalScale.sy;
-  //     var multiplierY = (totalScale.sy > totalScale.sx) ? 1 : totalScale.sy/totalScale.sx;
-  //     sx *= multiplierY
-  //     sy *= multiplierX
-  //   }
-  // }
+/* if(evt.shiftKey) {
+     replaced = true
+     var max = Math.min(Math.abs(sx), Math.abs(sy));
+     sx = max * (sx < 0 ? -1 : 1);
+     sy = max * (sy < 0 ? -1 : 1);
+     if (totalScale.sx != totalScale.sy) {
+       var multiplierX = (totalScale.sx > totalScale.sy) ? 1 : totalScale.sx/totalScale.sy;
+       var multiplierY = (totalScale.sy > totalScale.sx) ? 1 : totalScale.sy/totalScale.sx;
+       sx *= multiplierY
+       sy *= multiplierX
+     }
+   } */
   totalScale.sx *= sx;
   totalScale.sy *= sy;
   scale.setScale(sx,sy);
@@ -258,6 +258,7 @@ methodDraw.addExtension("mathsymbols", function() {
   canv.runExtensions('elementChanged', {
     elems: [cur_shape]
   });
+  canv.ungroupSelectedElement();
   canv.addToSelection([cur_shape]);
   }
 
@@ -358,8 +359,8 @@ methodDraw.addExtension("mathsymbols", function() {
               var bb_max_x = 0;
               var bb_max_y = 0;
               var i = 0;
-              for (i=0; i < selectedElements.length; i++) {
-                var selected = selectedElements[i].getBBox();
+              for (i=0; i < selectedElements.length && selectedElements[i] != null; i++) {
+                var selected = svgedit.utilities.getBBox(selectedElements[i]);
                 if (bb_min_x > selected.x) bb_min_x = selected.x;
                 if (bb_min_y > selected.y) bb_min_y = selected.y;
                 if (bb_max_x < selected.x + selected.width) bb_max_x = selected.x + selected.width;
