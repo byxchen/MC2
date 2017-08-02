@@ -70,6 +70,21 @@ function findOne(list, params) {
 //sockets handling
 ios.on('connection', function(socket){	
 
+	socket.on("join-room", function(data, callback) {
+		if (socket.username) {
+			socket.leave(socket.connectedRoom, function () {
+                socket.join(data.roomId, function () {
+                    socket.connectedRoom = data.roomId;
+                    console.log(socket.username+" joined room "+ data.roomId);
+                    //callback({success:true});
+                });
+            });
+
+		} else {
+            //callback({success:false});
+		}
+    });
+
 	// creating new user if nickname doesn't exists
 	socket.on('new user', function(data, callback){
         var clients = ios.sockets.adapter.rooms[data.roomId];
@@ -82,10 +97,10 @@ ios.on('connection', function(socket){
 				socket.username = data.username;
 				socket.userAvatar = data.userAvatar;
 				//nickname[data.username] = socket;
-				socket.join(data.roomId, function () {
-                    socket.connectedRoom = data.roomId;
-                    console.log(socket.username+" joined room "+ data.roomId);
-                });
+				// socket.join(data.roomId, function () {
+                 //    socket.connectedRoom = data.roomId;
+                 //    console.log(socket.username+" joined room "+ data.roomId);
+                // });
             	callback({success:true});
 			}
 	});

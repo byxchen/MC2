@@ -53,7 +53,11 @@ angular.module('Controllers')
 	// redirection if user is not logged in.
 	if(!$rootScope.loggedIn){
 		$location.path('/v1/'+$routeParams.roomId);
+	} else {
+        $socket.emit('join-room', {roomId: $routeParams.roomId});
 	}
+
+
 
 // ================================== Online Members List ===============================
 	$socket.emit('get-online-members',function(data){
