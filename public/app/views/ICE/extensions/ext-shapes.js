@@ -327,8 +327,20 @@ methodDraw.addExtension("shapes", function() {
 
       loadLibrary('basic');
 
-        var isMobile = false;
-        if ($(window).width() <= 479) isMobile = true;
+      $("#shape_buttons>.tool_button").bind("touchstart", function () {
+          $(this).css({
+            "background-color": "#dce0e0"
+          })
+      });
+
+        $("#shape_buttons>.tool_button").bind("touchend", function () {
+            $(this).css({
+                "background-color": "#ebf0ef"
+            })
+        });
+
+      var isMobile = false;
+      if ($(window).width() <= 479) isMobile = true;
       if (isMobile) ToggleFloatingLayer('FloatingLayer',0);
 
       $(document).on("mouseup", function (e) {
