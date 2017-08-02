@@ -40,7 +40,7 @@ angular.module('Controllers')
         }
     };
 })
-.controller('chatRoomCtrl', function ($scope, $rootScope, $socket, $location, $http, Upload, $timeout, sendImageService){		// Chat Page Controller
+.controller('chatRoomCtrl', function ($scope, $rootScope, $socket, $location, $http, Upload, $timeout, sendImageService, $routeParams){		// Chat Page Controller
 	// Varialbles Initialization.
 	$scope.isMsgBoxEmpty = false;
 	$scope.isFileSelected = false;
@@ -49,10 +49,10 @@ angular.module('Controllers')
 	$scope.chatMsg = "";
 	$scope.users = [];
 	$scope.messeges = [];
-	
+
 	// redirection if user is not logged in.
 	if(!$rootScope.loggedIn){
-		$location.path('/v1/');
+		$location.path('/v1/'+$routeParams.roomId);
 	}
 
 // ================================== Online Members List ===============================
@@ -138,6 +138,7 @@ angular.module('Controllers')
 
 	// recieving new text message
 	$socket.on("new message", function(data){
+
 		if(data.username == $rootScope.username){
 			data.ownMsg = true;	
 		}else{
@@ -627,4 +628,5 @@ angular.module('Controllers')
         }
     }
 
-})
+});
+

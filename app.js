@@ -11,7 +11,7 @@ var formidable = require('formidable');		// file upload module
 var util = require('util');
 
 // Initializing Variables
-var nickname = [];
+//var nickname = [];
 var i = [];
 var x = [];
 var online_member = [];
@@ -52,30 +52,53 @@ app.use(function(req, res, next) {
   next();
 });
 
+function findOne(list, params) {
+    var result;
+    list.every(function (user) {
+        var accepted = Object.keys(params).every(function (item) {
+            return (user[item] === params[item])
+        });
+        if (accepted) {
+            result = (user);
+            return false;
+        }
+        return true;
+    });
+    return result;
+}
+
 //sockets handling
 ios.on('connection', function(socket){	
 
 	// creating new user if nickname doesn't exists
 	socket.on('new user', function(data, callback){
-		if(nickname[data.username])
+        var clients = ios.sockets.adapter.rooms[data.roomId];
+        if (!clients) clients = [];
+
+		if(findOne(Object.keys(clients), {username: data.username}))
 			{
 				callback({success:false});
-			}else{
-				callback({success:true});
+			} else {
 				socket.username = data.username;
 				socket.userAvatar = data.userAvatar;
-				nickname[data.username] = socket;
+				//nickname[data.username] = socket;
+				socket.join(data.roomId, function () {
+                    socket.connectedRoom = data.roomId;
+                    console.log(socket.username+" joined room "+ data.roomId);
+                });
+            	callback({success:true});
 			}
 	});
 
 	// sending online members list
 	socket.on('get-online-members', function(data){
 		var online_member = [];
-		i = Object.keys(nickname);
+		i = ios.sockets.adapter.rooms[socket.connectedRoom];
+		if (!i) return ios.sockets.emit('online-members', online_member);
+		i = Object.keys(i);
 		for(var j=0;j<i.length;j++ )
 		{
-			socket_id = i[j];
-			socket_data = nickname[socket_id];
+			socket_data = i[j];
 			temp1 = {"username": socket_data.username, "userAvatar":socket_data.userAvatar};
 			online_member.push(temp1);
 		}
@@ -84,19 +107,20 @@ ios.on('connection', function(socket){
 
 	// sending new message
 	socket.on('send-message', function(data, callback){
-		if (nickname[data.username]) {
+
+		if (socket.username) {
 			if(data.hasMsg){
-				ios.sockets.emit('new message', data);
+                ios.sockets.to(socket.connectedRoom).emit('new message', data);
 				callback({success:true});	
 			}else if(data.hasFile){
 				if(data.istype == "image"){
-					socket.emit('new message image', data);
+					socket.to(socket.connectedRoom).emit('new message image', data);
 					callback({success:true});
 				} else if(data.istype == "music"){
-					socket.emit('new message music', data);
+					socket.to(socket.connectedRoom).emit('new message music', data);
 					callback({success:true});
 				} else if(data.istype == "PDF"){
-					socket.emit('new message PDF', data);
+					socket.to(socket.connectedRoom).emit('new message PDF', data);
 					callback({success:true});
 				}
 			}else{
@@ -106,14 +130,19 @@ ios.on('connection', function(socket){
 	});
 	
 	// disconnect user handling 
-	socket.on('disconnect', function () {	
-		delete nickname[socket.username];
+	socket.on('disconnect', function () {
+		//delete nickname[socket.username];
+
+        delete socket.username;
 		online_member = [];
-		x = Object.keys(nickname);
+
+		x = ios.sockets.adapter.rooms[socket.connectedRoom];
+        if (!x) return ios.sockets.emit('online-members', online_member);
+        x = Object.keys(x);
+
 		for(var k=0;k<x.length;k++ )
     	{
-        	socket_id = x[k];
-        	socket_data = nickname[socket_id];
+        	socket_data = x[k];
         	temp1 = {"username": socket_data.username, "userAvatar":socket_data.userAvatar};
             online_member.push(temp1);
     	}
@@ -308,7 +337,7 @@ function bytesToSize(bytes) {
     var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
     if (i == 0) return bytes + ' ' + sizes[i]; 
     return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
-};
+}
 //get file name from server file path
 function baseName(str)
 {
@@ -332,4 +361,4 @@ function routine_cleanup()
                    files_array.splice(i,1);
             }
     }
-};
+}
