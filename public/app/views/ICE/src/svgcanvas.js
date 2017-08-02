@@ -309,7 +309,7 @@ var addSvgElementFromJson = this.addSvgElementFromJson = function(data) {
   if(data.curStyles) {
     svgedit.utilities.assignAttributes(shape, {
       "fill": cur_shape.fill,
-      "stroke": cur_shape.stroke,
+      "stroke": "#0044cc",
       "stroke-width": cur_shape.stroke_width,
       "stroke-dasharray": cur_shape.stroke_dasharray,
       "stroke-opacity": cur_shape.stroke_opacity,
@@ -2675,6 +2675,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
           "element": "polyline",
           "curStyles": true,
           "attr": {
+            "stroke": "#6699ff",
             "points": d_attr,
             "id": getNextId(),
             "fill": "none",
