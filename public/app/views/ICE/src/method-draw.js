@@ -587,10 +587,10 @@ var SOTG = 0;
       // called when any element has changed
       var elementChanged = function(window,elems) {
         var iconThing = document.getElementById("tool_deletebutton");
-        if (selectedElement == null) {
+        if (selectedElement == null && !multiselected && !path.getNodePoint() && undoMgr.getUndoStackSize() > 0) {
           iconThing.style.backgroundImage = "url('images/t_undo.png')";
         }
-        else {
+        else if (selectedElement != null || multiselected) {
           iconThing.style.backgroundImage = "url('images/t_delete.png')";
         }
         var mode = svgCanvas.getMode();
