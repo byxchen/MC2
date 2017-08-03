@@ -17,6 +17,7 @@
 // 3) svgcanvas.js
 
 var SOTG = 0;
+var SOTP = 0;
 
 (function() {
   document.addEventListener("touchstart", touchHandler, true);
@@ -522,6 +523,11 @@ var SOTG = 0;
 
       // called when we've selected a different element
       var selectedChanged = function(window,elems) {
+        var iconThing = document.getElementById("tool_deletebutton");
+        if (selectedElement == null && !multiselected && !path.getNodePoint() && undoMgr.getUndoStackSize() > 0) {
+          iconThing.style.backgroundImage = "url('images/t_undo.png')";
+          SOTP = 0;
+        }
         var mode = svgCanvas.getMode();
         if(mode === "select") setSelectMode();
         if (mode === "pathedit") return updateContextPanel();
@@ -589,9 +595,11 @@ var SOTG = 0;
         var iconThing = document.getElementById("tool_deletebutton");
         if (selectedElement == null && !multiselected && !path.getNodePoint() && undoMgr.getUndoStackSize() > 0) {
           iconThing.style.backgroundImage = "url('images/t_undo.png')";
+          SOTP = 0;
         }
         else if (selectedElement != null || multiselected) {
           iconThing.style.backgroundImage = "url('images/t_delete.png')";
+          SOTP = 1;
         }
         var mode = svgCanvas.getMode();
         if(mode === "select") {

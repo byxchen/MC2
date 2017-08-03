@@ -1,3 +1,6 @@
+var textarea = document.getElementById("textArea");
+var chatLog = "Chatroom Created -- " + Date();
+
 angular.module('Controllers')
 .directive('schrollBottom', function () {		// custom directive for scrolling bottom on new message load
   return {
@@ -110,7 +113,7 @@ angular.module('Controllers')
 
 // ====================================== Messege Sending Code ============================
 	// sending text message function
-	var textarea = document.getElementById("textArea");
+
 	$scope.sendMsg = function(){
 		if ($scope.chatMsg || textarea.value) {
 			var message = "";
@@ -131,6 +134,9 @@ angular.module('Controllers')
 					$scope.setFocus = true;				
 				}
 			});
+			// Updates chatlog with relevant message history
+			chatLog += "\r";
+			chatLog += "[" + dateString + "] " + $rootScope.username + ": " + message;
 		}else{
 			$scope.isMsgBoxEmpty = true;
 		}
