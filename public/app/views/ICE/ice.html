@@ -848,7 +848,7 @@ function ToggleFloatingLayer(DivID, iState) // 1 visible, 0 hidden
         document.all[DivID].style.display = iState ? "block" : "none";
     }
 }
-ToggleFloatingLayer('FloatingLayer',0);
+//ToggleFloatingLayer('FloatingLayer',0);
 document.onmousedown=MoveInit;
 document.onmouseup=Function("MoveEnabled=false");
 
@@ -857,7 +857,7 @@ document.onmouseup=Function("MoveEnabled=false");
 
 
 <!-- Start Floating Layer -->
-<div id="FloatingLayer" style="position:absolute; left:50px;top:30px;visibility:visible;display: none">
+<div id="FloatingLayer" style="position:absolute; left:50px;top:30px;visibility:visible;">
     <div id="titleBar" style="cursor:move; width:100%; position:relative; background-color:transparent;">
         <div id="title" style="margin-right:30px; padding-left:3px;">
         </div>
