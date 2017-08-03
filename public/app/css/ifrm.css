@@ -66,7 +66,17 @@
 	#tool_swap{
 		display:inherit;
 	}
+
+	#downloadLogsButton{
+		display:none;
+	}
 }
 
-
-
+.nicknames{
+	position:absolute; 
+	z-index:99; 
+	color: white; 
+	font-size: 16px; 
+	top:15%; 
+	left:28%
+}
