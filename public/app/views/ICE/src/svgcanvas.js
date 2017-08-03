@@ -3028,7 +3028,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
         //   if(sx == 1) sx = sy;
         //   else sy = sx;
         // }
-        scale.setScale(sx,sx);
+        scale.setScale(Math.abs(sx),Math.abs(sx));
 
         translateBack.setTranslate(left+tx,top+ty);
         if(hasMatrix) {

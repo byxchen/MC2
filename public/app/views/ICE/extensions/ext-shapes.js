@@ -275,7 +275,7 @@ methodDraw.addExtension("shapes", function() {
       //icon.find('path').attr('d', path_d); //**MDP
       icon.find('text').text(char_d[0]); //**MDP
       icon.find('text').attr('font-size', char_d[2]); //**MDP
-        if (cat !== "basic" && cat !== "numerical") icon.find('text').attr('font-size', 350);
+        if (cat !== "basic" && cat !== "numerical") icon.find('text').attr('font-size', 300);
       icon.find('text').attr('x', char_d[3]); //**MDP
       icon.find('text').attr('y', char_d[4]); //**MDP
 

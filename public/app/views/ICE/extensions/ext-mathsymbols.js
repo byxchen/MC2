@@ -523,7 +523,7 @@ methodDraw.addExtension("mathsymbols", function() {
         sy=1.0;  // No y on horizontal lines
       } //**MDP)
 
-      scale.setScale(sx,sx);
+      scale.setScale(Math.abs(sx),Math.abs(sx));
       translateBack.setTranslate(left+tx, top+ty);
       var N = tlist.numberOfItems;
       tlist.appendItem(translateBack);
