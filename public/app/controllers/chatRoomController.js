@@ -1,5 +1,6 @@
 var textarea = document.getElementById("textArea");
 var chatLog = "Chatroom Created -- " + Date();
+var turn = 0;
 
 angular.module('Controllers')
 .directive('schrollBottom', function () {		// custom directive for scrolling bottom on new message load
@@ -134,9 +135,6 @@ angular.module('Controllers')
 					$scope.setFocus = true;				
 				}
 			});
-			// Updates chatlog with relevant message history
-			chatLog += "\r";
-			chatLog += "[" + dateString + "] " + $rootScope.username + ": " + message;
 		}else{
 			$scope.isMsgBoxEmpty = true;
 		}
@@ -150,6 +148,15 @@ angular.module('Controllers')
 			data.ownMsg = false;
 		}
 		$scope.messeges.push(data);
+		// Updates chatlog with relevant message history
+		if(turn == 1){
+			chatLog += "\r";
+			chatLog += "[" + data.msgTime + "] " + data.username + ": " + data.msg;
+			turn = 0;
+		}
+		else{
+			turn = 1;
+		}
 	});
 
 // ====================================== Image Sending Code ==============================
