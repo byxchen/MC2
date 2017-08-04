@@ -841,14 +841,14 @@ function ToggleFloatingLayer(DivID, iState) // 1 visible, 0 hidden
     else if(document.getElementById)	  //gecko(NN6) + IE 5+
     {
         var obj = document.getElementById(DivID);
-          if (obj != null) obj.style.visibility = iState ? "visible" : "hidden";
+          if (obj != null) obj.style.display = iState ? "block" : "none";
     }
     else if(document.all)	// IE 4
     {
-        document.all[DivID].style.visibility = iState ? "visible" : "hidden";
+        document.all[DivID].style.display = iState ? "block" : "none";
     }
 }
-ToggleFloatingLayer('FloatingLayer',0);
+//ToggleFloatingLayer('FloatingLayer',0);
 document.onmousedown=MoveInit;
 document.onmouseup=Function("MoveEnabled=false");
 

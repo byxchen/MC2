@@ -1,4 +1,4 @@
-angular.module('Controllers',[])
+angular.module('Controllers',["ngRoute"])
 .directive('focusMe', function($timeout) {	// Custom directive for focus
     return {
         link: function(scope, element, attrs) {
@@ -13,7 +13,7 @@ angular.module('Controllers',[])
         }
     };
 })
-.controller('loginCtrl', function ($scope, $location, $rootScope, $socket){		// Login Controller
+.controller('loginCtrl', function ($scope, $location, $rootScope, $socket, $routeParams){		// Login Controller
 	// Varialbles Initialization.
 	$scope.userAvatar = "Avatar1.jpg";
 	$scope.isErrorReq = false;
@@ -23,20 +23,21 @@ angular.module('Controllers',[])
 
 	// redirection if user logged in.
 	if($rootScope.loggedIn){
-		$location.path('/v1/ChatRoom');
+		$location.path('/v1/ChatRoom/'+$routeParams.roomId);
 	}
 
 	// Functions for controlling behaviour.
 	$scope.redirect = function(){
 		if ($scope.username.length <= 20) {
 			if($scope.username){
-				$socket.emit('new user',{username : $scope.username, userAvatar : $scope.userAvatar, initials : $scope.initials},function(data){
+
+				$socket.emit('new user',{username : $scope.username, userAvatar : $scope.userAvatar, initials : $scope.initials, roomId: $routeParams.roomId},function(data){
 					if(data.success == true){	// if nickname doesn't exists	
 						$rootScope.username = $scope.username;
 						$rootScope.initials = document.getElementById("nickname").value;
 						$rootScope.userAvatar = $scope.userAvatar;
 						$rootScope.loggedIn = true;
-						$location.path('/v1/ChatRoom');
+						$location.path('/v1/ChatRoom/'+$routeParams.roomId);
 					}else{		// if nickname exists
 						$scope.errMsg = "Use different nickname.";
 						$scope.isErrorNick = true;

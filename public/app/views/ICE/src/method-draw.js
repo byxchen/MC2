@@ -817,7 +817,11 @@ var SOTP = 0;
           shower.mousedown(function(evt) {
             //$('#workarea').one("mousedown", function(){$('#tools_shapelib').hide()})
             $('#workarea').one("mousedown", function(){$('#tools_mathlib').hide()})
-            if ($('#tools_shapelib').is(":visible")) toolButtonClick(show_sel, false);
+            if ($('#tools_shapelib').is(":visible")) {
+
+              toolButtonClick(show_sel, false);
+            }
+
             if ($('#tools_mathlib').is(":visible")) toolButtonClick(show_sel, false);
             if(shower.hasClass('disabled')) return false;
             var holder = $(hold_sel);

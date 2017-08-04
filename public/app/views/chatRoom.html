@@ -37,7 +37,9 @@
                     </div><!-- /.direct-chat-info -->
                     <div class="direct-chat-img" style="position:relative">
                       <img class="direct-chat-img" ng-src="app/css/dist/img/{{messege.userAvatar}}" alt="message user image"></img><!-- /.direct-chat-img -->
+
                       <span class="nicknames"> {{messege.initials}} </span>
+
                     </div>
                     <div ng-class="{'direct-chat-text' : true, 'text-right' : messege.ownMsg}">
                       <div ng-hide="hasFile">{{ messege.msg }}</div>
