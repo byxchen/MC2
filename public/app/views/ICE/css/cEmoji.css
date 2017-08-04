@@ -178,6 +178,9 @@ li input.active{
         margin-left:0;
         padding: 10px;
         background-color: #ebf0ef !important;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
     }
 
     #shape_buttons .tool_button>svg {
@@ -220,9 +223,7 @@ li input.active{
         background-color: #ebf0ef;
     }
 
-    #shape_buttons .tool_button:hover, .tool_button:active {
-        background-color: #fff;
-    }
+
 
     #FloatingLayer {
         border: 0 !important;
@@ -239,10 +240,10 @@ li input.active{
     }
 
     #floatingContent {
-        background-color: #ebf0ef !important;
+        background-color: transparent;
         opacity: 1 !important;
         height: 25px !important;
-
+        padding: 3px 0 !important;
     }
 
     #floatingContent h1 {
@@ -253,11 +254,13 @@ li input.active{
     }
 
     #floatingContent h1>div, font {
-        width: 25px;
+        width: 40px;
         text-align: center !important;
-        background-color: #ebf0ef !important;
+        background-color: transparent;
         position: relative;
         z-index: 11;
+        border-right: 1px #e0e0e0 solid;
+
     }
 
 

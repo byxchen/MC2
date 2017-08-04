@@ -9857,6 +9857,24 @@ var moveCursorAbs = this.moveCursorAbs;
         ToggleFloatingLayer('floatingContent',0);
       }, 4000);
 
+        $("#floatingContent").bind("touchstart", function (evt) {
+            clearTimeout(shortcutTimer);
+            shortcutTimer = setTimeout(function(){
+                ToggleFloatingLayer('floatingContent',0);
+            }, 4000);
+            $(evt.target).closest('div.suggest').css({
+                "background-color": "#ffa500",
+                "color": "#fff"
+            })
+        });
+
+        $("#floatingContent").bind("touchend", function (evt) {
+            $(evt.target).closest('div.suggest').css({
+                "background-color": "transparent",
+                "color": "#333"
+            })
+        });
+
      var shortcutText = "";
      for (var i = 0; i < shortcuts.length; i++) {
        if (i == shortcutIndex) {

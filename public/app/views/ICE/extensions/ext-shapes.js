@@ -92,20 +92,20 @@ methodDraw.addExtension("shapes", function() {
         "i51": "\u220B,R,300,10,300",
         "i52": "\u220C,R,300,10,300", //**MDP char, Resizeable, height, x, y
         "i53": "\u220D,R,300,10,300",
-        "i55": "\u220F,R,200,10,200",
-        "i56": "\u2210,R,200,10,200",
-        "i57": "\u2211,R,200,10,200",
+        "i55": "\u220F,R,200,-30,300",
+        "i56": "\u2210,R,200,-30,300",
+        "i57": "\u2211,R,200,-30,300",
         "i58": "\u2212,R,300,10,300", //**MDP char, Resizeable, height, x, y
         "i59": "\u2213,R,300,10,300",
         "i60": "\u2214,R,300,10,300",
         "i61": "\u2229,R,300,10,300",
         "i62": "\u222A,R,300,10,300",
-        "i63": "\u222B,R,200,10,200",
+        "i63": "\u222B,R,200,60,330",
         "i64": "\u2218,R,300,10,300", //**MDP char, Resizeable, height, x, y
         "i65": "\u2219,R,300,10,300",
-        "i66": "\u221A,R,300,10,300",
-        "i67": "\u221B,R,300,10,300",
-        "i68": "\u221C,R,300,10,300",
+        "i66": "\u221A,R,300,-10,350",
+        "i67": "\u221B,R,300,-10,350",
+        "i68": "\u221C,R,300,-10,350",
         "i69": "\u221D,R,300,10,300",
         "i70": "\u221E,R,300,10,300",
         "i71": "\u221F,R,300,10,300",
@@ -275,7 +275,7 @@ methodDraw.addExtension("shapes", function() {
       //icon.find('path').attr('d', path_d); //**MDP
       icon.find('text').text(char_d[0]); //**MDP
       icon.find('text').attr('font-size', char_d[2]); //**MDP
-        if (cat !== "basic" && cat !== "numerical") icon.find('text').attr('font-size', 300);
+        if (cat !== "basic" && cat !== "numerical") icon.find('text').attr('font-size', 350);
       icon.find('text').attr('x', char_d[3]); //**MDP
       icon.find('text').attr('y', char_d[4]); //**MDP
 
@@ -327,17 +327,21 @@ methodDraw.addExtension("shapes", function() {
 
       loadLibrary('basic');
 
-      $("#shape_buttons>.tool_button").bind("touchstart", function () {
-          $(this).css({
-            "background-color": "#dce0e0"
-          })
-      });
 
-        $("#shape_buttons>.tool_button").bind("touchend", function () {
-            $(this).css({
-                "background-color": "#ebf0ef"
-            })
-        });
+          $("#shape_buttons").bind("touchstart", function (evt) {
+              $(evt.target).closest('div.tool_button').css({
+                  "background-color": "#dce0e0"
+              })
+          });
+
+          $("#shape_buttons").bind("touchend", function (evt) {
+              $(evt.target).closest('div.tool_button').css({
+                  "background-color": "#ebf0ef"
+              })
+          });
+
+
+
 
       var isMobile = false;
       if ($(window).width() <= 479) isMobile = true;
@@ -414,6 +418,7 @@ methodDraw.addExtension("shapes", function() {
       //alert(cur_lib.id);
       //alert(btn[0].mathdata);
       canv.keyPressed(btn[0].mathdata.charAt(0));
+          ToggleFloatingLayer('FloatingLayer',1);
     //  methodDraw.clickSelect();
     //  canv.setMode('select');
       //document.getElementById("tool_select").click();
