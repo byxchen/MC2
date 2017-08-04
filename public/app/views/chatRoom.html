@@ -19,10 +19,12 @@
                 <div class="box-tools pull-right">
                   <!-- Any File Select Button -->
                   <button class="btn btn-box-tool mobile" data-widget="" onclick="swapFrame();">f(x)</button>
+                  <button class="btn btn-box-tool mobile" data-widget="" onclick="downloadLogs();">⇲</button>
                   <button class="btn btn-box-tool mobile" data-widget="" ngf-select ng-model="Files"><i class="glyphicon glyphicon-paperclip"></i></button>
-                  <!-- onlime member list mobile -->
+                  <!-- online member list mobile -->
                   <button class="btn btn-box-tool mobile toggle-contact-icon" data-toggle="tooltip" data-widget="chat-pane-toggle" title="Contacts" ng-click="toggleCustom()"><i class="fa fa-comments"></i></button>
                 </div>
+                  <button id="downloadLogsButton" class="btn-warning btn-flat pull-right" onclick="downloadLogs();">⇲</button>
               </div><!-- /.box-header -->
               <div class="box-body">
                 <!-- Conversations are loaded here -->
@@ -35,7 +37,9 @@
                     </div><!-- /.direct-chat-info -->
                     <div class="direct-chat-img" style="position:relative">
                       <img class="direct-chat-img" ng-src="app/css/dist/img/{{messege.userAvatar}}" alt="message user image"></img><!-- /.direct-chat-img -->
-                      <span style="position:absolute; z-index:99; color: white; font-size: 16px; padding-left: 12px; padding-top:8px;left:0;"> {{messege.initials}} </span>
+
+                      <span class="nicknames"> {{messege.initials}} </span>
+
                     </div>
                     <div ng-class="{'direct-chat-text' : true, 'text-right' : messege.ownMsg}">
                       <div ng-hide="hasFile">{{ messege.msg }}</div>

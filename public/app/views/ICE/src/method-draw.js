@@ -17,6 +17,7 @@
 // 3) svgcanvas.js
 
 var SOTG = 0;
+var SOTP = 0;
 
 (function() {
   document.addEventListener("touchstart", touchHandler, true);
@@ -41,7 +42,7 @@ var SOTG = 0;
       initTool: 'select',
       wireframe: false,
       colorPickerCSS: false,
-      gridSnapping: true,   //**MDP
+      gridSnapping: false,   //**MDP
       gridColor: "#000",
       baseUnit: 'px',
       snappingStep: 10,
@@ -130,7 +131,8 @@ var SOTG = 0;
         customHandlers = opts;
       });
       Editor.placeMathCursor();
-      console.log("cursor on");
+      undoMgr.undo();
+      undoMgr.undo();
     }
 
     Editor.randomizeIds = function() {
@@ -521,6 +523,11 @@ var SOTG = 0;
 
       // called when we've selected a different element
       var selectedChanged = function(window,elems) {
+        var iconThing = document.getElementById("tool_deletebutton");
+        if (selectedElement == null && !multiselected && !path.getNodePoint() && undoMgr.getUndoStackSize() > 0) {
+          iconThing.style.backgroundImage = "url('images/t_undo.png')";
+          SOTP = 0;
+        }
         var mode = svgCanvas.getMode();
         if(mode === "select") setSelectMode();
         if (mode === "pathedit") return updateContextPanel();
@@ -585,6 +592,15 @@ var SOTG = 0;
 
       // called when any element has changed
       var elementChanged = function(window,elems) {
+        var iconThing = document.getElementById("tool_deletebutton");
+        if (selectedElement == null && !multiselected && !path.getNodePoint() && undoMgr.getUndoStackSize() > 0) {
+          iconThing.style.backgroundImage = "url('images/t_undo.png')";
+          SOTP = 0;
+        }
+        else if (selectedElement != null || multiselected) {
+          iconThing.style.backgroundImage = "url('images/t_delete.png')";
+          SOTP = 1;
+        }
         var mode = svgCanvas.getMode();
         if(mode === "select") {
           setSelectMode();
@@ -2196,6 +2212,8 @@ var SOTG = 0;
       // Delete is a contextual tool that only appears in the ribbon if
       // an element has been selected
       var deleteSelected = function() {
+        var iconThing = document.getElementById("tool_deletebutton");
+        iconThing.style.backgroundImage = "url('images/t_undo.png')";
         //   **MDP(  -- TOOO: UNDO -- Fix the cursor/Undo thing
         if (selectedElement == null && !multiselected && !path.getNodePoint() && undoMgr.getUndoStackSize() > 0) {
           undoMgr.undo();
