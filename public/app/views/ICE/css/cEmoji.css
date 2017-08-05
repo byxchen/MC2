@@ -166,11 +166,12 @@ li input.active{
         width: 100% !important;
         margin-left: -47px !important;
         margin-top: 0 !important;
-        top: calc(100vh - 200px) !important;
+        top: calc(100vh - 170px) !important;
         border-radius: 0 !important;
         box-shadow: none !important;
         max-width: 100% !important;
         background-color: #ebf0ef !important;
+        height: 140px;
     }
 
     #shape_buttons {
@@ -185,6 +186,7 @@ li input.active{
         display: flex;
         justify-content: center;
         flex-wrap: wrap;
+        top: 30px;
     }
 
     #shape_buttons .tool_button>svg {
@@ -203,6 +205,9 @@ li input.active{
         border-radius: 0 !important;
         display: flex;
         width: 100% !important;
+        background-color: #ebf0ef !important;
+        height: 170px;
+
     }
 
     #shape_cats>div {
@@ -212,6 +217,7 @@ li input.active{
         border-radius: 0 !important;
         line-height: 27px;
         padding: 0;
+
     }
 
     #shape_cats>div::after {
@@ -231,7 +237,7 @@ li input.active{
 
     #FloatingLayer {
         border: 0 !important;
-        top: calc(100vh - 230px) !important;
+        top: calc(100vh - 200px) !important;
         z-index: 10;
         height: 30px !important;
         width: 100% !important;
@@ -248,6 +254,7 @@ li input.active{
         opacity: 1 !important;
         height: 25px !important;
         padding: 3px 0 !important;
+
     }
 
     #floatingContent h1 {
@@ -255,15 +262,14 @@ li input.active{
         font-size: 15px;
         margin: 0;
         line-height: 24px;
+        display: flex;
     }
 
     #floatingContent h1>div {
         padding: 0 3px;
         margin: 0;
-    }
+        flex-grow: 1;
 
-    #floatingContent h1>div, font {
-        width: 40px;
         text-align: center !important;
         background-color: transparent;
         position: relative;

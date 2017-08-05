@@ -373,7 +373,7 @@ methodDraw.addExtension("shapes", function() {
                   return;
               }
               area.css({
-                height: "calc(100vh - 270px)"
+                height: "calc(100vh - 240px)"
               });
               $("#tools_shapelib").css({
                   'opacity': "1"
@@ -432,7 +432,7 @@ methodDraw.addExtension("shapes", function() {
       });
 
 //
-      var tab = $('<input id="tabulator" onclick="toggleCats();">-</input><br><br>');
+      //var tab = $('<input id="tabulator" onclick="toggleCats();">-</input><br><br>');
       var shape_cats = $('<div id="shape_cats">');
       var cat_str = '';
       $.each(categories, function(id, label) {
@@ -453,7 +453,7 @@ methodDraw.addExtension("shapes", function() {
       shape_cats.children().eq(0).addClass('current');
 
       $('#tools_shapelib').prepend(shape_cats);
-      $('#tools_shapelib').prepend(tab);
+      //$('#tools_shapelib').prepend(tab);
       shower.mouseup(function() {
     //    canv.setMode(current_d ? mode_id : 'select');
     //    canv.setMode('select'); //**MDP
