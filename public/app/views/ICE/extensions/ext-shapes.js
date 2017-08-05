@@ -92,15 +92,15 @@ methodDraw.addExtension("shapes", function() {
         "i51": "\u220B,R,300,10,300",
         "i52": "\u220C,R,300,10,300", //**MDP char, Resizeable, height, x, y
         "i53": "\u220D,R,300,10,300",
-        "i55": "\u220F,R,200,-30,300",
+        "i55": "\u220F,R,200,20,300",
         "i56": "\u2210,R,200,-30,300",
-        "i57": "\u2211,R,200,-30,300",
+        "i57": "\u2211,R,200,20,300",
         "i58": "\u2212,R,300,10,300", //**MDP char, Resizeable, height, x, y
         "i59": "\u2213,R,300,10,300",
         "i60": "\u2214,R,300,10,300",
         "i61": "\u2229,R,300,10,300",
         "i62": "\u222A,R,300,10,300",
-        "i63": "\u222B,R,200,60,330",
+        "i63": "\u222B,R,200,25,300",
         "i64": "\u2218,R,300,10,300", //**MDP char, Resizeable, height, x, y
         "i65": "\u2219,R,300,10,300",
         "i66": "\u221A,R,300,-10,350",
@@ -112,9 +112,9 @@ methodDraw.addExtension("shapes", function() {
         "i72": "\u2220,R,300,10,300", //**MDP char, Resizeable, height, x, y
         "i73": "\u2221,R,300,10,300",
         "i74": "\u2222,R,300,10,300",
-        "i75": "\u2223,R,300,10,300",
-        "i76": "\u2224,R,300,10,300",
-        "i77": "\u2225,R,300,10,300"
+        "i75": "\u2223,R,300,70,300",
+        "i76": "\u2224,R,300,50,300",
+        "i77": "\u2225,R,300,50,300"
 
       },
       buttons: []
@@ -192,9 +192,9 @@ methodDraw.addExtension("shapes", function() {
         "8": "8,N,250,75,225",
         "9": "9,N,250,75,225",
         "0": "0,N,250,75,225",
-        "+": "+,N,250,75,225",
+        "+": "+,N,250,95,205",
         "-": "-,N,250,75,225",
-        ".": ".,N,250,75,225",
+        ".": ".,N,250,90,225",
         "(": "(,N,250,75,225",
         ")": "),N,250,75,225",
         "[": "[,N,250,75,225",
@@ -330,7 +330,7 @@ methodDraw.addExtension("shapes", function() {
 
           $("#shape_buttons").bind("touchstart", function (evt) {
               $(evt.target).closest('div.tool_button').css({
-                  "background-color": "#dce0e0"
+                  "background-color": "#cccfcf"
               })
           });
 
@@ -366,7 +366,7 @@ methodDraw.addExtension("shapes", function() {
 
               if (isOpen) {
                   area.css({
-                      height: "100vh"
+                      height: "calc(100vh - 40px)"
                   });
                   isOpen = false;
                   ToggleFloatingLayer('FloatingLayer',0);

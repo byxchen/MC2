@@ -180,25 +180,35 @@ li input.active{
         width: calc(100% - 20px);
         z-index: 10;
         left: 0;
-        margin-left:0;
-        padding: 10px;
+        margin: 0 auto;
+        padding: 5px;
         background-color: #ebf0ef !important;
         display: flex;
         justify-content: center;
         flex-wrap: wrap;
         top: 30px;
+        overflow: auto !important;
+        align-content: flex-start;
+        height: 130px;
     }
 
     #shape_buttons .tool_button>svg {
         display: block;
         margin: auto;
-        margin-top: 2px;
+
     }
 
     #shape_buttons .tool_button {
-        margin: 0;
-        width: 30px !important;
-        height: 30px !important;
+        margin: 2px;
+        width: 26px !important;
+        height: 26px !important;
+        border: 1px #3f3f3f solid;
+        border-radius: 3px;
+        box-shadow: 0 1px 3px rgba(0,0,0,.15);
+    }
+
+    #shape_buttons .tool_button:hover {
+        background-color: inherit;
     }
 
     #shape_cats{
