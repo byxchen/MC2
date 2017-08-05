@@ -155,6 +155,10 @@ li input.active{
   padding: 2.5%;
 }
 
+#floatingContent {
+    background-color: black;
+}
+
 /* Keyboard */
 
 @media screen and (max-width: 479px) {
@@ -251,6 +255,11 @@ li input.active{
         font-size: 15px;
         margin: 0;
         line-height: 24px;
+    }
+
+    #floatingContent h1>div {
+        padding: 0 3px;
+        margin: 0;
     }
 
     #floatingContent h1>div, font {

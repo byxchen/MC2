@@ -2769,13 +2769,13 @@ table.text-center th {
 .direct-chat-primary .right > .direct-chat-text:before {
   border-left-color: #3c8dbc;
 }
-.direct-chat-warning .right > .direct-chat-text {
+.direct-chat-warning .right > div > .direct-chat-text {
   background: #f39c12;
   border-color: #f39c12;
   color: #ffffff;
 }
-.direct-chat-warning .right > .direct-chat-text:after,
-.direct-chat-warning .right > .direct-chat-text:before {
+.direct-chat-warning .right > div > .direct-chat-text:after,
+.direct-chat-warning .right > div > .direct-chat-text:before {
   border-left-color: #f39c12;
 }
 .direct-chat-info .right > .direct-chat-text {

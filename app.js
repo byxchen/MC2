@@ -75,13 +75,14 @@ ios.on('connection', function(socket){
 			socket.leave(socket.connectedRoom, function () {
                 socket.join(data.roomId, function () {
                     socket.connectedRoom = data.roomId;
-                    console.log(socket.username+" joined room "+ data.roomId);
-                    //callback({success:true});
+                    //console.log(socket.username+" joined room "+ data.roomId);
+
+                    callback({msg: "You have joined room "+ data.roomId+".", type: "system"});
                 });
             });
 
 		} else {
-            //callback({success:false});
+            callback({msg: "Error failed to joined room "+ data.roomId+".", type: "system"});
 		}
     });
 
@@ -122,7 +123,7 @@ ios.on('connection', function(socket){
 
 	// sending new message
 	socket.on('send-message', function(data, callback){
-
+		data.type = "chat";
 		if (socket.username) {
 			if(data.hasMsg){
                 ios.sockets.to(socket.connectedRoom).emit('new message', data);

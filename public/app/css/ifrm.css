@@ -30,6 +30,12 @@
 	display:none;
 }
 
+.system-message {
+	color: #A0A0A0 !important;
+	margin-bottom: 5px;
+	font-size: 14px;
+}
+
 @media only screen and (max-device-width: 600px) {
  	#editorframe{
  		display:none;
