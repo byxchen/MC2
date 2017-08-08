@@ -155,6 +155,10 @@ li input.active{
   padding: 2.5%;
 }
 
+#floatingContent {
+    background-color: black;
+}
+
 /* Keyboard */
 
 @media screen and (max-width: 479px) {
@@ -162,11 +166,12 @@ li input.active{
         width: 100% !important;
         margin-left: -47px !important;
         margin-top: 0 !important;
-        top: calc(100vh - 200px) !important;
+        top: calc(100vh - 170px) !important;
         border-radius: 0 !important;
         box-shadow: none !important;
         max-width: 100% !important;
         background-color: #ebf0ef !important;
+        height: 140px;
     }
 
     #shape_buttons {
@@ -175,27 +180,44 @@ li input.active{
         width: calc(100% - 20px);
         z-index: 10;
         left: 0;
-        margin-left:0;
-        padding: 10px;
+        margin: 0 auto;
+        padding: 5px;
         background-color: #ebf0ef !important;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        top: 30px;
+        overflow: auto !important;
+        align-content: flex-start;
+        height: 130px;
     }
 
     #shape_buttons .tool_button>svg {
         display: block;
         margin: auto;
-        margin-top: 2px;
+
     }
 
     #shape_buttons .tool_button {
-        margin: 0;
-        width: 30px !important;
-        height: 30px !important;
+        margin: 2px;
+        width: 26px !important;
+        height: 26px !important;
+        border: 1px #3f3f3f solid;
+        border-radius: 3px;
+        box-shadow: 0 1px 3px rgba(0,0,0,.15);
+    }
+
+    #shape_buttons .tool_button:hover {
+        background-color: inherit;
     }
 
     #shape_cats{
         border-radius: 0 !important;
         display: flex;
         width: 100% !important;
+        background-color: #ebf0ef !important;
+        height: 170px;
+
     }
 
     #shape_cats>div {
@@ -205,6 +227,7 @@ li input.active{
         border-radius: 0 !important;
         line-height: 27px;
         padding: 0;
+
     }
 
     #shape_cats>div::after {
@@ -220,13 +243,11 @@ li input.active{
         background-color: #ebf0ef;
     }
 
-    #shape_buttons .tool_button:hover, .tool_button:active {
-        background-color: #fff;
-    }
+
 
     #FloatingLayer {
         border: 0 !important;
-        top: calc(100vh - 230px) !important;
+        top: calc(100vh - 200px) !important;
         z-index: 10;
         height: 30px !important;
         width: 100% !important;
@@ -239,9 +260,10 @@ li input.active{
     }
 
     #floatingContent {
-        background-color: #ebf0ef !important;
+        background-color: transparent;
         opacity: 1 !important;
         height: 25px !important;
+        padding: 3px 0 !important;
 
     }
 
@@ -250,14 +272,20 @@ li input.active{
         font-size: 15px;
         margin: 0;
         line-height: 24px;
+        display: flex;
     }
 
-    #floatingContent h1>div, font {
-        width: 25px;
+    #floatingContent h1>div {
+        padding: 0 3px;
+        margin: 0;
+        flex-grow: 1;
+
         text-align: center !important;
-        background-color: #ebf0ef !important;
+        background-color: transparent;
         position: relative;
         z-index: 11;
+        border-right: 1px #e0e0e0 solid;
+
     }
 
 

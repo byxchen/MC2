@@ -58,7 +58,9 @@ angular.module('Controllers')
 	if(!$rootScope.loggedIn){
 		$location.path('/v1/'+$routeParams.roomId);
 	} else {
-        $socket.emit('join-room', {roomId: $routeParams.roomId});
+        $socket.emit('join-room', {roomId: $routeParams.roomId}, function(data) {
+        	$scope.messeges.push(data);
+		});
 	}
 
 
@@ -152,6 +154,7 @@ angular.module('Controllers')
 		}else{
 			data.ownMsg = false;
 		}
+
 		$scope.messeges.push(data);
 		// Updates chatlog with relevant message history
 		if(turn == 1){
@@ -220,7 +223,7 @@ angular.module('Controllers')
 					}
 				}						
 			}
-		};
+		}
 	}
 
 	// validate file type to image function
