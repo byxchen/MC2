@@ -2224,6 +2224,7 @@ var SOTP = 0;
           svgCanvas.deleteSelectedElements();
         }
         if (path.getNodePoint()) {
+          console.log('delpat');
           path.deletePathNode();
         }
       };

@@ -3450,7 +3450,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
           if(selected)
           {
             var newX = selected.getBBox().x + selected.getBBox().width + 1;
-            var newY = Number(selected.getAttribute('y')) - 20;
+            var newY = Number(selected.getBBox().y);
             placeMathCursor(newX, newY);
             svgCanvas.keyPressed("");
           }
@@ -3528,22 +3528,22 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
               symbol = getBBox(document.getElementById(symbol.id));
               pushYElems.push({
                 "x": symbol.x,
-                "y": symbol.y + 1});
+                "y": symbol.y});
               pushYElems.push({
                 "x": symbol.x + symbol.width,
-                "y": symbol.y + 1});
+                "y": symbol.y});
               pushYElems.push({
                 "x": symbol.x,
-                "y": symbol.y + 22});
+                "y": symbol.y + 20});
               pushYElems.push({
                 "x": symbol.x + symbol.width,
-                "y": symbol.y + 22});
+                "y": symbol.y + 20});
               pushYElems.push({
                 "x": symbol.x,
-                "y": symbol.y - 18});
+                "y": symbol.y - 20});
               pushYElems.push({
                 "x": symbol.x + symbol.width,
-                "y": symbol.y - 18});
+                "y": symbol.y - 20});
               //var newX = Number(symbol.getAttribute('x')) + spacing;
               //symbol.setAttribute('x', newX);
             }.bind(this);
@@ -8447,6 +8447,8 @@ this.deleteSelectedElements = function() {
   var batchCmd = new BatchCommand("Delete Elements");
   var len = selectedElements.length;
   if (len == 0) return;
+  if(selectedElements[0] == groupedElement)
+    groupedElement = null;
   var selectedCopy = []; //selectedElements is being deleted
   for (var i = 0; i < len; ++i) {
     var selected = selectedElements[i];
@@ -8480,6 +8482,7 @@ this.deleteSelectedElements = function() {
 runExtensions("elementRemoved", {
   elems: selectedCopy
 }); // **MDP]
+
 
   clearSelection();
 };
@@ -9397,6 +9400,7 @@ this.moveCursor = function(dx, dy) {
   var isTop = dy < 0 ? 1 : -1;
   var w = getElem('math_cursor');
   if (w != null) {
+    clearSelection();
     if (curConfig.gridSnapping) {
 // 			// Use grid snap value regardless of zoom level
       var multi = svgCanvas.getZoom() * curConfig.snappingStep;
@@ -9415,13 +9419,14 @@ this.moveCursor = function(dx, dy) {
     else if (dy < 0) {
       dy = -20;
     }
-    var x = Number(w.getAttribute('x'));
-    var y = Number(w.getAttribute('y'));
+    var wb = getBBox(w);
+    var x = Number(wb.x);
+    var y = Number(wb.y);
     if(dx != 0) {
       var pushElems = [];
       var func = function(symbol) {
         symbol = getBBox(document.getElementById(symbol.id));
-        if(Math.abs(y - (symbol.y + 2)) > 18)
+        if(Math.abs(y - symbol.y) > 18)
           return;
         if(isLeft * x > isLeft * symbol.x)
           pushElems.push({
@@ -9453,18 +9458,21 @@ this.moveCursor = function(dx, dy) {
         symbol = getBBox(document.getElementById(symbol.id));
         if(Math.abs(x - (symbol.x)) > 25)
           return;
-        if(isTop * y > isTop * (symbol.y + 2))
+        if(isTop * y > isTop * (symbol.y)) {
           pushElems.push({
             "x": symbol.x,
-            "y": symbol.y + 2});
-        if(isTop * y > isTop * (symbol.y + 22))
+            "y": symbol.y});
+        }
+        if(isTop * y > isTop * (symbol.y + 20)) {
           pushElems.push({
             "x": symbol.x,
-            "y": symbol.y + 22});
-        if(isTop * y > isTop * (symbol.y - 18))
+            "y": symbol.y + 20});
+        }
+        if(isTop * y > isTop * (symbol.y - 20)) {
           pushElems.push({
             "x": symbol.x,
-            "y": symbol.y - 18});
+            "y": symbol.y - 20});
+        }
         //var newX = Number(symbol.getAttribute('x')) + spacing;
         //symbol.setAttribute('x', newX);
       }.bind(this);
@@ -9513,7 +9521,7 @@ var moveCursorAbs = this.moveCursorAbs;
 					'x': x,
 					'y': y,
 					'width': 2,
-					'height': 20,
+					'height': 25,
 					'id': 'math_cursor',
           'last_item': 'math_cursor',
 					'fill': 'grey',
@@ -9900,8 +9908,9 @@ var moveCursorAbs = this.moveCursorAbs;
 		lastKey = key;
 
     var math_cursor = svgCanvas.getElem('math_cursor');
-    var x = Number(math_cursor.getAttribute('x'));
-    var y = Number(math_cursor.getAttribute('y')) + Number(math_cursor.getAttribute('height'));
+    var math_cursorB = getBBox(math_cursor);
+    var x = math_cursorB.x;
+    var y = math_cursorB.y + 20 + 1;
     if(selectedElements.length > 0) {
       clearSelection();
     }
