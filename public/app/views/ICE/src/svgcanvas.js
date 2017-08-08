@@ -3398,7 +3398,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
               if (selected.textContent == "\u2211") selectorManager.requestSelector(selected).showGrips(true); //**MDP
              }
             else {//**MDP
-              selectorManager.requestSelector(selected).showGrips(true);
+              selectorManager.requestSelector(selected);
             }//**MDP
             // This shouldn't be necessary as it was done on mouseDown...
 //              call("selected", [selected]);
@@ -3455,7 +3455,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
             svgCanvas.keyPressed("");
           }
           else {
-            canvas.groupSelectedElements('g', false);
+            canvas.groupSelectedElements('g', false, false);
             groupedElement = selectedElements[0];
           }
         }
@@ -8594,7 +8594,7 @@ this.pasteElements = function(type, x, y) {
 
 // Parameters:
 // type - type of element to group into, defaults to <g>
-this.groupSelectedElements = function(type, revColor) {
+this.groupSelectedElements = function(type, revColor, showGrips) {
   if(!type) type = 'g';
   if(revColor == null) {
     revColor == true;
@@ -8648,7 +8648,7 @@ this.groupSelectedElements = function(type, revColor) {
 
   // update selection
   clearSelection(true, revColor);
-  addToSelection([g], true);
+  addToSelection([g], false);
 };
 
 
