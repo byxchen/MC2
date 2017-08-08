@@ -3062,18 +3062,18 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
         }
 
         translateOrigin.setTranslate(-(left+tx),-(top+ty));
-        if(evt.shiftKey) {
-          if(sx == 1) sx = sy
-          else sy = sx;
-        }
-        scale.setScale(sx,sy);
+        // if(evt.shiftKey) {
+        //   if(sx == 1) sx = sy;
+        //   else sy = sx;
+        // }
+        scale.setScale(Math.abs(sx),Math.abs(sx));
 
         translateBack.setTranslate(left+tx,top+ty);
         if(hasMatrix) {
           var diff = angle?1:0;
           tlist.replaceItem(translateOrigin, 2+diff);
           tlist.replaceItem(scale, 1+diff);
-          tlist.replaceItem(translateBack, 0+diff);
+          tlist.replaceItem(translateBack, diff);
         } else {
           var N = tlist.numberOfItems;
           tlist.replaceItem(translateBack, N-3);
@@ -9852,10 +9852,28 @@ var moveCursorAbs = this.moveCursorAbs;
 
     if(key in keyHash) {
       clearTimeout(shortcutTimer);
-      ToggleFloatingLayer('FloatingLayer',1);
+      ToggleFloatingLayer('floatingContent',1);
       shortcutTimer = setTimeout(function(){
-        ToggleFloatingLayer('FloatingLayer',0);
+        ToggleFloatingLayer('floatingContent',0);
       }, 4000);
+
+        $("#floatingContent").bind("touchstart", function (evt) {
+            clearTimeout(shortcutTimer);
+            shortcutTimer = setTimeout(function(){
+                ToggleFloatingLayer('floatingContent',0);
+            }, 4000);
+            $(evt.target).closest('div.suggest').css({
+                "background-color": "#ffa500",
+                "color": "#fff"
+            })
+        });
+
+        $("#floatingContent").bind("touchend", function (evt) {
+            $(evt.target).closest('div.suggest').css({
+                "background-color": "transparent",
+                "color": "#333"
+            })
+        });
 
      var shortcutText = "";
      for (var i = 0; i < shortcuts.length; i++) {

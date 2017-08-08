@@ -92,29 +92,29 @@ methodDraw.addExtension("shapes", function() {
         "i51": "\u220B,R,300,10,300",
         "i52": "\u220C,R,300,10,300", //**MDP char, Resizeable, height, x, y
         "i53": "\u220D,R,300,10,300",
-        "i55": "\u220F,R,200,10,200",
-        "i56": "\u2210,R,200,10,200",
-        "i57": "\u2211,R,200,10,200",
+        "i55": "\u220F,R,200,20,300",
+        "i56": "\u2210,R,200,-30,300",
+        "i57": "\u2211,R,200,20,300",
         "i58": "\u2212,R,300,10,300", //**MDP char, Resizeable, height, x, y
         "i59": "\u2213,R,300,10,300",
         "i60": "\u2214,R,300,10,300",
         "i61": "\u2229,R,300,10,300",
         "i62": "\u222A,R,300,10,300",
-        "i63": "\u222B,R,200,10,200",
+        "i63": "\u222B,R,200,25,300",
         "i64": "\u2218,R,300,10,300", //**MDP char, Resizeable, height, x, y
         "i65": "\u2219,R,300,10,300",
-        "i66": "\u221A,R,300,10,300",
-        "i67": "\u221B,R,300,10,300",
-        "i68": "\u221C,R,300,10,300",
+        "i66": "\u221A,R,300,-10,350",
+        "i67": "\u221B,R,300,-10,350",
+        "i68": "\u221C,R,300,-10,350",
         "i69": "\u221D,R,300,10,300",
         "i70": "\u221E,R,300,10,300",
         "i71": "\u221F,R,300,10,300",
         "i72": "\u2220,R,300,10,300", //**MDP char, Resizeable, height, x, y
         "i73": "\u2221,R,300,10,300",
         "i74": "\u2222,R,300,10,300",
-        "i75": "\u2223,R,300,10,300",
-        "i76": "\u2224,R,300,10,300",
-        "i77": "\u2225,R,300,10,300"
+        "i75": "\u2223,R,300,70,300",
+        "i76": "\u2224,R,300,50,300",
+        "i77": "\u2225,R,300,50,300"
 
       },
       buttons: []
@@ -192,9 +192,9 @@ methodDraw.addExtension("shapes", function() {
         "8": "8,N,250,75,225",
         "9": "9,N,250,75,225",
         "0": "0,N,250,75,225",
-        "+": "+,N,250,75,225",
+        "+": "+,N,250,95,205",
         "-": "-,N,250,75,225",
-        ".": ".,N,250,75,225",
+        ".": ".,N,250,90,225",
         "(": "(,N,250,75,225",
         ")": "),N,250,75,225",
         "[": "[,N,250,75,225",
@@ -249,7 +249,9 @@ methodDraw.addExtension("shapes", function() {
     //  var shape_icon = new DOMParser().parseFromString(
     //    '<svg xmlns="http://www.w3.org/2000/svg"><svg viewBox="' + vb + '"><path fill="#333" stroke="transparent" stroke-width="' + stroke + '" /><\/svg><\/svg>',
     //    'text/xml');
-
+    if (cat !== "basic" && cat !== "numerical") {
+      vb = "-15 -15 240 430";
+    }
      var shape_icon = new DOMParser().parseFromString(
        '<svg xmlns="http://www.w3.org/2000/svg"><svg viewBox="' + vb + '"><text id="mb" font-family="monospace" font-size="300" y="300" x="20" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">O</text><\/svg><\/svg>',
        'text/xml');
@@ -273,6 +275,7 @@ methodDraw.addExtension("shapes", function() {
       //icon.find('path').attr('d', path_d); //**MDP
       icon.find('text').text(char_d[0]); //**MDP
       icon.find('text').attr('font-size', char_d[2]); //**MDP
+        if (cat !== "basic" && cat !== "numerical") icon.find('text').attr('font-size', 350);
       icon.find('text').attr('x', char_d[3]); //**MDP
       icon.find('text').attr('y', char_d[4]); //**MDP
 
@@ -324,38 +327,64 @@ methodDraw.addExtension("shapes", function() {
 
       loadLibrary('basic');
 
-      shower.on("mouseup", function () {
-          var isMobile = false;
-          if ($(window).width() <= 400) isMobile = true;
-          var area = $("#workarea");
 
+          $("#shape_buttons").bind("touchstart", function (evt) {
+              $(evt.target).closest('div.tool_button').css({
+                  "background-color": "#cccfcf"
+              })
+          });
+
+          $("#shape_buttons").bind("touchend", function (evt) {
+              $(evt.target).closest('div.tool_button').css({
+                  "background-color": "#ebf0ef"
+              })
+          });
+
+
+
+
+      var isMobile = false;
+      if ($(window).width() <= 479) isMobile = true;
+      if (isMobile) ToggleFloatingLayer('FloatingLayer',0);
+
+      $(document).on("mouseup", function (e) {
+
+          if (e.target.id.indexOf("_show") !== -1 && e.target.id !== "tools_shapelib_show"){
+              var area = $("#workarea");
+              area.css({
+                  height: "100vh"
+              });
+              isOpen = false;
+              ToggleFloatingLayer('FloatingLayer',0);
+          }
+      });
+      shower.on("mouseup", function () {
+
+          var area = $("#workarea");
+          if ($(window).width() <= 479) isMobile = true;
           if (isMobile) {
-            console.log($("#tools_shapelib").offsetParent());
+
               if (isOpen) {
                   area.css({
-                      height: "100vh"
+                      height: "calc(100vh - 40px)"
                   });
                   isOpen = false;
+                  ToggleFloatingLayer('FloatingLayer',0);
                   return;
               }
               area.css({
-                height: "calc(100vh - 270px)"
+                height: "calc(100vh - 240px)"
               });
               $("#tools_shapelib").css({
-                  'margin-left': 0,
-                  'margin-top': 0,
-                  'top': "calc(100vh - 225px)",
-                  'opacity': "1",
-                  'width': area.width() - 10
+                  'opacity': "1"
               });
+              ToggleFloatingLayer('FloatingLayer',1);
               isOpen = true;
           }
       });
 
       $("#svgcanvas").click(function (e) {
-          var isMobile = false;
-
-          if ($(window).width() <= 400) isMobile = true;
+          if ($(window).width() <= 479) isMobile = true;
         if (isMobile) return;
           var math_cursor = svgCanvas.getElem('math_cursor');
           var x = Number(math_cursor.getAttribute('x'));
@@ -389,6 +418,7 @@ methodDraw.addExtension("shapes", function() {
       //alert(cur_lib.id);
       //alert(btn[0].mathdata);
       canv.keyPressed(btn[0].mathdata.charAt(0));
+          ToggleFloatingLayer('FloatingLayer',1);
     //  methodDraw.clickSelect();
     //  canv.setMode('select');
       //document.getElementById("tool_select").click();
@@ -402,7 +432,7 @@ methodDraw.addExtension("shapes", function() {
       });
 
 //
-      var tab = $('<input id="tabulator" onclick="toggleCats();">-</input><br><br>');
+      //var tab = $('<input id="tabulator" onclick="toggleCats();">-</input><br><br>');
       var shape_cats = $('<div id="shape_cats">');
       var cat_str = '';
       $.each(categories, function(id, label) {
@@ -423,7 +453,7 @@ methodDraw.addExtension("shapes", function() {
       shape_cats.children().eq(0).addClass('current');
 
       $('#tools_shapelib').prepend(shape_cats);
-      $('#tools_shapelib').prepend(tab);
+      //$('#tools_shapelib').prepend(tab);
       shower.mouseup(function() {
     //    canv.setMode(current_d ? mode_id : 'select');
     //    canv.setMode('select'); //**MDP

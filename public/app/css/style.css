@@ -1,5 +1,5 @@
 *{margin:0;padding:0;}
-html,body{height:100%;}
+
 /* ============================= login Page =============================*/
 .avatar{
 	height : 65px; 
@@ -196,6 +196,12 @@ html,body{height:100%;}
 }
 /*============================ Sreen size 480px ============================*/
 @media screen and (max-width: 479px) {
+	.login-box-body {
+		width: 95%;
+		min-width: 258px;
+		max-width: 280px;
+		padding: 20px 15px;
+	}
 .input-group{
 	width: 100%;
 	float: none;
@@ -211,3 +217,5 @@ html,body{height:100%;}
 #editorframe {
 	height: 100vh;
 }
+
+

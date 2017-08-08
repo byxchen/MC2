@@ -154,3 +154,139 @@ li input.active{
   margin-left:4%;
   padding: 2.5%;
 }
+
+#floatingContent {
+    background-color: black;
+}
+
+/* Keyboard */
+
+@media screen and (max-width: 479px) {
+    #tools_shapelib {
+        width: 100% !important;
+        margin-left: -47px !important;
+        margin-top: 0 !important;
+        top: calc(100vh - 170px) !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        max-width: 100% !important;
+        background-color: #ebf0ef !important;
+        height: 140px;
+    }
+
+    #shape_buttons {
+        border-radius: 0 !important;
+        position: relative;
+        width: calc(100% - 20px);
+        z-index: 10;
+        left: 0;
+        margin: 0 auto;
+        padding: 5px;
+        background-color: #ebf0ef !important;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        top: 30px;
+        overflow: auto !important;
+        align-content: flex-start;
+        height: 130px;
+    }
+
+    #shape_buttons .tool_button>svg {
+        display: block;
+        margin: auto;
+
+    }
+
+    #shape_buttons .tool_button {
+        margin: 2px;
+        width: 26px !important;
+        height: 26px !important;
+        border: 1px #3f3f3f solid;
+        border-radius: 3px;
+        box-shadow: 0 1px 3px rgba(0,0,0,.15);
+    }
+
+    #shape_buttons .tool_button:hover {
+        background-color: inherit;
+    }
+
+    #shape_cats{
+        border-radius: 0 !important;
+        display: flex;
+        width: 100% !important;
+        background-color: #ebf0ef !important;
+        height: 170px;
+
+    }
+
+    #shape_cats>div {
+        width: 100%;
+        text-align: center;
+        background-color: #e1e6e5;
+        border-radius: 0 !important;
+        line-height: 27px;
+        padding: 0;
+
+    }
+
+    #shape_cats>div::after {
+        border: 0 !important;
+    }
+
+    .current {
+        border-color: #3f3f3c !important;
+        font-weight: normal !important;
+    }
+
+    #shape_buttons .tool_button {
+        background-color: #ebf0ef;
+    }
+
+
+
+    #FloatingLayer {
+        border: 0 !important;
+        top: calc(100vh - 200px) !important;
+        z-index: 10;
+        height: 30px !important;
+        width: 100% !important;
+        left: 0 !important;
+        background-color: #ebf0ef !important;
+    }
+
+    #FloatingLayer * {
+        border: 0;
+    }
+
+    #floatingContent {
+        background-color: transparent;
+        opacity: 1 !important;
+        height: 25px !important;
+        padding: 3px 0 !important;
+
+    }
+
+    #floatingContent h1 {
+        height: 25px !important;
+        font-size: 15px;
+        margin: 0;
+        line-height: 24px;
+        display: flex;
+    }
+
+    #floatingContent h1>div {
+        padding: 0 3px;
+        margin: 0;
+        flex-grow: 1;
+
+        text-align: center !important;
+        background-color: transparent;
+        position: relative;
+        z-index: 11;
+        border-right: 1px #e0e0e0 solid;
+
+    }
+
+
+}
