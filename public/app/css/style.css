@@ -202,6 +202,10 @@
 		max-width: 280px;
 		padding: 20px 15px;
 	}
+
+	.selector-wrapper2>div {
+		width: 120px !important;
+	}
 .input-group{
 	width: 100%;
 	float: none;
@@ -219,3 +223,85 @@
 }
 
 
+.selector-wrapper2 {
+	width: auto;
+	margin: 10px auto;
+	display: flex;
+	justify-content: center;
+	height: 40px;
+}
+
+.selector-wrapper2>div {
+	width: 133px;
+	padding: 7px;
+	text-align: center;
+	border-radius: 30px;
+	cursor: pointer;
+	transition: all 0.1s linear;
+	margin: 0 5px;
+}
+
+input {
+	margin: 10px auto;
+}
+
+.create-button2 {
+	color: #fff;
+	background-color: #ed8355;
+	border: 2px #ed8355 solid;
+}
+
+.join-button2 {
+	color: #ed8355;
+	border: 2px #ed8355 solid;
+}
+
+
+
+.join-button2:hover {
+	color: #fff;
+	background-color: #ed8355;
+}
+
+.button-active2 {
+
+	background-color: #ed8355 !important;
+	background-image: none;
+	color: #fff !important;
+
+}
+
+.button-not2 {
+	background-color: transparent;
+	border: 2px #ed8355 solid;
+	border-radius: 50%;
+	background-size: 20px;
+	background-position: center;
+	background-repeat: no-repeat;
+	color: #ed8355;
+}
+
+.button-not2:hover {
+	background-color: #ed8355;
+	color: #fff;
+}
+
+.card {
+	background-color: #fff;
+
+	box-shadow:0 1px 3px rgba(0,0,0,.1);
+	transition: all 0.5s ease-in;
+}
+
+.login-logo {
+	margin-bottom: 0;
+}
+
+.login-box-msg {
+	padding-bottom: 5px;
+}
+
+.login-box-body {
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
