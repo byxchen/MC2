@@ -395,7 +395,7 @@ methodDraw.addExtension("shapes", function() {
           var width = $("#tools_left").width();
 
           if ((x + width) >= ($(window).width() - 400)) x -= 400;
-          if ((y + height) >= ($(window).height() - 240)) y -= 240;
+          if ((y + height) >= ($(window).height() - 240)) y -= 250;
         $("#tools_shapelib").css({
             'margin-left': x,
             'margin-top': 0,
