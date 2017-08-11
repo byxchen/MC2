@@ -371,11 +371,11 @@ methodDraw.addExtension("shapes", function() {
                   ToggleFloatingLayer('FloatingLayer',0);
                   return;
               }
-              var height = $("#menu_bar").height();
-              var y = parseInt($("#math_cursor").attr("y"));
-              vb[1] = "165";
-              console.log(height + y);
-              if ((y + height) >= ($(window).height() - 240)) area.attr("viewBox", vb.join(" "));
+          var height = $("#menu_bar").height();
+          var y = parseInt($("#math_cursor").attr("y"));
+          vb[1] = "165";
+
+          if ((y + height) >= ($(window).height() - 240)) area.attr("viewBox", vb.join(" "));
 
               $("#tools_shapelib").css({
                   'opacity': "1"
@@ -391,6 +391,11 @@ methodDraw.addExtension("shapes", function() {
           var math_cursor = svgCanvas.getElem('math_cursor');
           var x = Number(math_cursor.getAttribute('x'));
           var y = Number(math_cursor.getAttribute('y'));
+          var height = $("#menu_bar").height();
+          var width = $("#tools_left").width();
+
+          if ((x + width) >= ($(window).width() - 400)) x -= 400;
+          if ((y + height) >= ($(window).height() - 240)) y -= 240;
         $("#tools_shapelib").css({
             'margin-left': x,
             'margin-top': 0,
