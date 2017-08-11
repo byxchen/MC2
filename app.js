@@ -70,7 +70,6 @@ ios.on('connection', function(socket){
                 socket.join(data.roomId, function () {
                     socket.connectedRoom = data.roomId;
                     //console.log(socket.username+" joined room "+ data.roomId);
-
                     callback({msg: "You have joined room "+ data.roomId+".", type: "system"});
                 });
             });
