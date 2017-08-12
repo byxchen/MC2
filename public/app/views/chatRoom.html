@@ -225,7 +225,7 @@
                   <span class="input-group-btn" style="position:relative">
                     <button type="button" class="accordion btn btn-warning btn-flat">☺+</button>
                   </span>
-                    <textarea rows=1 id="textArea" type="textarea" name="message" placeholder="Type Message ..." ng-class="{'form-control': true, 'has-error':isMsgBoxEmpty}" ng-model="chatMsg" ng-change="isMsgBoxEmpty=false" ng-enter="sendMsg()" ng-focus="setFocus" focus-me="setFocus"/>
+                    <textarea rows=1 id="textArea" type="textarea" style="resize: none" name="message" placeholder="Type Message ..." ng-class="{'form-control': true, 'has-error':isMsgBoxEmpty}" ng-model="chatMsg" ng-change="isMsgBoxEmpty=false" ng-enter="sendMsg()" ng-focus="setFocus" focus-me="setFocus"/>
                     <span class="input-group-btn">
                       <button type="button" class="btn btn-warning btn-flat" ng-click="sendMsg()">Send</button>
                     </span>
