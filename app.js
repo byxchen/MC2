@@ -105,12 +105,9 @@ ios.on('connection', function(socket){
 		var online_member = [];
 		i = ios.sockets.adapter.rooms[socket.connectedRoom];
 		if (!i) return ios.sockets.emit('online-members', online_member);
-		i = Object.keys(i);
-		for(var j=0;j<i.length;j++ )
-		{
-			socket_data = i[j];
-			temp1 = {"username": socket_data.username, "userAvatar":socket_data.userAvatar};
-			online_member.push(temp1);
+		for (var clientId in i.sockets) {
+            temp1 = {"username": ios.sockets.connected[clientId].username, "userAvatar":ios.sockets.connected[clientId].userAvatar};
+            online_member.push(temp1);
 		}
 		ios.sockets.emit('online-members', online_member);		
 	});
