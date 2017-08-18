@@ -160,7 +160,6 @@ body {
 	text-align: center;
 	width: 50%;
 	font-size: 18px;
-	color: #414141;
 	
 	font-weight: 500;
 	background-color: #fff;
@@ -521,7 +520,7 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53
 	font-size: 20px;
 	border-bottom: 1px #e0e0e0 solid;
 	font-weight: 600;
-	padding: 5px 0;
+	padding: 10px 0 5px;
 }
 
 .menu-list li {
@@ -539,8 +538,12 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53
 }
 
 .menu-list li:hover {
-	background-color: #ed8355;
+	background-color: #c1dede;
 	color: #fff !important;
+}
+
+.blue-nav {
+	background-color: #c1dede;
 }
 
 @keyframes OpenPulse {
