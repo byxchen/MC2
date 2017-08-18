@@ -334,8 +334,12 @@ body {
 	font-size: 30px;
 	width: 50%;
 	margin-top: 12vh;
-	color: #5d6795 !important;
 
+
+}
+
+.landing-text .text {
+	color: #1f1f1f;
 }
 
 .landing-buttons {
@@ -509,7 +513,7 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53
 .menu-list {
 	opacity: 0;
 	transition: opacity 300ms 0s;
-	padding: 15px;
+	padding: 20px;
 	padding-top: 0;
 }
 
@@ -523,7 +527,7 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53
 .menu-list li {
 	padding: 10px;
 
-	width: calc(100vw - 30px);
+	width: calc(100vw - 40px);
 	font-size: 15px;
 	text-align: center;
 	transition: background-color 0.15s linear;
