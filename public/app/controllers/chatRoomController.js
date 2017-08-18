@@ -1,6 +1,6 @@
 var textarea = document.getElementById("textArea");
-var chatLog = "Chatroom Created -- " + Date();
-var turn = 0;
+var chatLog = "Chatroom created -- " + Date();
+
 
 angular.module('Controllers')
 .directive('schrollBottom', function () {		// custom directive for scrolling bottom on new message load
@@ -157,14 +157,8 @@ angular.module('Controllers')
 
 		$scope.messeges.push(data);
 		// Updates chatlog with relevant message history
-		if(turn == 1){
-			chatLog += "\r";
-			chatLog += "[" + data.msgTime + "] " + data.username + ": " + data.msg;
-			turn = 0;
-		}
-		else{
-			turn = 1;
-		}
+		chatLog += "\r";
+		chatLog += "[" + data.msgTime + "] " + data.username + ": " + data.msg;
 	});
 
 // ====================================== Image Sending Code ==============================
