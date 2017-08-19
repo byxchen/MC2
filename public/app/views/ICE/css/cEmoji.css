@@ -161,7 +161,7 @@ li input.active{
 
 /* Keyboard */
 
-@media screen and (max-width: 479px) {
+@media screen and (max-width: 700px) {
     #tools_shapelib {
         width: 100% !important;
         margin-left: -47px !important;
@@ -288,5 +288,34 @@ li input.active{
 
     }
 
+    #tools_mathlib {
+        opacity: 1 !important;
+        height: 55px;
+        bottom: 0;
+        top: inherit !important;
+        width: 100%;
+        margin-left: -47px !important;
+    }
+
+    #tools_mathlib>div {
+        height: 60px;
+        font-size: 12px;
+    }
+
+    #math_cats div.current::after {
+        border: 0;
+    }
+
+    #math_cats>div {
+        padding: 0;
+        text-align: center;
+        width: 50px;
+    }
+
+    #math_buttons {
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+    }
 
 }

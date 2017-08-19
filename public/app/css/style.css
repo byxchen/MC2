@@ -165,11 +165,14 @@
 	float : right;
 }
 /*============================ Sreen size 768px ============================*/
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 768px) {
 .login-box-body{
-	width: 280px;
+	width: 65%;
 	margin:0px auto;
 }
+	.selector-wrapper2 {
+		width: 65% !important;
+	}
 .avatar{
 	height : 50px; 
 	width : 50px; 
