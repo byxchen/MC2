@@ -523,11 +523,7 @@ var SOTP = 0;
 
       // called when we've selected a different element
       var selectedChanged = function(window,elems) {
-        var iconThing = document.getElementById("tool_deletebutton");
-        if (selectedElement == null && !multiselected && !path.getNodePoint() && undoMgr.getUndoStackSize() > 0) {
-          iconThing.style.backgroundImage = "url('images/t_undo.png')";
-          SOTP = 0;
-        }
+
         var mode = svgCanvas.getMode();
         if(mode === "select") setSelectMode();
         if (mode === "pathedit") return updateContextPanel();
@@ -558,6 +554,11 @@ var SOTP = 0;
           selectedElement: selectedElement,
           multiselected: multiselected
         });
+          var iconThing = document.getElementById("tool_deletebutton");
+          if (selectedElement == null && !multiselected && !path.getNodePoint() && undoMgr.getUndoStackSize() > 0) {
+              iconThing.style.backgroundImage = "url('images/t_undo.png')";
+              SOTP = 0;
+          }
       };
 
       // Call when part of element is in process of changing, generally
