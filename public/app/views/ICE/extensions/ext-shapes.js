@@ -343,7 +343,7 @@ methodDraw.addExtension("shapes", function() {
 
       var isMobile = false;
       if ($(window).width() <= 479) isMobile = true;
-      if (isMobile) ToggleFloatingLayer('FloatingLayer',0);
+      ToggleFloatingLayer('FloatingLayer',0);
 
       $(document).on("mouseup", function (e) {
 
@@ -371,23 +371,33 @@ methodDraw.addExtension("shapes", function() {
                   ToggleFloatingLayer('FloatingLayer',0);
                   return;
               }
-          var height = $("#menu_bar").height();
-          var y = parseInt($("#math_cursor").attr("y"));
-          vb[1] = "165";
+              var height = $("#menu_bar").height();
+              var y = parseInt($("#math_cursor").attr("y"));
+              vb[1] = "165";
 
-          if ((y + height) >= ($(window).height() - 240)) area.attr("viewBox", vb.join(" "));
+              if ((y + height) >= ($(window).height() - 240)) area.attr("viewBox", vb.join(" "));
 
               $("#tools_shapelib").css({
                   'opacity': "1"
               });
               ToggleFloatingLayer('FloatingLayer',1);
               isOpen = true;
+          } else {
+            if (isOpen) {
+              ToggleFloatingLayer('FloatingLayer',0);
+              isOpen = false;
+            }
+            else {
+              ToggleFloatingLayer('FloatingLayer', 1);
+              isOpen = true;
+            }
           }
       });
 
       $("#svgcanvas").click(function (e) {
           if ($(window).width() <= 479) isMobile = true;
         if (isMobile) return;
+          var bar = $("#FloatingLayer");
           var math_cursor = svgCanvas.getElem('math_cursor');
           var x = Number(math_cursor.getAttribute('x'));
           var y = Number(math_cursor.getAttribute('y'));
@@ -396,10 +406,15 @@ methodDraw.addExtension("shapes", function() {
 
           if ((x + width) >= ($(window).width() - 400)) x -= 400;
           if ((y + height) >= ($(window).height() - 240)) y -= 250;
+          bar.css({
+            'margin-left': x-3,
+              'margin-top': 0,
+              'top': y+60
+          });
         $("#tools_shapelib").css({
             'margin-left': x,
             'margin-top': 0,
-            'top': y+60
+            'top': y+96
         })
       });
 

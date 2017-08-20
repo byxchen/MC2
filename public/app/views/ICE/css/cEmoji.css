@@ -156,7 +156,18 @@ li input.active{
 }
 
 #floatingContent {
-    background-color: black;
+
+
+}
+
+#FloatingLayer {
+    background-color: #eee;
+    height: 35px;
+    width: 400px;
+}
+
+#floatingContent>h1 {
+    margin: 0;
 }
 
 /* Keyboard */

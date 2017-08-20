@@ -7010,6 +7010,8 @@ this.getRootElem = function() { return svgroot; };
 // Returns the array with selected DOM elements
 this.getSelectedElems = function() { return selectedElements; };
 
+this.resetSelection = function() { selectedElements = []; };
+
 // Function: getResolution
 // Returns the current dimensions and zoom level in an object
 var getResolution = this.getResolution = function() {
@@ -8473,6 +8475,7 @@ this.deleteSelectedElements = function() {
     selectedElements[i] = null;
     batchCmd.addSubCommand(new RemoveElementCommand(elem, nextSibling, parent));
   }
+  selectedElements = [];
   if (!batchCmd.isEmpty()) addCommandToHistory(batchCmd);
 //  call("changed", selectedCopy); //**MDP
 // **[MDP
@@ -9798,9 +9801,9 @@ var moveCursorAbs = this.moveCursorAbs;
       });
     // Closes the suggestion bar after element is inserted
     clearTimeout(shortcutTimer);
-      ToggleFloatingLayer('FloatingLayer',1);
+      ToggleFloatingLayer('floatingContent',1);
       shortcutTimer = setTimeout(function(){
-        ToggleFloatingLayer('FloatingLayer',0);
+        ToggleFloatingLayer('floatingContent',0);
     }, 2);
   }
 

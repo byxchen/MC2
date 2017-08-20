@@ -43,16 +43,11 @@
                         <header>
                             Schedule
                         </header>
-                        <div class="card-content">
-                            Monday 1:00 pm - 3:00 pm
-
-                            <span class="open-status-circle"></span>
-                        </div>
-                        <div class="card-content">
-                            Wednesday 1:00 pm - 3:00 pm
-                        </div>
-                        <div class="card-content">
-                            Friday 1:00 pm - 3:00 pm
+                        <div ng-repeat="interval in schedule">
+                            <div class="card-content">
+                                {{interval.day+" "+interval.start+" - "+interval.end}}
+                                <span ng-if="isInInterval(interval)" class="open-status-circle"></span>
+                            </div>
                         </div>
                     </div>
 

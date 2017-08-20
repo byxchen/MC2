@@ -33,6 +33,10 @@
 	line-height: 30px;
 }
 
+#floatingContent>h1>div:last-child {
+	margin-right: 0;
+}
+
 .suggest:hover {
 	background-color: #e0e0e0;
 }

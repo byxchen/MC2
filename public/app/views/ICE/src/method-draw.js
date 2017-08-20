@@ -2216,17 +2216,23 @@ var SOTP = 0;
         var iconThing = document.getElementById("tool_deletebutton");
         iconThing.style.backgroundImage = "url('images/t_undo.png')";
         //   **MDP(  -- TOOO: UNDO -- Fix the cursor/Undo thing
+
         if (selectedElement == null && !multiselected && !path.getNodePoint() && undoMgr.getUndoStackSize() > 0) {
           undoMgr.undo();
           svgCanvas.moveCursor(-1.9,0);
+          svgCanvas.resetSelection();
         }
         // **MDP)
         if (selectedElement != null || multiselected) {
           svgCanvas.deleteSelectedElements();
+            svgCanvas.moveCursor(-1.9,0);
         }
         if (path.getNodePoint()) {
           path.deletePathNode();
+          svgCanvas.resetSelection();
         }
+
+
       };
 
       var cutSelected = function() {
