@@ -264,6 +264,7 @@ li input.active{
         width: 100% !important;
         left: 0 !important;
         background-color: #ebf0ef !important;
+        margin-left: 0 !important;
     }
 
     #FloatingLayer * {

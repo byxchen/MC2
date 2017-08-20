@@ -411,11 +411,11 @@ methodDraw.addExtension("shapes", function() {
               'margin-top': 0,
               'top': y+60
           });
-        $("#tools_shapelib").css({
-            'margin-left': x,
-            'margin-top': 0,
-            'top': y+96
-        })
+          $("#tools_shapelib").css({
+              'margin-left': x,
+              'margin-top': 0,
+              'top': y+96
+          })
       });
 
 

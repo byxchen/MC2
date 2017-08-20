@@ -51,7 +51,15 @@
 	font-size: 14px;
 }
 
-@media only screen and (max-device-width: 600px) {
+#chatframe>.row {
+	margin: 0;
+}
+
+#chatframe>.row>.col-sm-12 {
+	padding: 0;
+}
+
+@media only screen and (max-device-width: 732px) {
  	#editorframe{
  		display:none;
 		width:100%;

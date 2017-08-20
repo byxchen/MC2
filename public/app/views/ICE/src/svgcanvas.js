@@ -9531,10 +9531,15 @@ var moveCursorAbs = this.moveCursorAbs;
 					'style': 'pointer-events:none'
 				}
 			});
+            $("#FloatingLayer").css({
+                'margin-left': x-3,
+                'margin-top': 0,
+                'top': y+60
+            });
             $("#tools_shapelib").css({
                 'margin-left': x,
                 'margin-top': 0,
-                'top': y+60
+                'top': y+96
             });
 
             if (!blinking) {startBlinking();};
