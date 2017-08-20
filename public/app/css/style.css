@@ -198,7 +198,7 @@
 }
 }
 /*============================ Sreen size 480px ============================*/
-@media screen and (max-width: 479px) {
+@media screen and (max-width: 732px) {
 	.login-box-body {
 		width: 95%;
 		min-width: 258px;
