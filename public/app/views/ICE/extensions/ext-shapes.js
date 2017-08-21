@@ -344,27 +344,15 @@ methodDraw.addExtension("shapes", function() {
       var isMobile = false;
       if ($(window).width() <= 479) isMobile = true;
       //ToggleFloatingLayer('FloatingLayer',0);
-
-        $(window).on( "orientationchange", function() {
-            var keyboard = $("#tools_shapelib");
-            $("#FloatingLayer").css({
-                top: keyboard.position().top-35
-            });
-        });
-
-        $(document).on("touchend", function () {
-            var keyboard = $("#tools_shapelib");
-            $("#FloatingLayer").css({
-                top: keyboard.position().top-35
-            });
-        });
+        
 
         setInterval(function () {
             var keyboard = $("#tools_shapelib");
             $("#FloatingLayer").css({
                 opacity: keyboard.css("opacity"),
                 visibility: keyboard.css("visibility"),
-                display: keyboard.css("display")
+                display: keyboard.css("display"),
+                top: keyboard.position().top-35
             });
         }, 20);
 
@@ -436,7 +424,7 @@ methodDraw.addExtension("shapes", function() {
           var width = $("#tools_left").width();
 
           if ((x + width) >= ($(window).width() - 400)) x -= 400;
-          if ((y + height) >= ($(window).height() - 240)) y -= 250;
+          if ((y + height) >= ($(window).height() - 240)) y -= 285;
           bar.css({
             'margin-left': x-3,
               'margin-top': 0,
