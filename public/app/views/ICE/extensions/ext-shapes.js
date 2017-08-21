@@ -344,7 +344,7 @@ methodDraw.addExtension("shapes", function() {
       var isMobile = false;
       if ($(window).width() <= 479) isMobile = true;
       //ToggleFloatingLayer('FloatingLayer',0);
-        
+
 
         setInterval(function () {
             var keyboard = $("#tools_shapelib");
