@@ -317,17 +317,17 @@ var addSvgElementFromJson = this.addSvgElementFromJson = function(data) {
       "stroke-opacity": cur_shape.stroke_opacity,
       "fill-opacity": cur_shape.fill_opacity,
       "opacity": cur_shape.opacity / 2,
-      "style": "pointer-events:inherit"
-    }, 100);
+      "style": "pointer-events:inherit",
+    }, 100, true);
   }
-  svgedit.utilities.assignAttributes(shape, data.attr, 100);
+  svgedit.utilities.assignAttributes(shape, data.attr, 100, true);
   svgedit.utilities.cleanupElement(shape);
 
   shape.setAttribute('opacity', 1.0); //**MDF Hack to deal with bug in passing params TODO
 
   if (data.textContent != null) {    //**MDP Hack to set text Content
-			shape.textContent=data.textContent; //**MDP
-		} //**MDP
+			shape.textContent = data.textContent; //**MDP
+    } //**MDP
   return shape;
 };
 
@@ -3398,7 +3398,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
               if (selected.textContent == "\u2211") selectorManager.requestSelector(selected).showGrips(true); //**MDP
              }
             else {//**MDP
-              selectorManager.requestSelector(selected).showGrips(true);
+              selectorManager.requestSelector(selected);
             }//**MDP
             // This shouldn't be necessary as it was done on mouseDown...
 //              call("selected", [selected]);
@@ -3449,13 +3449,13 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
           }
           if(selected)
           {
-            var newX = selected.getBBox().x + selected.getBBox().width + 1;
-            var newY = Number(selected.getAttribute('y')) - 20;
+            var newX = getBBox(selected).x +  getBBox(selected).width + 1;
+            var newY = Number(getBBox(selected).y);
             placeMathCursor(newX, newY);
             svgCanvas.keyPressed("");
           }
           else {
-            canvas.groupSelectedElements('g', false);
+            canvas.groupSelectedElements('g', false, false);
             groupedElement = selectedElements[0];
           }
         }
@@ -3466,20 +3466,20 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
             var snaps = document.querySelectorAll('[id^="snap_"]');
             for(var i = 0; i < snaps.length; i++) {
               var snap = snaps[i];
-              var snapX = snap.getBBox().x;
-              var snapY = snap.getBBox().y;
+              var snapX = getBBox(snap).x;
+              var snapY = getBBox(snap).y;
               var type = snap.getAttribute('type');
               var diffX = real_x - snapX;
               var diffY = real_y - snapY; 
-              if(0 <= diffX && diffX < snap.getBBox().width && 0 <= diffY && diffY < snap.getBBox().height) {
+              if(0 <= diffX && diffX < getBBox(snap).width && 0 <= diffY && diffY < snap.getBBox().height) {
                 var x = snapX + 1, y = snapY;
                 if (type == 'contains') {
-                  y = snapY + snap.getBBox().height/2 - 10;
-                  x = snapX + 10 + ((snap.getBBox().width - 20)/11);
+                  y = snapY + getBBox(snap).height/2 - 10;
+                  x = snapX + 10 + ((getBBox(snap).width - 20)/11);
                 }
                 if (type == 'contains' || type == 'below' || type == 'above') {
-                  if (diffX > snap.getBBox().width/3) {
-                    x += snap.getBBox().width/3;
+                  if (diffX > getBBox(snap).width/3) {
+                    x += getBBox(snap).width/3;
                   }
                 }
                 placeMathCursor(x, y);
@@ -3528,22 +3528,22 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
               symbol = getBBox(document.getElementById(symbol.id));
               pushYElems.push({
                 "x": symbol.x,
-                "y": symbol.y + 1});
+                "y": symbol.y});
               pushYElems.push({
                 "x": symbol.x + symbol.width,
-                "y": symbol.y + 1});
+                "y": symbol.y});
               pushYElems.push({
                 "x": symbol.x,
-                "y": symbol.y + 22});
+                "y": symbol.y + 20});
               pushYElems.push({
                 "x": symbol.x + symbol.width,
-                "y": symbol.y + 22});
+                "y": symbol.y + 20});
               pushYElems.push({
                 "x": symbol.x,
-                "y": symbol.y - 18});
+                "y": symbol.y - 20});
               pushYElems.push({
                 "x": symbol.x + symbol.width,
-                "y": symbol.y - 18});
+                "y": symbol.y - 20});
               //var newX = Number(symbol.getAttribute('x')) + spacing;
               //symbol.setAttribute('x', newX);
             }.bind(this);
@@ -8447,6 +8447,8 @@ this.deleteSelectedElements = function() {
   var batchCmd = new BatchCommand("Delete Elements");
   var len = selectedElements.length;
   if (len == 0) return;
+  if(selectedElements[0] == groupedElement)
+    groupedElement = null;
   var selectedCopy = []; //selectedElements is being deleted
   for (var i = 0; i < len; ++i) {
     var selected = selectedElements[i];
@@ -8480,6 +8482,7 @@ this.deleteSelectedElements = function() {
 runExtensions("elementRemoved", {
   elems: selectedCopy
 }); // **MDP]
+
 
   clearSelection();
 };
@@ -8594,7 +8597,7 @@ this.pasteElements = function(type, x, y) {
 
 // Parameters:
 // type - type of element to group into, defaults to <g>
-this.groupSelectedElements = function(type, revColor) {
+this.groupSelectedElements = function(type, revColor, showGrips) {
   if(!type) type = 'g';
   if(revColor == null) {
     revColor == true;
@@ -8648,7 +8651,7 @@ this.groupSelectedElements = function(type, revColor) {
 
   // update selection
   clearSelection(true, revColor);
-  addToSelection([g], true);
+  addToSelection([g], false);
 };
 
 
@@ -9397,6 +9400,7 @@ this.moveCursor = function(dx, dy) {
   var isTop = dy < 0 ? 1 : -1;
   var w = getElem('math_cursor');
   if (w != null) {
+    clearSelection();
     if (curConfig.gridSnapping) {
 // 			// Use grid snap value regardless of zoom level
       var multi = svgCanvas.getZoom() * curConfig.snappingStep;
@@ -9415,22 +9419,23 @@ this.moveCursor = function(dx, dy) {
     else if (dy < 0) {
       dy = -20;
     }
-    var x = Number(w.getAttribute('x'));
-    var y = Number(w.getAttribute('y'));
+    var wb = getBBox(w);
+    var x = wb.x;
+    var y = wb.y;
     if(dx != 0) {
       var pushElems = [];
       var func = function(symbol) {
         symbol = getBBox(document.getElementById(symbol.id));
-        if(Math.abs(y - (symbol.y + 2)) > 18)
+        if(Math.abs(y - symbol.y) > 18)
           return;
         if(isLeft * x > isLeft * symbol.x)
           pushElems.push({
             "x": symbol.x,
-            "y": symbol.y + 2});
+            "y": symbol.y });
         if(isLeft * x > isLeft * (symbol.x + symbol.width + 1))
           pushElems.push({
             "x": symbol.x + symbol.width + 1,
-            "y": symbol.y + 2});
+            "y": symbol.y});
         //var newX = Number(symbol.getAttribute('x')) + spacing;
         //symbol.setAttribute('x', newX);
       }.bind(this);
@@ -9453,18 +9458,21 @@ this.moveCursor = function(dx, dy) {
         symbol = getBBox(document.getElementById(symbol.id));
         if(Math.abs(x - (symbol.x)) > 25)
           return;
-        if(isTop * y > isTop * (symbol.y + 2))
+        if(isTop * y > isTop * (symbol.y)) {
           pushElems.push({
             "x": symbol.x,
-            "y": symbol.y + 2});
-        if(isTop * y > isTop * (symbol.y + 22))
+            "y": symbol.y});
+        }
+        if(isTop * y > isTop * (symbol.y + 20)) {
           pushElems.push({
             "x": symbol.x,
-            "y": symbol.y + 22});
-        if(isTop * y > isTop * (symbol.y - 18))
+            "y": symbol.y + 20});
+        }
+        if(isTop * y > isTop * (symbol.y - 20)) {
           pushElems.push({
             "x": symbol.x,
-            "y": symbol.y - 18});
+            "y": symbol.y - 20});
+        }
         //var newX = Number(symbol.getAttribute('x')) + spacing;
         //symbol.setAttribute('x', newX);
       }.bind(this);
@@ -9513,7 +9521,7 @@ var moveCursorAbs = this.moveCursorAbs;
 					'x': x,
 					'y': y,
 					'width': 2,
-					'height': 20,
+					'height': 25,
 					'id': 'math_cursor',
           'last_item': 'math_cursor',
 					'fill': 'grey',
@@ -9745,7 +9753,7 @@ var moveCursorAbs = this.moveCursorAbs;
 
     var condFunc = function(symbol) {
       symbol = document.getElementById(symbol.id);
-      var eqnX = Number(symbol.getBBox().x);//.getAttribute('x'));
+      var eqnX = Number(getBBox(symbol).x);//.getAttribute('x'));
       var res = (eqnX >= cursor_x && symbol != excl);
       //console.log(symbol.id, res, eqnX, cursor_x);
       return res;
@@ -9767,6 +9775,48 @@ var moveCursorAbs = this.moveCursorAbs;
   }
 
   var pushAllAtCursor = this.pushAllAtCursor;
+
+  this.removeNearestToCursor = function() {
+    var math_cursor = svgCanvas.getElem('math_cursor');
+    if(!math_cursor) {
+      return;
+    }
+    var eqns = document.querySelectorAll('[id^="svg_eqn_"]');
+    var seqns = [];
+    for (var i = 0; i < eqns.length; i++) {
+      var eqn = getBBox(eqns[i]);
+      if (eqn.x + eqn.width > math_cursor.getAttribute('x')) {
+        continue;
+      } else if (eqn.y + (eqn.height/2) > math_cursor.getAttribute('y') + 25) {
+        continue;
+      } else if (eqn.y + (eqn.height/2) < math_cursor.getAttribute('y')) {
+        continue;
+      } else {
+        seqns.push(eqns[i]);
+      }
+    }
+
+    if(seqns.length == 0) {
+      return;
+    }
+    seqns.sort(function(a, b) {
+      var ab = getBBox(a);
+      var bb = getBBox(b);
+      var x = math_cursor.getAttribute('x');
+      return (x - (ab.x + ab.width)) - (x - (bb.x + bb.width));
+    })
+    var t = seqns[0];
+    if (math_cursor.getAttribute('x') - (getBBox(t).x + getBBox(t).width) > 5) {
+      moveCursor(-1, 0);
+    } else {
+      math_cursor.setAttribute('x', getBBox(t).x);
+      selectOnly([t], false);
+      this.deleteSelectedElements();
+    }
+
+  };
+
+  var removeNearestToCursor = this.removeNearestToCursor;
 
   this.addToSVG = function(selectedSymbol){
     var math_cursor = svgCanvas.getElem('math_cursor');
@@ -9835,8 +9885,8 @@ var moveCursorAbs = this.moveCursorAbs;
     }
     var shortcuts = keyHash[key];
     var newChar = false;
-    var shortcutsVisible = document.getElementById("FloatingLayer").style.visibility;
-    if (key == lastKeyPress && shortcutsVisible == "visible") {
+    var shortcutsVisible = document.getElementById("floatingContent").style.display;
+    if (key == lastKeyPress && shortcutsVisible == "block") {
         newChar = false;
     } else {
         newChar = true;
@@ -9900,8 +9950,9 @@ var moveCursorAbs = this.moveCursorAbs;
 		lastKey = key;
 
     var math_cursor = svgCanvas.getElem('math_cursor');
-    var x = Number(math_cursor.getAttribute('x'));
-    var y = Number(math_cursor.getAttribute('y')) + Number(math_cursor.getAttribute('height'));
+    var math_cursorB = getBBox(math_cursor);
+    var x = math_cursorB.x;
+    var y = math_cursorB.y + 20 + 1;
     if(selectedElements.length > 0) {
       clearSelection();
     }
@@ -9911,8 +9962,8 @@ var moveCursorAbs = this.moveCursorAbs;
     	curStyles: true,
     	textContent: key,
     	attr: {
-    		'x': x.toString(),
-    		'y': y.toString(),
+    		'x': x,
+    		'y': y,
     	  'id': getNextId(),
     		'fill': cur_text.fill,
     	  'stroke-width': cur_text.stroke_width,
@@ -9923,9 +9974,11 @@ var moveCursorAbs = this.moveCursorAbs;
     		'xml:space': 'preserve',
     		'opacity': cur_shape.opacity,
     		'style': "pointer-events:inherit",
-    				//'textContent': 'a'
     		}
       });
+      if(getBBox(newText).x != math_cursorB.x) {
+        console.log('k: ', key, 'c: ', math_cursorB.x, 'bbox.x: ', getBBox(newText).x, 'at x: ', newText.getAttribute('x'));
+      }
     } else {
         if (shortcuts[shortcutIndex].length == 1) {
           newText.textContent = shortcuts[shortcutIndex];
@@ -9937,7 +9990,7 @@ var moveCursorAbs = this.moveCursorAbs;
     
 
     var parentNewText = newText.parentNode;
-    var bbox = newText.getBBox();
+    var bbox = getBBox(newText);
     var diffWidth = Number(bbox.x) + Number(bbox.width) - Number(math_cursor.getAttribute('x')) + 1;
     var cloneNewText = newText.cloneNode(true);
     parentNewText.removeChild(newText);
