@@ -2216,8 +2216,7 @@ var SOTP = 0;
         iconThing.style.backgroundImage = "url('images/t_undo.png')";
         //   **MDP(  -- TOOO: UNDO -- Fix the cursor/Undo thing
         if (selectedElement == null && !multiselected && !path.getNodePoint() && undoMgr.getUndoStackSize() > 0) {
-          undoMgr.undo();
-          svgCanvas.moveCursor(-1.9,0);
+          svgCanvas.removeNearestToCursor();
         }
         // **MDP)
         if (selectedElement != null || multiselected) {
