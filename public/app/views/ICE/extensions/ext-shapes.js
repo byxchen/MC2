@@ -343,17 +343,44 @@ methodDraw.addExtension("shapes", function() {
 
       var isMobile = false;
       if ($(window).width() <= 479) isMobile = true;
-      ToggleFloatingLayer('FloatingLayer',0);
+      //ToggleFloatingLayer('FloatingLayer',0);
+
+        $(window).on( "orientationchange", function() {
+            var keyboard = $("#tools_shapelib");
+            $("#FloatingLayer").css({
+                top: keyboard.position().top-35
+            });
+        });
+
+        $(document).on("touchend", function () {
+            var keyboard = $("#tools_shapelib");
+            $("#FloatingLayer").css({
+                top: keyboard.position().top-35
+            });
+        });
+
+        setInterval(function () {
+            var keyboard = $("#tools_shapelib");
+            $("#FloatingLayer").css({
+                opacity: keyboard.css("opacity"),
+                visibility: keyboard.css("visibility"),
+                display: keyboard.css("display")
+            });
+        }, 20);
 
       $(document).on("mouseup", function (e) {
 
           if (e.target.id.indexOf("_show") !== -1 && e.target.id !== "tools_shapelib_show"){
               var area = $("#workarea");
+              var content = $("#svgcontent");
+              var vb = content.attr("viewBox").split(" ");
+              vb[1] = "0";
+              content.attr("viewBox", vb.join(" "));
               area.css({
                   height: "100vh"
               });
               isOpen = false;
-              ToggleFloatingLayer('FloatingLayer',0);
+              //ToggleFloatingLayer('FloatingLayer',0);
           }
       });
       shower.on("mouseup", function () {
@@ -368,27 +395,31 @@ methodDraw.addExtension("shapes", function() {
 
                   area.attr("viewBox", vb.join(" "));
                   isOpen = false;
-                  ToggleFloatingLayer('FloatingLayer',0);
+                  //ToggleFloatingLayer('FloatingLayer',0);
                   return;
               }
               var height = $("#menu_bar").height();
               var y = parseInt($("#math_cursor").attr("y"));
+              var keyboard = $("#tools_shapelib");
+
               vb[1] = "165";
+              if ((y + height) >= ($(window).height() - (keyboard.height()+90))) area.attr("viewBox", vb.join(" "));
 
-              if ((y + height) >= ($(window).height() - 240)) area.attr("viewBox", vb.join(" "));
-
-              $("#tools_shapelib").css({
+              keyboard.css({
                   'opacity': "1"
               });
-              ToggleFloatingLayer('FloatingLayer',1);
+              $("#FloatingLayer").css({
+                top: keyboard.position().top-35
+              });
+              //ToggleFloatingLayer('FloatingLayer',1);
               isOpen = true;
           } else {
             if (isOpen) {
-              ToggleFloatingLayer('FloatingLayer',0);
+              //ToggleFloatingLayer('FloatingLayer',0);
               isOpen = false;
             }
             else {
-              ToggleFloatingLayer('FloatingLayer', 1);
+              //ToggleFloatingLayer('FloatingLayer', 1);
               isOpen = true;
             }
           }
@@ -440,7 +471,7 @@ methodDraw.addExtension("shapes", function() {
       //alert(cur_lib.id);
       //alert(btn[0].mathdata);
       canv.keyPressed(btn[0].mathdata.charAt(0));
-          ToggleFloatingLayer('FloatingLayer',1);
+          //ToggleFloatingLayer('FloatingLayer',1);
     //  methodDraw.clickSelect();
     //  canv.setMode('select');
       //document.getElementById("tool_select").click();

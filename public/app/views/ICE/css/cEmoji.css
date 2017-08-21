@@ -172,26 +172,28 @@ li input.active{
 
 /* Keyboard */
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 732px) {
     #tools_shapelib {
         width: 100% !important;
         margin-left: -47px !important;
         margin-top: 0 !important;
-        top: calc(100vh - 170px) !important;
+        /*top: calc(100vh - 170px) !important;*/
         border-radius: 0 !important;
         box-shadow: none !important;
         max-width: 100% !important;
         background-color: #ebf0ef !important;
-        height: 140px;
+        height: auto;
+        bottom: 30px;
+        top: auto !important;
     }
 
     #shape_buttons {
         border-radius: 0 !important;
         position: relative;
-        width: calc(100% - 20px);
+        /*width: 100%;*/
         z-index: 10;
         left: 0;
-        margin: 0 auto;
+        margin: 0 !important;
         padding: 5px;
         background-color: #ebf0ef !important;
         display: flex;
@@ -200,7 +202,7 @@ li input.active{
         top: 30px;
         overflow: auto !important;
         align-content: flex-start;
-        height: 130px;
+        /*height: 130px;*/
     }
 
     #shape_buttons .tool_button>svg {
@@ -227,8 +229,8 @@ li input.active{
         display: flex;
         width: 100% !important;
         background-color: #ebf0ef !important;
-        height: 170px;
-
+        /*height: 170px;*/
+        height: auto;
     }
 
     #shape_cats>div {
@@ -258,9 +260,9 @@ li input.active{
 
     #FloatingLayer {
         border: 0 !important;
-        top: calc(100vh - 200px) !important;
+        /*top: calc(100vh - 200px) !important;*/
         z-index: 10;
-        height: 30px !important;
+
         width: 100% !important;
         left: 0 !important;
         background-color: #ebf0ef !important;
