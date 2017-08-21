@@ -342,7 +342,7 @@ methodDraw.addExtension("shapes", function() {
 
 
       var isMobile = false;
-      if ($(window).width() <= 479) isMobile = true;
+      if ($(window).width() <= 513) isMobile = true;
       //ToggleFloatingLayer('FloatingLayer',0);
 
 
@@ -374,7 +374,7 @@ methodDraw.addExtension("shapes", function() {
       shower.on("mouseup", function () {
 
           var area = $("#svgcontent");
-          if ($(window).width() <= 479) isMobile = true;
+          if ($(window).width() <= 513) isMobile = true;
           if (isMobile) {
               var vb = area.attr("viewBox").split(" ");
 
@@ -414,7 +414,7 @@ methodDraw.addExtension("shapes", function() {
       });
 
       $("#svgcanvas").click(function (e) {
-          if ($(window).width() <= 479) isMobile = true;
+          if ($(window).width() <= 513) isMobile = true;
         if (isMobile) return;
           var bar = $("#FloatingLayer");
           var math_cursor = svgCanvas.getElem('math_cursor');
