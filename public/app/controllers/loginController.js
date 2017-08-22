@@ -46,8 +46,7 @@ angular.module('Controllers',["ngRoute"])
 						$rootScope.initials = $scope.form.initials;
 						$rootScope.userAvatar = $scope.userAvatar;
 						$rootScope.loggedIn = true;
-
-						if (!$scope.isJoin || !$scope.roomId) $location.path('/v1/ChatRoom/'+$scope.form.roomId);
+						if (!$scope.isJoin) $location.path('/v1/ChatRoom/'+$scope.form.roomId);
 						else $location.path('/v1/ChatRoom/'+$scope.roomId);
 					}else{		// if nickname exists
 						$scope.errMsg = "Use different nickname.";
