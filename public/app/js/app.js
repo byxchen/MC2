@@ -16,7 +16,6 @@ App.config(function ($routeProvider, $socketProvider){
 	})
 	.otherwise({		
         redirectTo: '/v1/',	// Default Route
-        templateUrl: 'app/views/login.html',
-        controller: 'loginCtrl'
+        templateUrl: 'app/views/login.html'
     });
 });
