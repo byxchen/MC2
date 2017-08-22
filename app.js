@@ -102,13 +102,16 @@ ios.on('connection', function(socket){
 	// sending online members list
 	socket.on('get-online-members', function(data){
 		var online_member = [];
-		var i = ios.sockets.adapter.rooms[socket.connectedRoom];
+		i = ios.sockets.adapter.rooms[socket.connectedRoom];
 		if (!i) return ios.sockets.emit('online-members', online_member);
-		for (var clientId in i.sockets) {
-            temp1 = {"username": ios.sockets.connected[clientId].username, "userAvatar":ios.sockets.connected[clientId].userAvatar};
-            online_member.push(temp1);
+		i = Object.keys(i);
+		for(var j=0;j<i.length;j++ )
+		{
+			socket_data = i[j];
+			temp1 = {"username": socket_data.username, "userAvatar":socket_data.userAvatar};
+			online_member.push(temp1);
 		}
-		ios.sockets.emit('online-members', online_member);
+		ios.sockets.emit('online-members', online_member);		
 	});
 
 	// sending new message
@@ -140,16 +143,20 @@ ios.on('connection', function(socket){
 		//delete nickname[socket.username];
 
         delete socket.username;
+		online_member = [];
 
-        var online_member = [];
-        var i = ios.sockets.adapter.rooms[socket.connectedRoom];
-        if (!i) return ios.sockets.emit('online-members', online_member);
-        for (var clientId in i.sockets) {
-            temp1 = {"username": ios.sockets.connected[clientId].username, "userAvatar":ios.sockets.connected[clientId].userAvatar};
+		x = ios.sockets.adapter.rooms[socket.connectedRoom];
+        if (!x) return ios.sockets.emit('online-members', online_member);
+        x = Object.keys(x);
+
+		for(var k=0;k<x.length;k++ )
+    	{
+        	socket_data = x[k];
+        	temp1 = {"username": socket_data.username, "userAvatar":socket_data.userAvatar};
             online_member.push(temp1);
-        }
-        ios.sockets.emit('online-members', online_member);
-    });
+    	}
+		ios.sockets.emit('online-members', online_member);            	
+   	});
 });
 
 // route for uploading images asynchronously
@@ -166,7 +173,7 @@ app.post('/v1/uploadImage',function (req, res){
     
     form.parse(req,function(err,fields,files){
 		var data = { 
-				username : fields.username,
+				username : fields.username, 
 				userAvatar : fields.userAvatar, 
 				repeatMsg : true, 
 				hasFile : fields.hasFile, 

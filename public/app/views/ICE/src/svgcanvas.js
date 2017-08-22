@@ -7010,8 +7010,6 @@ this.getRootElem = function() { return svgroot; };
 // Returns the array with selected DOM elements
 this.getSelectedElems = function() { return selectedElements; };
 
-this.resetSelection = function() { selectedElements = []; };
-
 // Function: getResolution
 // Returns the current dimensions and zoom level in an object
 var getResolution = this.getResolution = function() {
@@ -8477,7 +8475,6 @@ this.deleteSelectedElements = function() {
     selectedElements[i] = null;
     batchCmd.addSubCommand(new RemoveElementCommand(elem, nextSibling, parent));
   }
-  selectedElements = [];
   if (!batchCmd.isEmpty()) addCommandToHistory(batchCmd);
 //  call("changed", selectedCopy); //**MDP
 // **[MDP
@@ -9539,15 +9536,10 @@ var moveCursorAbs = this.moveCursorAbs;
 					'style': 'pointer-events:none'
 				}
 			});
-            $("#FloatingLayer").css({
-                'margin-left': x-3,
-                'margin-top': 0,
-                'top': y+60
-            });
             $("#tools_shapelib").css({
                 'margin-left': x,
                 'margin-top': 0,
-                'top': y+96
+                'top': y+60
             });
 
             if (!blinking) {startBlinking();};
@@ -9856,9 +9848,9 @@ var moveCursorAbs = this.moveCursorAbs;
       });
     // Closes the suggestion bar after element is inserted
     clearTimeout(shortcutTimer);
-      ToggleFloatingLayer('floatingContent',1);
+      ToggleFloatingLayer('FloatingLayer',1);
       shortcutTimer = setTimeout(function(){
-        ToggleFloatingLayer('floatingContent',0);
+        ToggleFloatingLayer('FloatingLayer',0);
     }, 2);
   }
 
@@ -9915,8 +9907,7 @@ var moveCursorAbs = this.moveCursorAbs;
         ToggleFloatingLayer('floatingContent',0);
       }, 4000);
 
-        var floating = $("#floatingContent");
-        floating.bind("touchstart", function (evt) {
+        $("#floatingContent").bind("touchstart", function (evt) {
             clearTimeout(shortcutTimer);
             shortcutTimer = setTimeout(function(){
                 ToggleFloatingLayer('floatingContent',0);
@@ -9927,7 +9918,7 @@ var moveCursorAbs = this.moveCursorAbs;
             })
         });
 
-        floating.bind("touchend", function (evt) {
+        $("#floatingContent").bind("touchend", function (evt) {
             $(evt.target).closest('div.suggest').css({
                 "background-color": "transparent",
                 "color": "#333"
@@ -9935,59 +9926,25 @@ var moveCursorAbs = this.moveCursorAbs;
         });
 
      var shortcutText = "";
-
-     floating.html("");
-     floating.append($("<h1>"));
-     var h1 = $("#floatingContent>h1");
-
-
-     var escape = $("<div>");
-
-
-     shortcuts.forEach(function(shortcut, i) {
+     for (var i = 0; i < shortcuts.length; i++) {
        if (i == shortcutIndex) {
          if (shortcuts[i].length == 1) {
-            var suggest = $('<div class="suggest" onclick="svgCanvas.addToSVG(' + "'"+shortcuts[i]+"'" + ');"> ' + '<font color=orange>' + shortcuts[i] + '</font></div>');
-            escape.html(shortcuts[i]);
-            var sc = escape.html();
-            suggest.bind("touchend", function () {
-                svgCanvas.addToSVG(sc);
-            });
-            h1.append(suggest);
+            shortcutText += '<div class="suggest" onclick="svgCanvas.addToSVG(' + "'"+shortcuts[i]+"'" + ');"> ' + '<font color=orange>' + shortcuts[i] + '</font></div>';
          }
           else {
-             var suggest = $('<div class="suggest" onclick="svgCanvas.addToSVG(' + "'&#x"+shortcuts[i]+"'" + ');"> ' + '<font color=orange>' + ' &#x' + shortcuts[i] + '</font></div>');
-             escape.html("&#x"+shortcuts[i]);
-             var sc = escape.html();
-             suggest.bind("touchend", function () {
-                 svgCanvas.addToSVG(sc);
-             });
-             h1.append(suggest);
+            shortcutText += '<div class="suggest" onclick="svgCanvas.addToSVG(' + "'&#x"+shortcuts[i]+"'" + ');"> ' + '<font color=orange>' + ' &#x' + shortcuts[i] + '</font></div>';
           }
        } else {
          if (shortcuts[i].length == 1) {
-             var suggest = $('<div class="suggest" onclick="svgCanvas.addToSVG(' + "'"+shortcuts[i]+"'" + ');"> ' + shortcuts[i] + "</div>");
-             escape.html(shortcuts[i]);
-             var sc = escape.html();
-             suggest.bind("touchend", function () {
-                 svgCanvas.addToSVG(sc);
-             });
-             h1.append(suggest);
+            shortcutText += '<div class="suggest" onclick="svgCanvas.addToSVG(' + "'"+shortcuts[i]+"'" + ');"> ' + shortcuts[i] + "</div>";
          }
           else {
-             var suggest = $('<div class="suggest" onclick="svgCanvas.addToSVG(' + "'&#x"+shortcuts[i]+"'" + ');"> ' + ' &#x' + shortcuts[i] + "</div>");
-             escape.html("&#x"+shortcuts[i]);
-             var sc = escape.html();
-             suggest.bind("touchend", function () {
-                 svgCanvas.addToSVG(sc);
-             });
-             h1.append(suggest);
+            shortcutText += '<div class="suggest" onclick="svgCanvas.addToSVG(' + "'&#x"+shortcuts[i]+"'" + ');"> ' + ' &#x' + shortcuts[i] + "</div>";
           }
        }
-    });
-      // document.getElementById('floatingContent').innerHTML =
-		// 	"<h1> " + shortcutText + " </h1>";
-
+    }
+      document.getElementById('floatingContent').innerHTML =
+			"<h1> " + shortcutText + " </h1>";
     }
 
 		lastKey = key;

@@ -33,10 +33,6 @@
 	line-height: 30px;
 }
 
-#floatingContent>h1>div:last-child {
-	margin-right: 0;
-}
-
 .suggest:hover {
 	background-color: #e0e0e0;
 }
@@ -51,15 +47,7 @@
 	font-size: 14px;
 }
 
-#chatframe>.row {
-	margin: 0;
-}
-
-#chatframe>.row>.col-sm-12 {
-	padding: 0;
-}
-
-@media only screen and (max-device-width: 732px) {
+@media only screen and (max-device-width: 600px) {
  	#editorframe{
  		display:none;
 		width:100%;

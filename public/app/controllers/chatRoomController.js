@@ -122,7 +122,6 @@ angular.module('Controllers')
 	// sending text message function
 
 	$scope.sendMsg = function(){
-        var textarea = document.getElementById("textArea");
 		if ($scope.chatMsg || textarea.value) {
 			var message = "";
 			if(!$scope.chatMsg){
