@@ -52,13 +52,19 @@ app.use(function(req, res, next) {
   next();
 });
 
-function findClient(clients, username) {
-	for (var clientId in clients) {
-		if (ios.sockets.connected[clientId].username === username) {
-			return true;
-		}
-	}
-	return false;
+function findOne(list, params) {
+    var result;
+    list.every(function (user) {
+        var accepted = Object.keys(params).every(function (item) {
+            return (user[item] === params[item])
+        });
+        if (accepted) {
+            result = (user);
+            return false;
+        }
+        return true;
+    });
+    return result;
 }
 
 //sockets handling
@@ -82,9 +88,9 @@ ios.on('connection', function(socket){
 	// creating new user if nickname doesn't exists
 	socket.on('new user', function(data, callback){
         var clients = ios.sockets.adapter.rooms[data.roomId];
-        if (!clients) clients = {sockets:[]};
+        if (!clients) clients = [];
 
-		if(findClient(clients.sockets, data.username))
+		if(findOne(Object.keys(clients), {username: data.username}))
 			{
 				callback({success:false});
 			} else {
