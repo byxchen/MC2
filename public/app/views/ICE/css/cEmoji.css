@@ -185,7 +185,7 @@ li input.active{
         height: auto;
         bottom: 30px;
         top: auto !important;
-        opacity: 1
+        opacity: 1;
     }
 
     #shape_buttons {
