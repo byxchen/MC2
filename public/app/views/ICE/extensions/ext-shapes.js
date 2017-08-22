@@ -342,7 +342,7 @@ methodDraw.addExtension("shapes", function() {
 
 
       var isMobile = false;
-      if ($(window).width() <= 513) isMobile = true;
+      if ($(window).width() <= 732) isMobile = true;
       //ToggleFloatingLayer('FloatingLayer',0);
 
 
@@ -374,7 +374,7 @@ methodDraw.addExtension("shapes", function() {
       shower.on("mouseup", function () {
 
           var area = $("#svgcontent");
-          if ($(window).width() <= 513) isMobile = true;
+          if ($(window).width() <= 732) isMobile = true;
           if (isMobile) {
               var vb = area.attr("viewBox").split(" ");
 
@@ -416,8 +416,9 @@ methodDraw.addExtension("shapes", function() {
 
       $("#svgcanvas").bind("mouseup touchend", function (e) {
 
-          if ($(window).width() <= 513) isMobile = true;
-        if (isMobile) return;
+          if ($(window).width() <= 732) isMobile = true;
+
+          if (isMobile) return prompt();
           var bar = $("#FloatingLayer");
           var math_cursor = svgCanvas.getElem('math_cursor');
           var x = Number(math_cursor.getAttribute('x'));
@@ -430,12 +431,12 @@ methodDraw.addExtension("shapes", function() {
           bar.css({
             'margin-left': x-3,
               'margin-top': 0,
-              'top': y+60
+              'top': y+70
           });
           $("#tools_shapelib").css({
               'margin-left': x,
               'margin-top': 0,
-              'top': y+96
+              'top': y+106
           })
       });
 
