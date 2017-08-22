@@ -9455,9 +9455,9 @@ this.moveCursor = function(dx, dy) {
     if(dy != 0) {
       var pushElems = [];
       var func = function(symbol) {
-        console.log(document.getElementById(symbol.id).__proto__);
+        //console.log(document.getElementById(symbol.id).__proto__);
         symbol = getBBox(document.getElementById(symbol.id));
-        console.log(symbol.height);
+        //console.log(symbol.height);
         if(Math.abs(x - (symbol.x)) > 25)
           return;
         if(isTop * y > isTop * (symbol.y)) {
