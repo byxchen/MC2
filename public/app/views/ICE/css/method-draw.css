@@ -1025,10 +1025,10 @@ box-shadow: inset 0 3px 10px rgba(255, 255, 255, 0.1),
   width: 350px;
   z-index: 10;
   left: 47px !important;
-  height: 350px;
+  height: 210px;
   background: #fff;
   border-radius: 5px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+     box-shadow:0 1px 3px rgba(0,0,0,0.3);
 }
 
  .tools_flyout_v {
@@ -1292,6 +1292,10 @@ box-shadow: inset 0 3px 10px rgba(255, 255, 255, 0.1),
   right: 0;
   position: absolute;
   vertical-align: top;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: flex-start;
 }
 
 #shape_cats {
@@ -1300,7 +1304,7 @@ box-shadow: inset 0 3px 10px rgba(255, 255, 255, 0.1),
   position: absolute;
   left: 0;
   top: 0;
-  height: 300px;
+  height: 210px;
   background: #eee;
   border-radius: 3px 0 0 3px;
   z-index: 2;
@@ -1361,7 +1365,7 @@ box-shadow: inset 0 3px 10px rgba(255, 255, 255, 0.1),
   position: absolute;
   left: 0;
   top: 0;
-  height: 300px;
+  height: 210px;
   background: #eee;
   border-radius: 3px 0 0 3px;
   z-index: 2;
@@ -1536,14 +1540,17 @@ box-shadow: inset 0 3px 10px rgba(255, 255, 255, 0.1),
 
  .tools_flyout .tool_button,
  .tools_flyout .tool_flyout {
-  background: #fff;
+  background: rgb(238, 238, 238);
   width: 40px;
   height: 40px;
   margin: 5px;
-  border-radius: 0px;
+
   -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
-  border-width: 0;
+
+     border: 1px #3f3f3f solid;
+     border-radius: 3px;
+     box-shadow: 0 1px 3px rgba(0,0,0,.15);
 }
 
 /* Necessary to keep the flyouts sized properly */
