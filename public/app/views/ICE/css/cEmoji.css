@@ -156,31 +156,45 @@ li input.active{
 }
 
 #floatingContent {
-    background-color: black;
+
+
+}
+
+#FloatingLayer {
+    background-color: #eee;
+    height: 35px;
+    width: 400px;
+}
+
+#floatingContent>h1 {
+    margin: 0;
 }
 
 /* Keyboard */
 
-@media screen and (max-width: 479px) {
+@media screen and (max-width: 732px) {
     #tools_shapelib {
         width: 100% !important;
         margin-left: -47px !important;
         margin-top: 0 !important;
-        top: calc(100vh - 170px) !important;
+        /*top: calc(100vh - 170px) !important;*/
         border-radius: 0 !important;
         box-shadow: none !important;
         max-width: 100% !important;
         background-color: #ebf0ef !important;
-        height: 140px;
+        height: auto;
+        bottom: 30px;
+        top: auto !important;
+        opacity: 1;
     }
 
     #shape_buttons {
         border-radius: 0 !important;
         position: relative;
-        width: calc(100% - 20px);
+        /*width: 100%;*/
         z-index: 10;
         left: 0;
-        margin: 0 auto;
+        margin: 0 !important;
         padding: 5px;
         background-color: #ebf0ef !important;
         display: flex;
@@ -189,7 +203,7 @@ li input.active{
         top: 30px;
         overflow: auto !important;
         align-content: flex-start;
-        height: 130px;
+        /*height: 130px;*/
     }
 
     #shape_buttons .tool_button>svg {
@@ -216,8 +230,8 @@ li input.active{
         display: flex;
         width: 100% !important;
         background-color: #ebf0ef !important;
-        height: 170px;
-
+        /*height: 170px;*/
+        height: auto;
     }
 
     #shape_cats>div {
@@ -247,12 +261,13 @@ li input.active{
 
     #FloatingLayer {
         border: 0 !important;
-        top: calc(100vh - 200px) !important;
+        /*top: calc(100vh - 200px) !important;*/
         z-index: 10;
-        height: 30px !important;
+
         width: 100% !important;
         left: 0 !important;
         background-color: #ebf0ef !important;
+        margin-left: 0 !important;
     }
 
     #FloatingLayer * {
@@ -288,5 +303,34 @@ li input.active{
 
     }
 
+    #tools_mathlib {
+        opacity: 1 !important;
+        height: 55px;
+        bottom: 0;
+        top: inherit !important;
+        width: 100%;
+        margin-left: -47px !important;
+    }
+
+    #tools_mathlib>div {
+        height: 60px;
+        font-size: 12px;
+    }
+
+    #math_cats div.current::after {
+        border: 0;
+    }
+
+    #math_cats>div {
+        padding: 0;
+        text-align: center;
+        width: 50px;
+    }
+
+    #math_buttons {
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+    }
 
 }
