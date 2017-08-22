@@ -2218,9 +2218,13 @@ var SOTP = 0;
         //   **MDP(  -- TOOO: UNDO -- Fix the cursor/Undo thing
 
         if (selectedElement == null && !multiselected && !path.getNodePoint() && undoMgr.getUndoStackSize() > 0) {
-          undoMgr.undo();
-          svgCanvas.moveCursor(-1.9,0);
-          svgCanvas.resetSelection();
+          svgCanvas.removeNearestToCursor();
+          //undoMgr.undo();
+          //svgCanvas.moveCursor(-1.9,0);
+          //svgCanvas.resetSelection();
+          svgCanvas.clearSelection();
+          
+
         }
         // **MDP)
         if (selectedElement != null || multiselected) {
@@ -2228,8 +2232,10 @@ var SOTP = 0;
             svgCanvas.moveCursor(-1.9,0);
         }
         if (path.getNodePoint()) {
+          console.log('delpat');
           path.deletePathNode();
-          svgCanvas.resetSelection();
+          // svgCanvas.resetSelection();
+          svgCanvas.clearSelection();
         }
 
 
