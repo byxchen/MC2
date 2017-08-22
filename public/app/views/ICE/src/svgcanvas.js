@@ -9455,7 +9455,9 @@ this.moveCursor = function(dx, dy) {
     if(dy != 0) {
       var pushElems = [];
       var func = function(symbol) {
+        console.log(document.getElementById(symbol.id).__proto__);
         symbol = getBBox(document.getElementById(symbol.id));
+        console.log(symbol.height);
         if(Math.abs(x - (symbol.x)) > 25)
           return;
         if(isTop * y > isTop * (symbol.y)) {
@@ -9482,6 +9484,8 @@ this.moveCursor = function(dx, dy) {
       pushElems.sort(function(a, b) {
         return isTop * (b.y - y) - isTop * (a.y - y);
       });
+
+      console.log(y, pushElems);
       if (pushElems.length > 0 && isTop * (y - pushElems[0].y) < 25) {
         //w.setAttribute('x', pushElems[0].y);
         w.setAttribute('y', pushElems[0].y);
@@ -9979,6 +9983,9 @@ var moveCursorAbs = this.moveCursorAbs;
       if(getBBox(newText).x != math_cursorB.x) {
         console.log('k: ', key, 'c: ', math_cursorB.x, 'bbox.x: ', getBBox(newText).x, 'at x: ', newText.getAttribute('x'));
       }
+      // if(getBBox(newText).y != math_cursorB.y) {
+      //   console.log('k: ', key, 'c: ', math_cursorB.y, 'bbox.y: ', getBBox(newText).y, 'at y: ', newText.getAttribute('y'));
+      // }
     } else {
         if (shortcuts[shortcutIndex].length == 1) {
           newText.textContent = shortcuts[shortcutIndex];
