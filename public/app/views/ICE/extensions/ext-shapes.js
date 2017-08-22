@@ -8,6 +8,7 @@
  *
  */
 
+var isOpen = false;
 methodDraw.addExtension("shapes", function() {
 
 
@@ -191,9 +192,9 @@ methodDraw.addExtension("shapes", function() {
         "8": "8,N,250,75,225",
         "9": "9,N,250,75,225",
         "0": "0,N,250,75,225",
-        "+": "+,N,250,75,225",
+        "+": "+,N,250,95,205",
         "-": "-,N,250,75,225",
-        ".": ".,N,250,75,225",
+        ".": ".,N,250,90,225",
         "(": "(,N,250,75,225",
         ")": "),N,250,75,225",
         "[": "[,N,250,75,225",
@@ -321,7 +322,8 @@ methodDraw.addExtension("shapes", function() {
 
       var shower = $('#tools_shapelib_show');
 
-      var isOpen = false;
+
+
 
       loadLibrary('basic');
 
@@ -358,25 +360,21 @@ methodDraw.addExtension("shapes", function() {
       });
       shower.on("mouseup", function () {
 
-          var area = $("#svgcontent");
+          var area = $("#workarea");
           if ($(window).width() <= 479) isMobile = true;
           if (isMobile) {
-              var vb = area.attr("viewBox").split(" ");
 
               if (isOpen) {
-                  vb[1] = "0";
-
-                  area.attr("viewBox", vb.join(" "));
+                  area.css({
+                      height: "calc(100vh - 40px)"
+                  });
                   isOpen = false;
                   ToggleFloatingLayer('FloatingLayer',0);
                   return;
               }
-          var height = $("#menu_bar").height();
-          var y = parseInt($("#math_cursor").attr("y"));
-          vb[1] = "165";
-
-          if ((y + height) >= ($(window).height() - 240)) area.attr("viewBox", vb.join(" "));
-
+              area.css({
+                height: "calc(100vh - 240px)"
+              });
               $("#tools_shapelib").css({
                   'opacity': "1"
               });
@@ -391,11 +389,6 @@ methodDraw.addExtension("shapes", function() {
           var math_cursor = svgCanvas.getElem('math_cursor');
           var x = Number(math_cursor.getAttribute('x'));
           var y = Number(math_cursor.getAttribute('y'));
-          var height = $("#menu_bar").height();
-          var width = $("#tools_left").width();
-
-          if ((x + width) >= ($(window).width() - 400)) x -= 400;
-          if ((y + height) >= ($(window).height() - 240)) y -= 250;
         $("#tools_shapelib").css({
             'margin-left': x,
             'margin-top': 0,
