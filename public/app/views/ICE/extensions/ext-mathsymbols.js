@@ -182,6 +182,8 @@ methodDraw.addExtension("mathsymbols", function() {
 //      console.time('b');
     canv.recalculateDimensions(cur_shape);
     var tlist = canv.getTransformList(cur_shape);
+      cur_shape = null;
+      current_d = null;
     lastBBox = cur_shape.getBBox();
     totalScale = {
       sx: 1,
@@ -252,6 +254,12 @@ methodDraw.addExtension("mathsymbols", function() {
    } */
   totalScale.sx *= sx;
   totalScale.sy *= sy;
+
+      if (sx === Infinity || sy === Infinity)
+          scale.setScale(1, 1);
+      else
+          scale.setScale(sx, sy);
+
   scale.setScale(sx,sy);
   translateBack.setTranslate(left+tx, top+ty);
   var N = tlist.numberOfItems;
@@ -264,7 +272,7 @@ methodDraw.addExtension("mathsymbols", function() {
   canv.runExtensions('elementChanged', {
     elems: [cur_shape]
   });
-  canv.ungroupSelectedElement();
+  //canv.ungroupSelectedElement();
   canv.addToSelection([cur_shape]);
   }
 
@@ -311,8 +319,9 @@ methodDraw.addExtension("mathsymbols", function() {
 
         cur_shape_id = btn[0].id.substr((mode_id+'_').length);
         current_d = cur_lib.data[cur_shape_id];
-        
+
         var selectedElements = canv.getSelectedElems();
+
         if (selectedElements.length == 0) {
           var mode = canv.getMode();
           if(mode !== mode_id) return;
@@ -328,6 +337,7 @@ methodDraw.addExtension("mathsymbols", function() {
               "opacity": cur_style.opacity / 2,
               "cursor": 'move',
               "style": "pointer-events:inherit",
+                "stroke-width": 1
             }
           });
           //cur_shape.setAttribute("d", current_d);
@@ -341,6 +351,10 @@ methodDraw.addExtension("mathsymbols", function() {
             canv.pathActions.fixEnd(cur_shape);
           }
 
+          if (x < 0 || y < 0) {
+            x = y = 10;
+          }
+
           cur_shape.setAttribute('transform', "translate(" + x + "," + y + ") scale(0.2) translate(" + -x + "," + -y + ")");
     //      console.time('b');
           canv.recalculateDimensions(cur_shape);
@@ -351,14 +365,17 @@ methodDraw.addExtension("mathsymbols", function() {
             sy: 1
           };
           canv.setMode('select');
+
           canv.selectOnly([cur_shape]);
+
+            cur_shape = null;
+            current_d = null;
           $('.tools_flyout').fadeOut();
           return;
 
         }
 
         //MDP(
-        
         if ((cur_shape_id == "root" || cur_shape_id == "integral" || cur_shape_id == "sum" || cur_shape_id == "lbracket" || cur_shape_id == "fraction") && selectedElements.length > 0) {
               var bb_min_x = Infinity;
               var bb_min_y = Infinity;
@@ -425,6 +442,8 @@ methodDraw.addExtension("mathsymbols", function() {
               document.getElementById("tool_select").click();
         }
         //MDP)
+          cur_shape = null;
+          current_d = null;
         $('.tools_flyout').fadeOut();
       });
 
