@@ -413,7 +413,9 @@ methodDraw.addExtension("shapes", function() {
           }
       });
 
-      $("#svgcanvas").click(function (e) {
+
+      $("#svgcanvas").bind("mouseup touchend", function (e) {
+
           if ($(window).width() <= 513) isMobile = true;
         if (isMobile) return;
           var bar = $("#FloatingLayer");

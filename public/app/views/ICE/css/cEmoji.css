@@ -172,7 +172,7 @@ li input.active{
 
 /* Keyboard */
 
-@media screen and (max-width: 513px) {
+@media screen and (max-width: 732px) {
     #tools_shapelib {
         width: 100% !important;
         margin-left: -47px !important;
@@ -185,6 +185,7 @@ li input.active{
         height: auto;
         bottom: 30px;
         top: auto !important;
+        opacity: 1;
     }
 
     #shape_buttons {
