@@ -414,11 +414,11 @@ methodDraw.addExtension("shapes", function() {
       });
 
 
-      $("#svgcanvas").bind("mouseup touchend", function (e) {
+      $("#svgcanvas").bind("mouseup", function (e) {
 
           if ($(window).width() <= 732) isMobile = true;
 
-          if (isMobile) return prompt();
+          if (isMobile) return;
           var bar = $("#FloatingLayer");
           var math_cursor = svgCanvas.getElem('math_cursor');
           var x = Number(math_cursor.getAttribute('x'));
