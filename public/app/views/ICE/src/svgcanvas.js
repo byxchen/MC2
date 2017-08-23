@@ -9536,10 +9536,15 @@ var moveCursorAbs = this.moveCursorAbs;
 					'style': 'pointer-events:none'
 				}
 			});
+            $("#FloatingLayer").css({
+                'margin-left': x-3,
+                'margin-top': 0,
+                'top': y+70
+            });
             $("#tools_shapelib").css({
                 'margin-left': x,
                 'margin-top': 0,
-                'top': y+60
+                'top': y+106
             });
 
             if (!blinking) {startBlinking();};
