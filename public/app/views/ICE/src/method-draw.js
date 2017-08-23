@@ -523,7 +523,11 @@ var SOTP = 0;
 
       // called when we've selected a different element
       var selectedChanged = function(window,elems) {
-
+        var iconThing = document.getElementById("tool_deletebutton");
+        if (selectedElement == null && !multiselected && !path.getNodePoint() && undoMgr.getUndoStackSize() > 0) {
+          iconThing.style.backgroundImage = "url('images/t_undo.png')";
+          SOTP = 0;
+        }
         var mode = svgCanvas.getMode();
         if(mode === "select") setSelectMode();
         if (mode === "pathedit") return updateContextPanel();
@@ -554,11 +558,6 @@ var SOTP = 0;
           selectedElement: selectedElement,
           multiselected: multiselected
         });
-          var iconThing = document.getElementById("tool_deletebutton");
-          if (selectedElement == null && !multiselected && !path.getNodePoint() && undoMgr.getUndoStackSize() > 0) {
-              iconThing.style.backgroundImage = "url('images/t_undo.png')";
-              SOTP = 0;
-          }
       };
 
       // Call when part of element is in process of changing, generally
@@ -2216,29 +2215,17 @@ var SOTP = 0;
         var iconThing = document.getElementById("tool_deletebutton");
         iconThing.style.backgroundImage = "url('images/t_undo.png')";
         //   **MDP(  -- TOOO: UNDO -- Fix the cursor/Undo thing
-
         if (selectedElement == null && !multiselected && !path.getNodePoint() && undoMgr.getUndoStackSize() > 0) {
           svgCanvas.removeNearestToCursor();
-          //undoMgr.undo();
-          //svgCanvas.moveCursor(-1.9,0);
-          //svgCanvas.resetSelection();
-          svgCanvas.clearSelection();
-          
-
         }
         // **MDP)
         if (selectedElement != null || multiselected) {
           svgCanvas.deleteSelectedElements();
-            svgCanvas.moveCursor(-1.9,0);
         }
         if (path.getNodePoint()) {
           console.log('delpat');
           path.deletePathNode();
-          // svgCanvas.resetSelection();
-          svgCanvas.clearSelection();
         }
-
-
       };
 
       var cutSelected = function() {
