@@ -9936,57 +9936,25 @@ var moveCursorAbs = this.moveCursorAbs;
 
      var shortcutText = "";
 
-     floating.html("");
-     floating.append($("<h1>"));
-     var h1 = $("#floatingContent>h1");
-
-
-     var escape = $("<div>");
-
-
      shortcuts.forEach(function(shortcut, i) {
        if (i == shortcutIndex) {
          if (shortcuts[i].length == 1) {
-            var suggest = $('<div class="suggest" onclick="svgCanvas.addToSVG(' + "'"+shortcuts[i]+"'" + ');"> ' + '<font color=orange>' + shortcuts[i] + '</font></div>');
-            escape.html(shortcuts[i]);
-            var sc = escape.html();
-            suggest.bind("touchend", function () {
-                svgCanvas.addToSVG(sc);
-            });
-            h1.append(suggest);
+            shortcutText += '<div class="suggest" onmouseup="svgCanvas.addToSVG(' + "'"+shortcuts[i]+"'" + ');"> ' + '<font color=orange>' + shortcuts[i] + '</font></div>';
          }
           else {
-             var suggest = $('<div class="suggest" onclick="svgCanvas.addToSVG(' + "'&#x"+shortcuts[i]+"'" + ');"> ' + '<font color=orange>' + ' &#x' + shortcuts[i] + '</font></div>');
-             escape.html("&#x"+shortcuts[i]);
-             var sc = escape.html();
-             suggest.bind("touchend", function () {
-                 svgCanvas.addToSVG(sc);
-             });
-             h1.append(suggest);
+             shortcutText += '<div class="suggest" onmouseup="svgCanvas.addToSVG(' + "'&#x"+shortcuts[i]+"'" + ');"> ' + '<font color=orange>' + ' &#x' + shortcuts[i] + '</font></div>';
           }
        } else {
          if (shortcuts[i].length == 1) {
-             var suggest = $('<div class="suggest" onclick="svgCanvas.addToSVG(' + "'"+shortcuts[i]+"'" + ');"> ' + shortcuts[i] + "</div>");
-             escape.html(shortcuts[i]);
-             var sc = escape.html();
-             suggest.bind("touchend", function () {
-                 svgCanvas.addToSVG(sc);
-             });
-             h1.append(suggest);
+             shortcutText += '<div class="suggest" onmouseup="svgCanvas.addToSVG(' + "'"+shortcuts[i]+"'" + ');"> ' + shortcuts[i] + "</div>";
          }
           else {
-             var suggest = $('<div class="suggest" onclick="svgCanvas.addToSVG(' + "'&#x"+shortcuts[i]+"'" + ');"> ' + ' &#x' + shortcuts[i] + "</div>");
-             escape.html("&#x"+shortcuts[i]);
-             var sc = escape.html();
-             suggest.bind("touchend", function () {
-                 svgCanvas.addToSVG(sc);
-             });
-             h1.append(suggest);
+             shortcutText += '<div class="suggest" onmouseup="svgCanvas.addToSVG(' + "'&#x"+shortcuts[i]+"'" + ');"> ' + ' &#x' + shortcuts[i] + "</div>";
           }
        }
     });
-      // document.getElementById('floatingContent').innerHTML =
-		// 	"<h1> " + shortcutText + " </h1>";
+        document.getElementById('floatingContent').innerHTML =
+		 	"<h1> " + shortcutText + " </h1>";
 
     }
 
