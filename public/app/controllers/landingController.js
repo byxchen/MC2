@@ -9,7 +9,7 @@ angular.module('Controllers', [])
 
     $scope.schedule = [{day: "Monday", start: "1:00 pm", end: "3:00 pm"},
         {day: "Wednesday", start: "1:00 pm", end: "3:00 pm"},
-        {day: "Saturday", start: "6:00 pm", end: "7:00 pm"}];
+        {day: "Tuesday", start: "11:00 am", end: "1:00 pm"}];
 
     $scope.isInInterval = function (interval) {
         var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
