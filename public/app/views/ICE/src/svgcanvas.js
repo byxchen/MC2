@@ -7010,6 +7010,8 @@ this.getRootElem = function() { return svgroot; };
 // Returns the array with selected DOM elements
 this.getSelectedElems = function() { return selectedElements; };
 
+this.resetSelection = function() { selectedElements = []; };
+
 // Function: getResolution
 // Returns the current dimensions and zoom level in an object
 var getResolution = this.getResolution = function() {
@@ -8475,6 +8477,7 @@ this.deleteSelectedElements = function() {
     selectedElements[i] = null;
     batchCmd.addSubCommand(new RemoveElementCommand(elem, nextSibling, parent));
   }
+  selectedElements = [];
   if (!batchCmd.isEmpty()) addCommandToHistory(batchCmd);
 //  call("changed", selectedCopy); //**MDP
 // **[MDP
@@ -9853,9 +9856,9 @@ var moveCursorAbs = this.moveCursorAbs;
       });
     // Closes the suggestion bar after element is inserted
     clearTimeout(shortcutTimer);
-      ToggleFloatingLayer('FloatingLayer',1);
+      ToggleFloatingLayer('floatingContent',1);
       shortcutTimer = setTimeout(function(){
-        ToggleFloatingLayer('FloatingLayer',0);
+        ToggleFloatingLayer('floatingContent',0);
     }, 2);
   }
 
@@ -9912,7 +9915,8 @@ var moveCursorAbs = this.moveCursorAbs;
         ToggleFloatingLayer('floatingContent',0);
       }, 4000);
 
-        $("#floatingContent").bind("touchstart", function (evt) {
+        var floating = $("#floatingContent");
+        floating.bind("touchstart", function (evt) {
             clearTimeout(shortcutTimer);
             shortcutTimer = setTimeout(function(){
                 ToggleFloatingLayer('floatingContent',0);
@@ -9923,7 +9927,7 @@ var moveCursorAbs = this.moveCursorAbs;
             })
         });
 
-        $("#floatingContent").bind("touchend", function (evt) {
+        floating.bind("touchend", function (evt) {
             $(evt.target).closest('div.suggest').css({
                 "background-color": "transparent",
                 "color": "#333"
@@ -9931,25 +9935,27 @@ var moveCursorAbs = this.moveCursorAbs;
         });
 
      var shortcutText = "";
-     for (var i = 0; i < shortcuts.length; i++) {
+
+     shortcuts.forEach(function(shortcut, i) {
        if (i == shortcutIndex) {
          if (shortcuts[i].length == 1) {
-            shortcutText += '<div class="suggest" onclick="svgCanvas.addToSVG(' + "'"+shortcuts[i]+"'" + ');"> ' + '<font color=orange>' + shortcuts[i] + '</font></div>';
+            shortcutText += '<div class="suggest" onmouseup="svgCanvas.addToSVG(' + "'"+shortcuts[i]+"'" + ');"> ' + '<font color=orange>' + shortcuts[i] + '</font></div>';
          }
           else {
-            shortcutText += '<div class="suggest" onclick="svgCanvas.addToSVG(' + "'&#x"+shortcuts[i]+"'" + ');"> ' + '<font color=orange>' + ' &#x' + shortcuts[i] + '</font></div>';
+             shortcutText += '<div class="suggest" onmouseup="svgCanvas.addToSVG(' + "'&#x"+shortcuts[i]+"'" + ');"> ' + '<font color=orange>' + ' &#x' + shortcuts[i] + '</font></div>';
           }
        } else {
          if (shortcuts[i].length == 1) {
-            shortcutText += '<div class="suggest" onclick="svgCanvas.addToSVG(' + "'"+shortcuts[i]+"'" + ');"> ' + shortcuts[i] + "</div>";
+             shortcutText += '<div class="suggest" onmouseup="svgCanvas.addToSVG(' + "'"+shortcuts[i]+"'" + ');"> ' + shortcuts[i] + "</div>";
          }
           else {
-            shortcutText += '<div class="suggest" onclick="svgCanvas.addToSVG(' + "'&#x"+shortcuts[i]+"'" + ');"> ' + ' &#x' + shortcuts[i] + "</div>";
+             shortcutText += '<div class="suggest" onmouseup="svgCanvas.addToSVG(' + "'&#x"+shortcuts[i]+"'" + ');"> ' + ' &#x' + shortcuts[i] + "</div>";
           }
        }
-    }
-      document.getElementById('floatingContent').innerHTML =
-			"<h1> " + shortcutText + " </h1>";
+    });
+        document.getElementById('floatingContent').innerHTML =
+		 	"<h1> " + shortcutText + " </h1>";
+
     }
 
 		lastKey = key;

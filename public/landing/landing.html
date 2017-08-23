@@ -1,0 +1,79 @@
+<div class="landing-wrapper">
+    <header class="header-bar" ng-class="{'blue-nav': !hideMenu}">
+        <div class="cont"> <a class="header-text" href="/"> MC²<span>Chat</span> </a>
+            <div class="mobile-menu visible-xs" ng-click="menuOnClick()">
+            </div>
+            <nav class="mobile-nav" ng-class="{'menu-active': !hideMenu}">
+                <ul class="menu-list">
+                    <header>Menu</header>
+                    <li><a href="">Video</a></li>
+                    <li><a href="">Github</a></li>
+                    <li><a href="">About</a></li>
+                </ul>
+            </nav>
+            <nav class="navbar-clear hidden-xs">
+                <ul id="btn-list">
+                    <li><a href="">Video</a></li>
+                    <li><a href="">Github</a></li>
+                    <li><a href="">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="container-wrapper">
+        <div class="landing">
+
+            <div class="landing-text">
+                <div class="text"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, dolore magna aliqua. </div>
+                <div class="landing-buttons">
+                    <div class="chat-button"> Go to MC2 </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="info-wrapper">
+        <div class="container-wrapper">
+            <div class="card-container">
+                <div class="landing-card orange-button">
+                    <div class="card-icon schedule">
+
+                    </div>
+                    <div>
+                        <header>
+                            Schedule
+                        </header>
+                        <div ng-repeat="interval in schedule">
+                            <div class="card-content">
+                                {{interval.day+" "+interval.start+" - "+interval.end}}
+                                <span ng-if="isInInterval(interval)" class="open-status-circle"></span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="landing-card orange-button">
+                    <div class="card-icon git">
+
+                    </div>
+                    <div>
+                        <header>
+                            Open Source
+                        </header>
+                        <div class="card-content">
+                            Something something open source.
+
+                        </div>
+                        <div class="line-button">
+                            See on Github
+                        </div>
+                    </div>
+                </div>
+                <div class="landing-card orange-button">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
