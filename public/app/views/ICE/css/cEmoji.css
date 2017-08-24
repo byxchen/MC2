@@ -333,4 +333,20 @@ li input.active{
         flex-wrap: wrap;
     }
 
+    .qwerty-wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    #shape_buttons .qwerty-wrapper .tool_button {
+        flex-grow: 1;
+        flex-shrink: 1;
+        max-width: 30px;
+    }
+
+    #shapelib_space {
+        flex-grow: 50 !important;
+    }
+
 }
