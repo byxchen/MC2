@@ -643,7 +643,7 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53
 	
 	.landing {
 		height: calc(100vh - 80px);
-		min-height: 587px;
+
 		padding: 30px 5px;
 	}
 	
@@ -682,7 +682,6 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53
 	
 	.landing {
 		width: 100%;
-		
 	}
 	
 	.landing-card {
@@ -694,4 +693,13 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53
 		height: 40vh;
 	}
 
+}
+
+@media (min-width: 0px) and (max-width: 330px) {
+
+	.landing {
+		width: 100%;
+		min-height: 587px;
+	}
+	
 }
