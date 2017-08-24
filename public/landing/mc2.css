@@ -644,6 +644,7 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53
 	.landing {
 		height: calc(100vh - 80px);
 		min-height: 587px;
+		padding: 30px 5px;
 	}
 	
 	.card-container {
@@ -661,7 +662,7 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53
 	}
 
 	.landing-splash {
-		margin-top: 2vh;
+		margin-top: 0;
 	}
 	
 	.chat-button {
