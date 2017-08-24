@@ -347,6 +347,7 @@ li input.active{
 
     #shapelib_space {
         flex-grow: 50 !important;
+        max-width: 150px !important;
     }
 
 }
