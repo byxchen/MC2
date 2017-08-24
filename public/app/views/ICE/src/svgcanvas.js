@@ -9488,8 +9488,14 @@ this.moveCursor = function(dx, dy) {
       console.log('c', y, 'elems', pushElems);
       if (pushElems.length > 0 && isTop * (y - pushElems[0].y) < 25) {
         //w.setAttribute('x', pushElems[0].y);
-        w.setAttribute('y', pushElems[0].y);
-        return;
+        var i = 0;
+        while (pushElems.length > i && isTop * (y - pushElems[i].y <= 0.5)) {
+          i++;
+        }
+        if (i < pushElems.length && isTop * (y - pushElems[i].y) < 25) {
+          w.setAttribute('y', pushElems[i].y);
+          return;
+        }
       }
     }
     w.setAttribute('x', x + dx);
