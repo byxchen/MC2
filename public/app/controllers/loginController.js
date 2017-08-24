@@ -35,13 +35,19 @@ angular.module('Controllers',["ngRoute"])
 		$scope.form.initials = $scope.form.username.substring(0,2);
     };
 
+	$scope.toggle = function (isJoin) {
+		$scope.isJoin = isJoin;
+    };
+
 	// Functions for controlling behaviour.
 	$scope.redirect = function(){
+
 		if ($scope.form.username.length <= 20) {
 			if($scope.form.username && $scope.form.roomId){
 
-				$socket.emit('new user',{username : $scope.form.username, userAvatar : $scope.userAvatar, initials : $scope.form.initials, roomId: $scope.form.roomId},function(data){
-					if(data.success == true){	// if nickname doesn't exists	
+				$socket.emit('new user',{username : $scope.form.username, userAvatar : $scope.userAvatar, initials : $scope.form.initials, roomId: $scope.form.roomId, isJoin: $scope.isJoin},function(data){
+					if(data.success == true){	// if nickname doesn't exists
+
 						$rootScope.username = $scope.form.username;
 						$rootScope.initials = $scope.form.initials;
 						$rootScope.userAvatar = $scope.userAvatar;
@@ -49,8 +55,9 @@ angular.module('Controllers',["ngRoute"])
 
 						if (!$scope.isJoin || !$scope.roomId) $location.path('/v1/ChatRoom/'+$scope.form.roomId);
 						else $location.path('/v1/ChatRoom/'+$scope.roomId);
+
 					}else{		// if nickname exists
-						$scope.errMsg = "Use different nickname.";
+						$scope.errMsg = data.message;
 						$scope.isErrorNick = true;
 						$scope.isErrorReq = true;
 						$scope.printErr($scope.errMsg);	

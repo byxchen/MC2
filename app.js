@@ -55,10 +55,14 @@ app.use(function(req, res, next) {
 function findClient(clients, username) {
 	for (var clientId in clients) {
 		if (ios.sockets.connected[clientId].username === username) {
-			return true;
+			return ios.socket.connected[clientId];
 		}
 	}
-	return false;
+	return null;
+}
+
+function findRoom(roomId) {
+	return ios.sockets.adapter.rooms[roomId];
 }
 
 //sockets handling
@@ -82,11 +86,13 @@ ios.on('connection', function(socket){
 	// creating new user if nickname doesn't exists
 	socket.on('new user', function(data, callback){
         var clients = ios.sockets.adapter.rooms[data.roomId];
-        if (!clients) clients = {sockets:[]};
 
+        if (!clients && data.isJoin) return callback({success: false, message: "Room does not exist."});
+        else if (clients && !data.isJoin) return callback({success: false, message: "Room already exists."});
+		if (!data.isJoin) clients = {sockets:[]};
 		if(findClient(clients.sockets, data.username))
 			{
-				callback({success:false});
+				callback({success:false, message: "Use different username."});
 			} else {
 				socket.username = data.username;
 				socket.userAvatar = data.userAvatar;
