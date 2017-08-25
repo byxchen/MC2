@@ -3470,8 +3470,10 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
               var snapY = getBBox(snap).y;
               var type = snap.getAttribute('type');
               var diffX = real_x - snapX;
-              var diffY = real_y - snapY; 
-              if(0 <= diffX && diffX < getBBox(snap).width && 0 <= diffY && diffY < snap.getBBox().height) {
+              var diffY = real_y - snapY;
+              var widthThreshold = getBBox(snap).width;
+              var heightThreshold = getBBox(snap).height;
+              if(0 <= diffX && diffX < widthThreshold && 0 <= diffY && diffY < heightThreshold) {
                 var x = snapX + 1, y = snapY;
                 if (type == 'contains') {
                   y = snapY + getBBox(snap).height/2 - 10;
