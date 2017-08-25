@@ -1,10 +1,11 @@
-@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,300italic,400italic,600italic);
 * {
 	margin: 0;
 	padding: 0;
 	text-rendering: geometricPrecision;
 	color: #414141;
-	font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+	-webkit-font-smoothing: antialiased;
+	font-family: 'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
 	
 }
 
@@ -109,19 +110,19 @@ header nav ul {
 .navbar-clear ul li {
 	float: left;
 	color: #FFFFFF;
-	font-size: 14px;
+	font-size: 13px;
 	text-align: left;
 	margin-right: 25px;
 	margin-top: 25px;
 	letter-spacing: 1px;
-	font-weight: 600;
+
 	transition: all 0.3s linear;
 	
 }
 
 .landing-wrapper {
 	
-	background-color: #c1dede;
+
 	
 }
 
@@ -135,10 +136,9 @@ body {
 }
 
 .landing {
-	height: calc(100vh - 350px);
-	display: flex;
-	justify-content: space-between;
-	min-height: 300px;
+	height: calc(100vh - 350px - 2vh);
+
+	min-height: 370px;
 }
 
 .container-wrapper {
@@ -250,6 +250,11 @@ body {
 	
 }
 
+.card header {
+	color: #5d6795;
+	text-align: center;
+}
+
 .button-active {
 	width: 86% !important;
 	background-color: #ed8355 !important;
@@ -331,9 +336,9 @@ body {
 
 .landing-text {
 	font-size: 30px;
-	width: 50%;
-	margin-top: 12vh;
+	width: 100%;
 
+	text-align: center;
 
 }
 
@@ -346,15 +351,18 @@ body {
 }
 
 .chat-button {
-	font-size: 17px;
+	font-size: 14px;
+	font-weight: 600;
 	background-color: #ed8355;
-	width: 120px;
+	width: 130px;
 	text-align: center;
 	color: #fff;
 	cursor: pointer;
-	padding: 7px;
+	padding: 9px;
 	transition: all 0.15s linear;
 	box-shadow:0px 0px 69px -2px rgba(235,129,84,.2);
+	user-select: none;
+	margin: auto;
 }
 
 .git {
@@ -373,7 +381,7 @@ body {
 .line-button {
 	background-color: transparent;
 	border: 1px #5d6795 solid;
-	padding: 5px 20px;
+	padding: 5px 16px;
 	margin-left: 5px;
 	width: 135px;
 	color: #5d6795;
@@ -546,6 +554,79 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53
 	background-color: #c1dede;
 }
 
+.landing-splash {
+	background-image: url("/app/images/math-art2.svg");
+	width: 100%;
+	background-repeat: no-repeat;
+	background-position: center;
+	margin-top: 2vh;
+	height: 34vh;
+	min-height: 220px;
+}
+
+.utorid-form {
+	margin: 20px auto;
+	width: 250px;
+	
+}
+
+.utorid-form div {
+	color: #9da3bd;
+	font-size: 13px;
+	padding: 8px 3px 3px;
+}
+
+.utorid-form input[type="text"] {
+	border: 0;
+	border-bottom: 2px #dee1e3 solid;
+	padding: 10px;
+	outline: none;
+	width: 100%;
+	transition: all 0.1s linear;
+	font-weight: 600;
+	
+}
+
+.utorid-form input[type="text"]:focus {
+	border-bottom: 2px #545d85 solid;
+}
+
+.utorid-form input[type="button"], .utorid-form input[type="submit"] {
+	padding: 10px;
+	width: 120px;
+	border-radius: 2px;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.utorid-form input:focus {
+	outline: none;
+}
+
+.utorid-form .confirm-button {
+	border: 1px #ed8355 solid;
+	color: #ed8355;
+	background-color: #fff;
+	transition: all 0.12s linear;
+}
+
+.utorid-form .confirm-button:hover {
+	border: 1px #ed8355 solid;
+	color: #fff;
+	background-color: #ed8355;
+}
+
+.utorid-form .cancel-button {
+	background-color: #dadce3;
+	color: #5d6795;
+}
+
+.button-wrapper {
+	display: flex;
+	justify-content: center;
+	margin: 25px 0 ;
+}
+
 @keyframes OpenPulse {
     from {
         transform: scale3d(1,1,1);
@@ -599,8 +680,8 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53
 		width: 50%;
 	}
 	
-	.landing-text {
-		margin-top: 8vh;
+	.landing-splash {
+		margin-top: 2vh;
 	}
 	
 	.card-container {
@@ -622,6 +703,11 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53
 	
 	.card {
 		width: 90%;
+
+	}
+
+	.ng-scope .card {
+		margin: 10px auto;
 	}
 	
 	.cont {
@@ -630,6 +716,8 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53
 	
 	.landing {
 		height: calc(100vh - 80px);
+
+		padding: 30px 5px;
 	}
 	
 	.card-container {
@@ -641,9 +729,13 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53
 	}
 	
 	.landing-text {
-		margin-top: 10vh;
+
 		width: 100%;
 		text-align: center;
+	}
+
+	.landing-splash {
+		margin-top: 0;
 	}
 	
 	.chat-button {
@@ -663,11 +755,36 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53
 	
 	.landing {
 		width: 100%;
-		
 	}
 	
 	.landing-card {
 		min-width: 99%;
 	}
 
+	.landing-splash {
+		width: 100%;
+		height: 40vh;
+	}
+
+
+
+}
+
+@media (min-width: 0px) and (max-width: 330px) {
+
+	.landing {
+		width: 100%;
+		min-height: 587px;
+	}
+
+	.ng-scope .card {
+		height: calc(100vh - 35px);
+	}
+
+}
+@media (max-height: 420px) and (min-height: 0px) {
+	.landing {
+
+		min-height: 450px;
+	}
 }

@@ -247,8 +247,13 @@
 	text-align: center;
 	border-radius: 30px;
 	cursor: pointer;
-	transition: all 0.1s linear;
+	transition: background-color 0.1s linear, border 0.1s linear;
 	margin: 0 calc((100% - 266px) / 6);
+	line-height: 23px;
+	color: #8a8a8a;
+	font-weight: 700;
+	font-size: 13px;
+	border: 2px transparent solid;
 }
 
 input {
@@ -256,21 +261,23 @@ input {
 }
 
 .create-button2 {
-	color: #fff;
-	background-color: #ed8355;
-	border: 2px #ed8355 solid;
+
+
 }
 
 .join-button2 {
-	color: #ed8355;
-	border: 2px #ed8355 solid;
+
 }
 
 
 
 .join-button2:hover {
-	color: #fff;
-	background-color: #ed8355;
+	color: #ed8355;
+
+}
+
+.create-button2:hover {
+	color: #ed8355;
 }
 
 .button-active2 {
@@ -279,16 +286,18 @@ input {
 	background-image: none;
 	color: #fff !important;
 
+	font-size: 14px;
+	line-height: inherit;
 }
 
 .button-not2 {
 	background-color: transparent;
-	border: 2px #ed8355 solid;
+
 	border-radius: 50%;
 	background-size: 20px;
 	background-position: center;
 	background-repeat: no-repeat;
-	color: #ed8355;
+	color: #a0a0a0;
 }
 
 .button-not2:hover {
@@ -316,3 +325,6 @@ input {
 	padding-bottom: 15px;
 }
 
+.no-toggle {
+	margin-top: 15px;
+}
