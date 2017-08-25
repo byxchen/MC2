@@ -250,6 +250,11 @@ body {
 	
 }
 
+.card header {
+	color: #5d6795;
+	text-align: center;
+}
+
 .button-active {
 	width: 86% !important;
 	background-color: #ed8355 !important;
@@ -559,6 +564,69 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53
 	min-height: 220px;
 }
 
+.utorid-form {
+	margin: 20px auto;
+	width: 250px;
+	
+}
+
+.utorid-form div {
+	color: #9da3bd;
+	font-size: 14px;
+	padding: 3px;
+}
+
+.utorid-form input[type="text"] {
+	background-color: #f0f0f0;
+	border: 1px transparent solid;
+	padding: 10px;
+	outline: none;
+	width: 100%;
+	transition: all 0.1s linear;
+	font-weight: 600;
+	
+}
+
+.utorid-form input[type="text"]:focus {
+	border: 1px #9da3bd solid;
+}
+
+.utorid-form input[type="button"], .utorid-form input[type="submit"] {
+	padding: 10px;
+	width: 120px;
+	border-radius: 2px;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.utorid-form input:focus {
+	outline: none;
+}
+
+.utorid-form .confirm-button {
+	border: 1px #ed8355 solid;
+	color: #ed8355;
+	background-color: #fff;
+	transition: all 0.12s linear;
+}
+
+.utorid-form .confirm-button:hover {
+	border: 1px #ed8355 solid;
+	color: #fff;
+	background-color: #ed8355;
+}
+
+.utorid-form .cancel-button {
+	background-color: #dadce3;
+	color: #5d6795;
+}
+
+.button-wrapper {
+	display: flex;
+	justify-content: center;
+	margin: 35px 0 ;
+}
+
 @keyframes OpenPulse {
     from {
         transform: scale3d(1,1,1);
@@ -635,6 +703,11 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53
 	
 	.card {
 		width: 90%;
+
+	}
+
+	.ng-scope .card {
+		margin: 10px auto;
 	}
 	
 	.cont {
@@ -693,6 +766,8 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53
 		height: 40vh;
 	}
 
+
+
 }
 
 @media (min-width: 0px) and (max-width: 330px) {
@@ -701,5 +776,15 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53
 		width: 100%;
 		min-height: 587px;
 	}
-	
+
+	.ng-scope .card {
+		height: calc(100vh - 40px);
+	}
+
+}
+@media (max-height: 420px) and (min-height: 0px) {
+	.landing {
+
+		min-height: 450px;
+	}
 }

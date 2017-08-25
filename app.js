@@ -9,6 +9,7 @@ var io = require('socket.io');				// using sockets
 var ios = io.listen(server);				// listening sockets
 var formidable = require('formidable');		// file upload module
 var util = require('util');
+const uuidv4 = require('uuid/v4');
 
 // Initializing Variables
 //var nickname = [];
@@ -156,6 +157,34 @@ ios.on('connection', function(socket){
         }
         ios.sockets.emit('online-members', online_member);
     });
+});
+
+var testList = [{utorid: "test", email:"example@email.com"}];
+var urls = {};
+
+function generateURLs() {
+	testList.forEach(function (item, i) {
+		var rand = uuidv4();
+		urls[rand] = item;
+		console.log(rand);
+    });
+}
+
+generateURLs();
+
+app.get("/v1/api/register/:code", function (req, res) {
+	var resp = urls[req.params.code];
+	if (!resp) return res.status(404).json({status: 404, message: "Requested registration id cannot be found."});
+	res.json(resp);
+});
+
+app.post("/v1/api/register", function (req, res) {
+    console.log(req.body);
+    res.json({});
+});
+
+app.get("/register/:code", function (req, res) {
+	res.sendfile("public/register/index.html");
 });
 
 // route for uploading images asynchronously
