@@ -571,14 +571,14 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53
 }
 
 .utorid-form div {
-	color: #9da3bd;
-	font-size: 14px;
-	padding: 3px;
+	color: #5d6795;
+	font-size: 13px;
+	padding: 8px 3px 3px;
 }
 
 .utorid-form input[type="text"] {
-	background-color: #f0f0f0;
-	border: 1px transparent solid;
+	border: 0;
+	border-bottom: 2px #dee1e3 solid;
 	padding: 10px;
 	outline: none;
 	width: 100%;
@@ -588,7 +588,7 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53
 }
 
 .utorid-form input[type="text"]:focus {
-	border: 1px #9da3bd solid;
+	border-bottom: 2px #545d85 solid;
 }
 
 .utorid-form input[type="button"], .utorid-form input[type="submit"] {
@@ -624,7 +624,7 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53
 .button-wrapper {
 	display: flex;
 	justify-content: center;
-	margin: 35px 0 ;
+	margin: 25px 0 ;
 }
 
 @keyframes OpenPulse {
@@ -778,7 +778,7 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53
 	}
 
 	.ng-scope .card {
-		height: calc(100vh - 40px);
+		height: calc(100vh - 35px);
 	}
 
 }

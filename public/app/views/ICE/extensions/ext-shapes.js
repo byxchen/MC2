@@ -24,7 +24,6 @@ methodDraw.addExtension("shapes", function() {
       numerical: '[0-9]+-()',
     symbols: 'Symbols',
     greek: 'Greek',
-    greek2: 'Greek 2',
 
 //    arrow: 'Arrows',
 //    flowchart: 'Flowchart',
