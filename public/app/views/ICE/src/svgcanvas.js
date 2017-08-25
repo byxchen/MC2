@@ -3450,7 +3450,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
           if(selected)
           {
             var newX = getBBox(selected).x +  getBBox(selected).width + 1;
-            var newY = Number(getBBox(selected).y);
+            var newY = getBBox(selected).y;
             placeMathCursor(newX, newY);
             svgCanvas.keyPressed("");
           }
@@ -3470,8 +3470,10 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
               var snapY = getBBox(snap).y;
               var type = snap.getAttribute('type');
               var diffX = real_x - snapX;
-              var diffY = real_y - snapY; 
-              if(0 <= diffX && diffX < getBBox(snap).width && 0 <= diffY && diffY < snap.getBBox().height) {
+              var diffY = real_y - snapY;
+              var widthThreshold = getBBox(snap).width;
+              var heightThreshold = getBBox(snap).height;
+              if(0 <= diffX && diffX < widthThreshold && 0 <= diffY && diffY < heightThreshold) {
                 var x = snapX + 1, y = snapY;
                 if (type == 'contains') {
                   y = snapY + getBBox(snap).height/2 - 10;
@@ -9485,10 +9487,17 @@ this.moveCursor = function(dx, dy) {
       pushElems.sort(function(a, b) {
         return isTop * (b.y - y) - isTop * (a.y - y);
       });
+      console.log('c', y, 'elems', pushElems);
       if (pushElems.length > 0 && isTop * (y - pushElems[0].y) < 25) {
         //w.setAttribute('x', pushElems[0].y);
-        w.setAttribute('y', pushElems[0].y);
-        return;
+        var i = 0;
+        while (pushElems.length > i && isTop * (y - pushElems[i].y <= 0.5)) {
+          i++;
+        }
+        if (i < pushElems.length && isTop * (y - pushElems[i].y) < 25) {
+          w.setAttribute('y', pushElems[i].y);
+          return;
+        }
       }
     }
     w.setAttribute('x', x + dx);
@@ -9963,7 +9972,7 @@ var moveCursorAbs = this.moveCursorAbs;
     var math_cursor = svgCanvas.getElem('math_cursor');
     var math_cursorB = getBBox(math_cursor);
     var x = math_cursorB.x;
-    var y = math_cursorB.y + 20 + 1;
+    var y = math_cursorB.y + 21;
     if(selectedElements.length > 0) {
       clearSelection();
     }
@@ -9980,7 +9989,7 @@ var moveCursorAbs = this.moveCursorAbs;
     	  'stroke-width': cur_text.stroke_width,
     		'font-size': cur_text.font_size,
     		//		'font-family': cur_text.font_family,
-    		'font-family': 'Monspace',
+    		'font-family': 'Times',
     		'text-anchor': 'left',
     		'xml:space': 'preserve',
     		'opacity': cur_shape.opacity,
@@ -10025,6 +10034,8 @@ var moveCursorAbs = this.moveCursorAbs;
     //svgEdit.clickSelect();
     //  svgCanvas.setSelectMode();
     //}, 1500);
+          console.log(newText.__proto__)
+      console.log(newText.clientHeight);
 	};
 
 // End MDP]
