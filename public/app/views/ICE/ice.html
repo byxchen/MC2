@@ -72,11 +72,15 @@
   <script type="text/javascript" src="../recognition/operatorSymbol.js"></script>
   <script type="text/javascript" src="../../js/ifrm.js"></script>
   <!--<script type="text/javascript" src="../../controllers/chatRoomController.js"></script>-->
-
+  <script>
+    $("html").css({
+      "touch-action": "pan-down"
+    });
+  </script>
 <!--{endif}-->
 
 
-<title>iCE</title>
+<title>MC2 Editor</title>
 </head>
 <body>
 <div id="svg_editor">
@@ -537,16 +541,18 @@
 
 
 <div id="tools_left" class="tools_panel">
-  <div class="tool_button" id="tool_select" title="Select Tool [V]"></div>
-  <!-- merge into one tool! -->
-  <div class="tool_button" id="tool_fhpath" title="Pencil Tool [P]"></div>
-  <div class="tool_button" id="tool_selectpath" style="background-image: url('images/t_select.png');" title="Select/Path Tool[U]"></div>
-  <div class="tool_button" id="tool_deletebutton" style="background-image: url('images/t_undo.png');" title="Undo/Delete Tool[U]"></div>
+
+    <div class="tool_button" id="tool_select" title="Select Tool [V]"></div>
+    <div class="tool_button" id="tool_fhpath" title="Pencil Tool [P]"></div>
+    <div class="tool_button" id="tool_selectpath" style="background-image: url('images/t_select.png');" title="Select/Path Tool[S]"></div>
+    <div class="tool_button" id="tool_deletebutton" style="background-image: url('images/t_undo.png');" title="Undo/Delete Tool[U]"></div>
+
   <!--
   <div class="tool_button" id="tool_line" title="Line Tool [L]"></div>
   -->
 
-  <div id="color_tools">
+  <!-- does not display color palette as it is irrelevant -->
+  <div id="color_tools" style="display:none">
         <div id="tool_switch" title="Switch stroke and fill colors [X]"></div>
         <div class="color_tool active" id="tool_fill">
           <label class="icon_label" title="Change fill color"></label>
@@ -601,6 +607,12 @@
   </div>
 
   <div id="tools_bottom_3">
+  <!-- Bottom panel test
+    <div class="tool_button" id="tool_select" style="display:inline-flex;" title="Select Tool [V]"></div>
+    <div class="tool_button" id="tool_fhpath" style="display:inline-flex;" title="Pencil Tool [P]"></div>
+    <div class="tool_button" id="tool_selectpath" style="display:inline-flex; background-image: url('images/t_select.png');" title="Select/Path Tool[S]"></div>
+    <div class="tool_button" id="tool_deletebutton" style="display:inline-flex; background-image: url('images/t_undo.png');" title="Undo/Delete Tool[U]"></div>
+  -->
     <!--
 
         <div id="palette" title="Click to change fill color, shift-click to change stroke color"></div>

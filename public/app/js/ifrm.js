@@ -5,6 +5,7 @@ function swapFrame(){
 	var editor = document.getElementById("editorframe");
 	editor.style.display = "inline";
 	chat.style.display = "none";
+	simulateFullScreen();
 }
 
 function swapParentFrame(){
@@ -12,16 +13,17 @@ function swapParentFrame(){
     var editor = parent.document.getElementById("editorframe");
     editor.style.display = "none";
     chat.style.display = "inline";
+    cancelFS();
 }
 
 function swapTool(){
 	var SP = document.getElementById("tool_selectpath");
 	if(state == 0){
-		alert(5);
+		//alert(5);
 		state = 1;
 	}
 	else{
-		alert(6);
+		//alert(6);
 		state = 0;
 	}
 }
@@ -52,4 +54,15 @@ function simulateFullScreen(){
     else {
       cancelFullScreen.call(doc);
     }
+}
+
+function cancelFS(){
+	alert("changing");
+	var doc = window.document;
+    var docEl = doc.documentElement;
+
+    var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+    var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+
+    cancelFullScreen.call(doc);
 }
