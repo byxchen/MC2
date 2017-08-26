@@ -56,7 +56,7 @@ app.use(function(req, res, next) {
 function findClient(clients, username) {
 	for (var clientId in clients) {
 		if (ios.sockets.connected[clientId].username === username) {
-			return ios.socket.connected[clientId];
+			return ios.sockets.connected[clientId];
 		}
 	}
 	return null;
