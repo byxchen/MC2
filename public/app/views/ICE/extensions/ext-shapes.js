@@ -450,8 +450,7 @@ methodDraw.addExtension("shapes", function() {
               area.css({
                   height: "100vh"
               });
-              isOpen = false;
-              //ToggleFloatingLayer('FloatingLayer',0);
+              isOpen = false
           }
       });
       shower.on("mouseup", function () {
@@ -466,7 +465,6 @@ methodDraw.addExtension("shapes", function() {
 
                   area.attr("viewBox", vb.join(" "));
                   isOpen = false;
-                  //ToggleFloatingLayer('FloatingLayer',0);
                   return;
               }
               var height = $("#menu_bar").height();
@@ -479,21 +477,13 @@ methodDraw.addExtension("shapes", function() {
               keyboard.css({
                   'opacity': "1"
               });
-              $("#FloatingLayer").css({
-                top: keyboard.position().top-35
-              });
-              //ToggleFloatingLayer('FloatingLayer',1);
               isOpen = true;
-          } else {
-            if (isOpen) {
-              //ToggleFloatingLayer('FloatingLayer',0);
+          } else if (isOpen) {
               isOpen = false;
-            }
-            else {
-              //ToggleFloatingLayer('FloatingLayer', 1);
+            } else {
               isOpen = true;
             }
-          }
+
       });
 
 
