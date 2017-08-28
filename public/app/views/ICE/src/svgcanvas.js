@@ -279,7 +279,7 @@ var cur_shape = all_properties.shape;
 // Array with all the currently selected elements
 // default size of 0 until it needs to grow bigger
 var selectedElements = new Array(0);
-var groupedElement;
+this.groupedElement = null;
 
 // Function: addSvgElementFromJson
 // Create a new SVG element based on the given object keys/values and add it to the current layer
@@ -2211,8 +2211,8 @@ var root_sctm = null;
 // noCall - Optional boolean that when true does not call the "selected" handler
 var clearSelection = this.clearSelection = function(noCall, revColor) {
   //canvas.ungroupSelectedElement()
-  if(groupedElement) {
-    canvas.ungroupSelectedElement(groupedElement, false);
+  if(canvas.groupedElement) {
+    canvas.ungroupSelectedElement(canvas.groupedElement, false);
   }
   if (selectedElements[0] != null) {
     var len = selectedElements.length;
@@ -3456,7 +3456,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
           }
           else {
             canvas.groupSelectedElements('g', false, false);
-            groupedElement = selectedElements[0];
+            canvas.groupedElement = selectedElements[0];
           }
         }
         
@@ -8451,8 +8451,8 @@ this.deleteSelectedElements = function() {
   var batchCmd = new BatchCommand("Delete Elements");
   var len = selectedElements.length;
   if (len == 0) return;
-  if(selectedElements[0] == groupedElement)
-    groupedElement = null;
+  if(selectedElements[0] == canvas.groupedElement)
+    canvas.groupedElement = null;
   var selectedCopy = []; //selectedElements is being deleted
   for (var i = 0; i < len; ++i) {
     var selected = selectedElements[i];
@@ -8855,7 +8855,7 @@ this.ungroupSelectedElement = function(gElem, revColor) {
   if(revColor == null) {
     revColor == true;
   }
-  groupedElement = null;
+  canvas.groupedElement = null;
   if($(g).data('gsvg') || $(g).data('symbol')) {
     // Is svg, so actually convert to group
 
@@ -9487,7 +9487,6 @@ this.moveCursor = function(dx, dy) {
       pushElems.sort(function(a, b) {
         return isTop * (b.y - y) - isTop * (a.y - y);
       });
-      console.log('c', y, 'elems', pushElems);
       if (pushElems.length > 0 && isTop * (y - pushElems[0].y) < 25) {
         //w.setAttribute('x', pushElems[0].y);
         var i = 0;
@@ -9997,7 +9996,6 @@ var moveCursorAbs = this.moveCursorAbs;
     		}
       });
       if(getBBox(newText).x != math_cursorB.x) {
-        console.log('k: ', key, 'c: ', math_cursorB.x, 'bbox.x: ', getBBox(newText).x, 'at x: ', newText.getAttribute('x'));
       }
     } else {
         if (shortcuts[shortcutIndex].length == 1) {
@@ -10034,8 +10032,6 @@ var moveCursorAbs = this.moveCursorAbs;
     //svgEdit.clickSelect();
     //  svgCanvas.setSelectMode();
     //}, 1500);
-          console.log(newText.__proto__)
-      console.log(newText.clientHeight);
 	};
 
 // End MDP]
