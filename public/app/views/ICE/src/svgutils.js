@@ -478,7 +478,7 @@ svgedit.utilities.getBBox = function(elem) {
       try { ret = selected.getBBox();} catch(e){}
     }
     if (ret) {
-      ret.x = selected.x.baseVal[0].value;
+      ret.x = selected.x.baseVal.getItem(0).value;
     }
     break;
   case 'path':
