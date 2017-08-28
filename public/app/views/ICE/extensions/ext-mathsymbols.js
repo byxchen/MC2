@@ -476,7 +476,7 @@ methodDraw.addExtension("mathsymbols", function() {
 
       $('#tool_mathlib').remove();
 
-      var h = $('#tools_mathlib').height();
+      var h = $('#').height();
       $('#tools_mathlib').css({
         'margin-top': -(h/2),
         'margin-left': 3
