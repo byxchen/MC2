@@ -17,14 +17,15 @@ methodDraw.addExtension("shapes", function() {
   var start_x, start_y;
   var svgroot = canv.getRootElem();
   var lastBBox = {};
+    var on = false;
 
   // This populates the category list
   var categories = {
     basic: '[a-z]',
+      numerical: '[0-9]+-()',
     symbols: 'Symbols',
     greek: 'Greek',
-    greek2: 'Greek 2',
-    numerical: '[0-9]+-()',
+
 //    arrow: 'Arrows',
 //    flowchart: 'Flowchart',
 //    nature: 'Nature',
@@ -37,41 +38,83 @@ methodDraw.addExtension("shapes", function() {
   };
 
   var library = {
-    'basic': {
-      data: {
-        "a": "a,N,250,75,225", //**MDP char, Resizeable, height, x, y
-        "b": "b,N,250,75,225",
-        "c": "c,N,250,75,225",
-        "d": "d,N,250,75,225",
-        "e": "e,N,250,75,225",
-        "f": "f,N,250,75,225",
-        "g": "g,N,250,75,225",
-        "h": "h,N,250,75,225",
-        "i": "i,N,250,75,225",
-        "j": "j,N,250,75,225",
-        "k": "k,N,250,75,225",
-        "l": "l,N,250,75,225",
-        "m": "m,N,250,75,225",
-        "n": "n,N,250,75,225",
-        "o": "o,N,250,75,225",
-        "p": "p,N,250,75,225",
-        "q": "q,N,250,75,225",
-        "r": "r,N,250,75,225",
-        "s": "s,N,250,75,225",
-        "t": "t,N,250,75,225",
-        "u": "u,N,250,75,225",
-        "v": "v,N,250,75,225",
-        "w": "w,N,250,75,225",
-        "x": "x,N,250,75,225",
-        "y": "y,N,250,75,225",
-        "z": "z,N,250,75,225",
-        "left": "\u21e6,N,250,75,225",
-        "up": "\u21e7,N,250,75,225",
-        "right": "\u21e8,N,250,75,225",
-        "down": "\u21e9,N,250,75,225",
-        "space": " ,N,250,75,225",
-        "U": "\u238c,N,250,75,225",
+      'basic': {
+          data: {
+              "a": "a,N,250,75,225", //**MDP char, Resizeable, height, x, y
+              "b": "b,N,250,75,225",
+              "c": "c,N,250,75,225",
+              "d": "d,N,250,75,225",
+              "e": "e,N,250,75,225",
+              "f": "f,N,250,75,225",
+              "g": "g,N,250,75,225",
+              "h": "h,N,250,75,225",
+              "i": "i,N,250,75,225",
+              "j": "j,N,250,75,225",
+              "k": "k,N,250,75,225",
+              "l": "l,N,250,75,225",
+              "m": "m,N,250,75,225",
+              "n": "n,N,250,75,225",
+              "o": "o,N,250,75,225",
+              "p": "p,N,250,75,225",
+              "q": "q,N,250,75,225",
+              "r": "r,N,250,75,225",
+              "s": "s,N,250,75,225",
+              "t": "t,N,250,75,225",
+              "u": "u,N,250,75,225",
+              "v": "v,N,250,75,225",
+              "w": "w,N,250,75,225",
+              "x": "x,N,250,75,225",
+              "y": "y,N,250,75,225",
+              "z": "z,N,250,75,225",
+              "left": "\u21e6,N,250,75,225",
+              "up": "\u21e7,N,250,75,225",
+              "right": "\u21e8,N,250,75,225",
+              "down": "\u21e9,N,250,75,225",
+              "space": " ,N,250,75,225",
 
+
+          },
+          buttons: []
+      },
+    'qwerty': {
+      data: {
+          "q": "q,N,250,75,225",
+          "w": "w,N,250,75,225",
+          "e": "e,N,250,75,225",
+          "r": "r,N,250,75,225",
+          "t": "t,N,250,75,225",
+          "y": "y,N,250,75,225",
+          "u": "u,N,250,75,225",
+          "i": "i,N,250,75,225",
+          "o": "o,N,250,75,225",
+          "p": "p,N,250,75,225",
+        "a": "a,N,250,75,225", //**MDP char, Resizeable, height, x, y
+          "s": "s,N,250,75,225",
+          "d": "d,N,250,75,225",
+          "f": "f,N,250,75,225",
+          "g": "g,N,250,75,225",
+          "h": "h,N,250,75,225",
+          "j": "j,N,250,75,225",
+          "k": "k,N,250,75,225",
+          "l": "l,N,250,75,225",
+          "z": "z,N,250,75,225",
+          "x": "x,N,250,75,225",
+        "c": "c,N,250,75,225",
+          "v": "v,N,250,75,225",
+          "b": "b,N,250,75,225",
+          "n": "n,N,250,75,225",
+
+
+
+          "m": "m,N,250,75,225",
+
+        "space": " ,N,250,75,225",
+
+          "left": "\u21e6,N,250,75,225",
+          "up": "\u21e7,N,250,75,225",
+          "right": "\u21e8,N,250,75,225",
+          "down": "\u21e9,N,250,75,225",
+          "shift": "\u21EA,N,250,75,225"
 
       },
       buttons: []
@@ -267,6 +310,15 @@ methodDraw.addExtension("shapes", function() {
 
     cur_lib.buttons = [];
 
+    var wrapper = $("<div class='qwerty-wrapper'>");
+
+      var isMobile = false;
+      if ($(window).width() <= 732) isMobile = true;
+
+      if (isMobile && cat === 'basic') {
+          data = library['qwerty'].data;
+      }
+
     for(var id in data) {
       var path_d = data[id];
       var icon = svg_elem.clone();
@@ -286,8 +338,35 @@ methodDraw.addExtension("shapes", function() {
       icon_btn[0].mathchar = id;
       icon_btn[0].mathdata = path_d;
 
-      // Store for later use
-      cur_lib.buttons.push(icon_btn[0]);
+        if (cat !== 'basic' || !isMobile) cur_lib.buttons.push(icon_btn[0]);
+      else {
+            wrapper.append(icon_btn);
+            // Store for later use
+            if (id === 'p' || id === 'l' || id === 'm' || id === 'down') {
+                if (id === 'down') {
+                    var shift = $('<div class="tool_button loaded" id="shapelib_shift" title="shift" style="background-color: rgb(235, 240, 239);flex-grow: 30;max-width: 80px;"><svg xmlns="http://www.w3.org/2000/svg" width="70" height="25"><svg viewBox="0 0 620 330"><text id="mb" font-family="monospace" font-size="220" y="235" x="10" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">shift</text></svg></svg></div>');
+                        shift.bind('mouseup', function () {
+                            on = !on;
+
+                            if (on) {
+                                $("#shape_buttons .tool_button text").each(function(i, item) {
+                                    item.innerHTML = item.innerHTML.toUpperCase();
+
+                                });
+                            } else {
+                                $("#shape_buttons .tool_button text").each(function(i, item) {
+                                    item.innerHTML = item.innerHTML.toLowerCase();
+
+                                });
+                            }
+                        });
+                    wrapper.prepend(shift);
+                }
+
+                cur_lib.buttons.push(wrapper[0]);
+                wrapper = $("<div class='qwerty-wrapper'>");
+            }
+        }
     }
 
   }
@@ -444,7 +523,8 @@ methodDraw.addExtension("shapes", function() {
       // Do mouseup on parent element rather than each button
       $('#shape_buttons').mouseup(function(evt) {
         var btn = $(evt.target).closest('div.tool_button');
-
+        if (!btn[0]) return;
+        if (!btn[0].mathdata) return;
         if(!btn.length) return;
 
         var copy = btn.children().clone().attr({width: 24, height: 24});
@@ -461,7 +541,15 @@ methodDraw.addExtension("shapes", function() {
    		//alert(btn[0].data);
       //alert(cur_lib.id);
       //alert(btn[0].mathdata);
-      canv.keyPressed(btn[0].mathdata.charAt(0));
+      if (!on) canv.keyPressed(btn[0].mathdata.charAt(0));
+      else {
+          canv.keyPressed(btn[0].mathdata.charAt(0).toUpperCase());
+          $("#shape_buttons .tool_button text").each(function(i, item) {
+              item.innerHTML = item.innerHTML.toLowerCase();
+
+          });
+          on = false;
+      }
           //ToggleFloatingLayer('FloatingLayer',1);
     //  methodDraw.clickSelect();
     //  canv.setMode('select');

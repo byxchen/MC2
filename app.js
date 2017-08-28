@@ -9,6 +9,7 @@ var io = require('socket.io');				// using sockets
 var ios = io.listen(server);				// listening sockets
 var formidable = require('formidable');		// file upload module
 var util = require('util');
+const uuidv4 = require('uuid/v4');
 
 // Initializing Variables
 //var nickname = [];
@@ -55,10 +56,14 @@ app.use(function(req, res, next) {
 function findClient(clients, username) {
 	for (var clientId in clients) {
 		if (ios.sockets.connected[clientId].username === username) {
-			return true;
+			return ios.socket.connected[clientId];
 		}
 	}
-	return false;
+	return null;
+}
+
+function findRoom(roomId) {
+	return ios.sockets.adapter.rooms[roomId];
 }
 
 //sockets handling
@@ -82,11 +87,13 @@ ios.on('connection', function(socket){
 	// creating new user if nickname doesn't exists
 	socket.on('new user', function(data, callback){
         var clients = ios.sockets.adapter.rooms[data.roomId];
-        if (!clients) clients = {sockets:[]};
 
+        if (!clients && data.isJoin) return callback({success: false, message: "Room does not exist."});
+        else if (clients && !data.isJoin) return callback({success: false, message: "Room already exists."});
+		if (!data.isJoin) clients = {sockets:[]};
 		if(findClient(clients.sockets, data.username))
 			{
-				callback({success:false});
+				callback({success:false, message: "Use different username."});
 			} else {
 				socket.username = data.username;
 				socket.userAvatar = data.userAvatar;
@@ -150,6 +157,34 @@ ios.on('connection', function(socket){
         }
         ios.sockets.emit('online-members', online_member);
     });
+});
+
+var testList = [{utorid: "test", email:"example@email.com"}];
+var urls = {};
+
+function generateURLs() {
+	testList.forEach(function (item, i) {
+		var rand = uuidv4();
+		urls[rand] = item;
+		console.log(rand);
+    });
+}
+
+generateURLs();
+
+app.get("/v1/api/register/:code", function (req, res) {
+	var resp = urls[req.params.code];
+	if (!resp) return res.status(404).json({status: 404, message: "Requested registration id cannot be found."});
+	res.json(resp);
+});
+
+app.post("/v1/api/register", function (req, res) {
+    console.log(req.body);
+    res.json({});
+});
+
+app.get("/register/:code", function (req, res) {
+	res.sendfile("public/register/index.html");
 });
 
 // route for uploading images asynchronously
