@@ -59,12 +59,12 @@ function simulateFullScreen(){
 }
 
 function cancelFS(){
-	alert("changing");
+	//alert("changing");
 	var doc = window.document;
     var docEl = doc.documentElement;
 
     var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
     var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
 
-    cancelFullScreen.call(doc);
+    if(cancelFullScreen) cancelFullScreen.call(doc);
 }

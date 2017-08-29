@@ -9,12 +9,18 @@
     <script type="text/javascript">//<![CDATA[ 
             function resizeEditor()
             {
+              var ua = window.navigator.userAgent;
+              var iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
+              var webkit = !!ua.match(/WebKit/i);
+              var iOSSafari = iOS && webkit && !ua.match(/CriOS/i);
+              if (iOSSafari) {
                 var heights = window.innerHeight;
                 document.getElementById("editor-frame").style.height = heights + "px";
-            }
+              }
+            }            
             resizeEditor();
             window.onresize = function() {
-                resizeEditor();
+              resizeEditor();
             };
             //]]>  
     </script> 
@@ -42,7 +48,7 @@
                 </div>
                   <button id="downloadLogsButton" class="btn-warning btn-flat pull-right" onclick="downloadLogs();">⇲</button>
               </div><!-- /.box-header -->
-              <div class="box-body">
+              <div id="chat_body_div" class="box-body">
                 <!-- Conversations are loaded here -->
                 <div class="direct-chat-messages" id="dcs" schroll-bottom="messeges">
                   <!-- Message. Default to the left -->
@@ -163,6 +169,20 @@
 
 
               </div><!-- /.box-body -->
+              <script type="text/javascript">//<![CDATA[ 
+                  function resizeChat()
+                  {
+                      var heights = window.innerHeight;
+                      var target = document.getElementById('chat_body_div');
+                      heights -= 100;
+                      target.style.height = heights + "px";
+                  }
+                  resizeChat();
+                  window.onresize = function() {
+                      resizeChat();
+                  };
+                  //]]>  
+              </script> 
               <div class="box-footer">
               <div id="panel">
                       <span style="font-color: black; font-size: 13px">
@@ -240,7 +260,7 @@
                   <span class="input-group-btn" style="position:relative">
                     <button type="button" class="accordion btn btn-warning btn-flat">☺+</button>
                   </span>
-                    <textarea rows=1 id="textArea" type="textarea" style="resize: none" name="message" placeholder="Type Message ..." ng-class="{'form-control': true, 'has-error':isMsgBoxEmpty}" ng-model="chatMsg" ng-change="isMsgBoxEmpty=false" ng-enter="sendMsg()" ng-focus="setFocus" focus-me="setFocus"/>
+                    <textarea rows=1 id="textArea" type="textarea" style="resize: none" name="message" placeholder="Type Message ..." ng-class="{'form-control': true, 'has-error':isMsgBoxEmpty}" ng-model="chatMsg" ng-change="isMsgBoxEmpty=false" ng-enter="sendMsg()" ng-focus="setFocus"/>
                     <span class="input-group-btn">
                       <button type="button" class="btn btn-warning btn-flat" ng-click="sendMsg()">Send</button>
                     </span>
@@ -251,19 +271,6 @@
             </div>
             <script src="app/js/chatroomPlus.js"></script>     
       </div>
-    </section><!-- /.content -->
-    <script type="text/javascript">//<![CDATA[ 
-        function resizeChat()
-        {
-            var heights = window.innerHeight;
-            document.getElementById("chatframe").style.height = heights + "px";
-        }
-        resizeChat();
-        window.onresize = function() {
-            resizeChat();
-        };
-        //]]>  
-    </script> 
-  
+    </section><!-- /.content -->  
   </div><!-- /.container -->
 </div><!-- /.content-wrapper -->
