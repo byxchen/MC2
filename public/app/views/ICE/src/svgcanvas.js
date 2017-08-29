@@ -2890,19 +2890,21 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
           var y = Number(math_cursor.getAttribute('y'));
           var height = $("#menu_bar").height();
           var width = $("#tools_left").width();
+          if ($(window).width() > 732) {
+            if ((x + width) >= ($(window).width() - 400)) x -= 400;
+            if ((y + height) >= ($(window).height() - 240)) y -= 285;
+            bar.css({
+              'margin-left': x-3,
+                'margin-top': 0,
+                'top': y+70
+            });
+            $("#tools_shapelib").css({
+                'margin-left': x,
+                'margin-top': 0,
+                'top': y+106
+            })
+          }
 
-          if ((x + width) >= ($(window).width() - 400)) x -= 400;
-          if ((y + height) >= ($(window).height() - 240)) y -= 285;
-          bar.css({
-            'margin-left': x-3,
-              'margin-top': 0,
-              'top': y+70
-          });
-          $("#tools_shapelib").css({
-              'margin-left': x,
-              'margin-top': 0,
-              'top': y+106
-          })
       }
     }
 
