@@ -360,10 +360,10 @@ methodDraw.addExtension("mathsymbols", function() {
           canv.recalculateDimensions(cur_shape);
           var tlist = canv.getTransformList(cur_shape);
           lastBBox = cur_shape.getBBox();
-          totalScale = {
+          /*totalScale = {
             sx: 1,
             sy: 1
-          };
+          };*/
           canv.setMode('select');
 
           canv.selectOnly([cur_shape]);

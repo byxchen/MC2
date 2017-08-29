@@ -9524,7 +9524,9 @@ this.moveCursor = function(dx, dy) {
       if (pushElems.length > 0 && isTop * (y - pushElems[0].y) < 25) {
         //w.setAttribute('x', pushElems[0].y);
         var i = 0;
-        while (pushElems.length > i && isTop * (y - pushElems[i].y <= 0.5)) {
+        console.log(y - pushElems[i].y);
+        while (pushElems.length > i && isTop * (y - pushElems[i].y <= 1)) {
+          y - pushElems[i].y
           i++;
         }
         if (i < pushElems.length && isTop * (y - pushElems[i].y) < 25) {
