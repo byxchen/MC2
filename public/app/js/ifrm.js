@@ -43,9 +43,21 @@ function downloadLogs(){
 
 function PDFDL(){
 	var doc = new jsPDF();
-
+	doc.setFont('Courier');
+	doc.setFontSize(8);
 	doc.text(chatLog, 10, 10);
 	doc.save('MC2-LOG.pdf');
+}
+
+function imageOpen(){
+	var chatScreen = document.getElementById("chatframe");
+	html2canvas(chatScreen).then(function(canvas) {
+	    // Export the canvas to its data URI representation
+	    var base64image = canvas.toDataURL("image/png");
+
+	    // Open the image in a new window
+	    window.open(base64image, "_blank");
+	});
 }
 
 function simulateFullScreen(){
