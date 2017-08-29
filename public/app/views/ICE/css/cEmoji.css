@@ -350,4 +350,8 @@ li input.active{
         max-width: 150px !important;
     }
 
+    #shapelib_shift {
+        flex-grow: 30 !important;
+        max-width: 80px !important;
+    }
 }

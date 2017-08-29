@@ -1,7 +1,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1, shrink-to-fit=no">
 <div class="login-box">
   <div class="login-logo">
-    <a href><b>MC²</b>Chat<small></small></a>
+    <a href="/"><b>MC²</b>Chat<small></small></a>
   </div><!-- /.login-logo -->
 
   <div ng-if="!(roomId && isJoin)" class="selector-wrapper2">
@@ -16,7 +16,8 @@
   </div>
   <div class="login-box-body card" ng-class="{'no-toggle': roomId && isJoin}">
     <h4 ng-if="!roomId || !isJoin" class="login-box-msg">Sign in to get started...</h4>
-    <h4 ng-if="roomId && isJoin" class="login-box-msg">Sign in to join room <b>{{roomId}}</b></h4>
+    <h4 ng-if="roomId && isJoin && !trackId" class="login-box-msg">Sign in to join room <b>{{roomId}}</b></h4>
+    <h4 ng-if="roomId && isJoin && trackId" class="login-box-msg">Welcome -----, sign into <b>{{roomId}}</b></h4>
     <form>
       <div class="form-group errGroup">
       </div>

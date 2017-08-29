@@ -817,7 +817,7 @@ var SOTP = 0;
           // Clicking the "show" icon should set the current mode
           shower.mousedown(function(evt) {
             //$('#workarea').one("mousedown", function(){$('#tools_shapelib').hide()})
-            $('#workarea').one("mousedown", function(){$('#tools_mathlib').hide()})
+            //$('#workarea').one("mousedown", function(){$('#tools_mathlib').hide()});
             if ($('#tools_shapelib').is(":visible")) {
 
               toolButtonClick(show_sel, false);
@@ -842,16 +842,16 @@ var SOTP = 0;
             },time);
             evt.preventDefault();
           }).mouseup(function(evt) {
+
             clearTimeout(timer);
             var opt = $(this).attr('data-curopt');
             // Is library and popped up, so do nothing
             if(shower.data('isLibrary') && $(show_sel.replace('_show','')).is(':visible')) {
               toolButtonClick(show_sel, true);
-              return;
             }
-            if (toolButtonClick(show_sel) && (opt in flyout_funcs)) {
-               flyout_funcs[opt]();
-            }
+            // if (toolButtonClick(show_sel) && (opt in flyout_funcs)) {
+            //    flyout_funcs[opt]();
+            // }
           });
 
           //  $('#tools_rect').mouseleave(function(){$('#tools_rect').fadeOut();});
@@ -1803,6 +1803,7 @@ var SOTP = 0;
       // - hides any flyouts
       // - adds the tool_button_current class to the button passed in
       var toolButtonClick = function(button, noHiding) {
+
         if ($(button).hasClass('disabled')) return false;
         if($(button).parent().hasClass('tools_flyout')) return true;
         var fadeFlyouts = fadeFlyouts || 'normal';
