@@ -2852,9 +2852,9 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
   // in this function we do not record any state changes yet (but we do update
   // any elements that are still being created, moved or resized on the canvas)
   var mouseMove = function(evt) {
-    if (evt.originalEvent.touches && evt.originalEvent.touches.length > 1) return;
-    if (!started) return;
-    if(evt.button === 1 || canvas.spaceKey) return;
+    if (evt.originalEvent.touches && evt.originalEvent.touches.length > 1) {return;}
+    if (!started) {return;}
+    if(evt.button === 1 || canvas.spaceKey) {return;}
     var selected = selectedElements[0],
       pt = transformPoint( evt.pageX, evt.pageY, root_sctm ),
       mouse_x = pt.x * current_zoom,
@@ -2863,7 +2863,19 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
 
     var real_x = x = mouse_x / current_zoom;
     var real_y = y = mouse_y / current_zoom;
-
+    if(selectedElements.length > 0)
+      $('.tools_flyout').hide();
+    /*
+    var activeTool = document.getElementById('tools_shapelib');
+    if(activeTool) {
+      var activeToolB = activeTool.getBoundingClientRect();
+      if (activeToolB.left <= evt.clientX && evt.clientX <= activeToolB.right) {
+        if (activeToolB.top <= evt.clientY && evt.clientY <= activeToolB.bottom) {
+          $('.tools_flyout').hide();
+        }
+      }
+    } */
+        
     if (!selected) {
       var math_cursor = svgCanvas.getElem('math_cursor');
       if(math_cursor) {
@@ -2872,6 +2884,25 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
         var new_y = Number(cursor_y) + Number(real_y) - Number(down_y);
         placeMathCursor(new_x, new_y);
         svgCanvas.keyPressed("");
+        var bar = $("#FloatingLayer");
+          var math_cursor = svgCanvas.getElem('math_cursor');
+          var x = Number(math_cursor.getAttribute('x'));
+          var y = Number(math_cursor.getAttribute('y'));
+          var height = $("#menu_bar").height();
+          var width = $("#tools_left").width();
+
+          if ((x + width) >= ($(window).width() - 400)) x -= 400;
+          if ((y + height) >= ($(window).height() - 240)) y -= 285;
+          bar.css({
+            'margin-left': x-3,
+              'margin-top': 0,
+              'top': y+70
+          });
+          $("#tools_shapelib").css({
+              'margin-left': x,
+              'margin-top': 0,
+              'top': y+106
+          })
       }
     }
 
