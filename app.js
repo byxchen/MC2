@@ -179,7 +179,7 @@ app.get("/v1/api/test/sendTrackingEmail", function(req, res) {
         connection.login({credentials: {user: "", pass: ""}}, function (err) {
             Promise.all(Object.keys(urls).map(function (id) {
                 return new Promise(function (resolve, rej) {
-                    connection.send({from: "", to: urls[id].email}, "test confirmation: http://127.0.0.1/register/"+id, function (err, info) {
+                    connection.send({from: "", to: urls[id].email}, "test confirmation: http://127.0.0.1/#/v1/test?trackId="+id, function (err, info) {
                         resolve(info);
                     });
                 });
