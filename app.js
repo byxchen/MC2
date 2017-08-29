@@ -12,8 +12,6 @@ var util = require('util');
 const uuidv4 = require('uuid/v4');
 const SMTPConnection = require('nodemailer/lib/smtp-connection');
 var connection = new SMTPConnection({host: "smtp.gmail.com", secure: true, requireTLS: true});
-const AdminView = require("./AdminView");
-var AdminController =  new AdminView(ios, app);
 
 // Initializing Variables
 //var nickname = [];
