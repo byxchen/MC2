@@ -279,7 +279,7 @@ var cur_shape = all_properties.shape;
 // Array with all the currently selected elements
 // default size of 0 until it needs to grow bigger
 var selectedElements = new Array(0);
-var groupedElement;
+this.groupedElement = null;
 
 // Function: addSvgElementFromJson
 // Create a new SVG element based on the given object keys/values and add it to the current layer
@@ -2211,8 +2211,8 @@ var root_sctm = null;
 // noCall - Optional boolean that when true does not call the "selected" handler
 var clearSelection = this.clearSelection = function(noCall, revColor) {
   //canvas.ungroupSelectedElement()
-  if(groupedElement) {
-    canvas.ungroupSelectedElement(groupedElement, false);
+  if(canvas.groupedElement) {
+    canvas.ungroupSelectedElement(canvas.groupedElement, false);
   }
   if (selectedElements[0] != null) {
     var len = selectedElements.length;
@@ -2852,9 +2852,9 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
   // in this function we do not record any state changes yet (but we do update
   // any elements that are still being created, moved or resized on the canvas)
   var mouseMove = function(evt) {
-    if (evt.originalEvent.touches && evt.originalEvent.touches.length > 1) return;
-    if (!started) return;
-    if(evt.button === 1 || canvas.spaceKey) return;
+    if (evt.originalEvent.touches && evt.originalEvent.touches.length > 1) {return;}
+    if (!started) {return;}
+    if(evt.button === 1 || canvas.spaceKey) {return;}
     var selected = selectedElements[0],
       pt = transformPoint( evt.pageX, evt.pageY, root_sctm ),
       mouse_x = pt.x * current_zoom,
@@ -2863,7 +2863,19 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
 
     var real_x = x = mouse_x / current_zoom;
     var real_y = y = mouse_y / current_zoom;
-
+    if(selectedElements.length > 0)
+      $('.tools_flyout').hide();
+    /*
+    var activeTool = document.getElementById('tools_shapelib');
+    if(activeTool) {
+      var activeToolB = activeTool.getBoundingClientRect();
+      if (activeToolB.left <= evt.clientX && evt.clientX <= activeToolB.right) {
+        if (activeToolB.top <= evt.clientY && evt.clientY <= activeToolB.bottom) {
+          $('.tools_flyout').hide();
+        }
+      }
+    } */
+        
     if (!selected) {
       var math_cursor = svgCanvas.getElem('math_cursor');
       if(math_cursor) {
@@ -2872,6 +2884,25 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
         var new_y = Number(cursor_y) + Number(real_y) - Number(down_y);
         placeMathCursor(new_x, new_y);
         svgCanvas.keyPressed("");
+        var bar = $("#FloatingLayer");
+          var math_cursor = svgCanvas.getElem('math_cursor');
+          var x = Number(math_cursor.getAttribute('x'));
+          var y = Number(math_cursor.getAttribute('y'));
+          var height = $("#menu_bar").height();
+          var width = $("#tools_left").width();
+
+          if ((x + width) >= ($(window).width() - 400)) x -= 400;
+          if ((y + height) >= ($(window).height() - 240)) y -= 285;
+          bar.css({
+            'margin-left': x-3,
+              'margin-top': 0,
+              'top': y+70
+          });
+          $("#tools_shapelib").css({
+              'margin-left': x,
+              'margin-top': 0,
+              'top': y+106
+          })
       }
     }
 
@@ -3456,7 +3487,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
           }
           else {
             canvas.groupSelectedElements('g', false, false);
-            groupedElement = selectedElements[0];
+            canvas.groupedElement = selectedElements[0];
           }
         }
         
@@ -3563,7 +3594,8 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
             //console.log("x", x, "y", y, pushYElems);
             if (pushYElems.length > 0 && Math.abs(x - pushYElems[0].x) < 25) {
               //console.log("set y");
-              targetY = pushYElems[0].y;
+              if(Math.abs(y - pushYElems[0].y) < 20)
+                targetY = pushYElems[0].y;
             }
             removeSnapPoints();
             placeMathCursor(targetX, targetY);
@@ -8451,8 +8483,8 @@ this.deleteSelectedElements = function() {
   var batchCmd = new BatchCommand("Delete Elements");
   var len = selectedElements.length;
   if (len == 0) return;
-  if(selectedElements[0] == groupedElement)
-    groupedElement = null;
+  if(selectedElements[0] == canvas.groupedElement)
+    canvas.groupedElement = null;
   var selectedCopy = []; //selectedElements is being deleted
   for (var i = 0; i < len; ++i) {
     var selected = selectedElements[i];
@@ -8855,7 +8887,7 @@ this.ungroupSelectedElement = function(gElem, revColor) {
   if(revColor == null) {
     revColor == true;
   }
-  groupedElement = null;
+  canvas.groupedElement = null;
   if($(g).data('gsvg') || $(g).data('symbol')) {
     // Is svg, so actually convert to group
 
@@ -9487,7 +9519,6 @@ this.moveCursor = function(dx, dy) {
       pushElems.sort(function(a, b) {
         return isTop * (b.y - y) - isTop * (a.y - y);
       });
-      console.log('c', y, 'elems', pushElems);
       if (pushElems.length > 0 && isTop * (y - pushElems[0].y) < 25) {
         //w.setAttribute('x', pushElems[0].y);
         var i = 0;
@@ -9997,7 +10028,6 @@ var moveCursorAbs = this.moveCursorAbs;
     		}
       });
       if(getBBox(newText).x != math_cursorB.x) {
-        console.log('k: ', key, 'c: ', math_cursorB.x, 'bbox.x: ', getBBox(newText).x, 'at x: ', newText.getAttribute('x'));
       }
     } else {
         if (shortcuts[shortcutIndex].length == 1) {
@@ -10034,8 +10064,6 @@ var moveCursorAbs = this.moveCursorAbs;
     //svgEdit.clickSelect();
     //  svgCanvas.setSelectMode();
     //}, 1500);
-          console.log(newText.__proto__)
-      console.log(newText.clientHeight);
 	};
 
 // End MDP]

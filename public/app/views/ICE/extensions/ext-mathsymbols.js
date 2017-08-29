@@ -155,6 +155,7 @@ methodDraw.addExtension("mathsymbols", function() {
     var cur_style = canv.getStyle();
     var sw = 1;
     if (cur_shape_id == 'root' || cur_shape_id == 'fraction' ) sw=5;
+
     cur_shape = canv.addSvgElementFromJson({
       "element": "path",
       "curStyles": true,
@@ -182,8 +183,6 @@ methodDraw.addExtension("mathsymbols", function() {
 //      console.time('b');
     canv.recalculateDimensions(cur_shape);
     var tlist = canv.getTransformList(cur_shape);
-      cur_shape = null;
-      current_d = null;
     lastBBox = cur_shape.getBBox();
     totalScale = {
       sx: 1,
@@ -272,8 +271,10 @@ methodDraw.addExtension("mathsymbols", function() {
   canv.runExtensions('elementChanged', {
     elems: [cur_shape]
   });
-  //canv.ungroupSelectedElement();
+  canv.ungroupSelectedElement();
   canv.addToSelection([cur_shape]);
+  canv.groupSelectedElements('g', false);
+  canv.groupedElement = canv.getSelectedElems()[0];
   }
 
 
@@ -321,7 +322,6 @@ methodDraw.addExtension("mathsymbols", function() {
         current_d = cur_lib.data[cur_shape_id];
 
         var selectedElements = canv.getSelectedElems();
-
         if (selectedElements.length == 0) {
           var mode = canv.getMode();
           if(mode !== mode_id) return;
@@ -372,7 +372,6 @@ methodDraw.addExtension("mathsymbols", function() {
             current_d = null;
           $('.tools_flyout').fadeOut();
           return;
-
         }
 
         //MDP(
@@ -477,7 +476,7 @@ methodDraw.addExtension("mathsymbols", function() {
 
       $('#tool_mathlib').remove();
 
-      var h = $('#tools_mathlib').height();
+      var h = $('#').height();
       $('#tools_mathlib').css({
         'margin-top': -(h/2),
         'margin-left': 3
