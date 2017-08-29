@@ -107,14 +107,14 @@ methodDraw.addExtension("shapes", function() {
 
 
           "m": "m,N,250,75,225",
-
-        "space": " ,N,250,75,225",
+          "shift": "shift,N,220,10,235",
+          "space": " ,N,250,75,225",
 
           "left": "\u21e6,N,250,75,225",
           "up": "\u21e7,N,250,75,225",
           "right": "\u21e8,N,250,75,225",
           "down": "\u21e9,N,250,75,225",
-          "shift": "\u21EA,N,250,75,225"
+
 
       },
       buttons: []
@@ -339,29 +339,33 @@ methodDraw.addExtension("shapes", function() {
       icon_btn[0].mathdata = path_d;
 
         if (cat !== 'basic' || !isMobile) cur_lib.buttons.push(icon_btn[0]);
-      else {
+        else {
+            if (id === "shift") {
+                icon_btn.find("svg svg").attr("viewBox", "0 0 620 330");
+                icon_btn.find(">svg").attr("width", "80");
+            }
             wrapper.append(icon_btn);
             // Store for later use
             if (id === 'p' || id === 'l' || id === 'm' || id === 'down') {
-                if (id === 'down') {
-                    var shift = $('<div class="tool_button loaded" id="shapelib_shift" title="shift" style="background-color: rgb(235, 240, 239);flex-grow: 30;max-width: 80px;"><svg xmlns="http://www.w3.org/2000/svg" width="70" height="25"><svg viewBox="0 0 620 330"><text id="mb" font-family="monospace" font-size="220" y="235" x="10" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">shift</text></svg></svg></div>');
-                        shift.bind('mouseup', function () {
-                            on = !on;
-
-                            if (on) {
-                                $("#shape_buttons .tool_button text").each(function(i, item) {
-                                    item.innerHTML = item.innerHTML.toUpperCase();
-
-                                });
-                            } else {
-                                $("#shape_buttons .tool_button text").each(function(i, item) {
-                                    item.innerHTML = item.innerHTML.toLowerCase();
-
-                                });
-                            }
-                        });
-                    wrapper.prepend(shift);
-                }
+                // if (id === 'down') {
+                //     var shift = $('<div class="tool_button loaded" id="shapelib_shift" title="shift" style="background-color: rgb(235, 240, 239);flex-grow: 30;max-width: 80px;"><svg xmlns="http://www.w3.org/2000/svg" width="70" height="25"><svg viewBox="0 0 620 330"><text id="mb" font-family="monospace" font-size="220" y="235" x="10" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">shift</text></svg></svg></div>');
+                //         shift.bind('mouseup', function () {
+                //             on = !on;
+                //
+                //             if (on) {
+                //                 $("#shape_buttons .tool_button text").each(function(i, item) {
+                //                     item.innerHTML = item.innerHTML.toUpperCase();
+                //
+                //                 });
+                //             } else {
+                //                 $("#shape_buttons .tool_button text").each(function(i, item) {
+                //                     item.innerHTML = item.innerHTML.toLowerCase();
+                //
+                //                 });
+                //             }
+                //         });
+                //     wrapper.prepend(shift);
+                // }
 
                 cur_lib.buttons.push(wrapper[0]);
                 wrapper = $("<div class='qwerty-wrapper'>");
@@ -446,10 +450,10 @@ methodDraw.addExtension("shapes", function() {
               area.css({
                   height: "100vh"
               });
-              isOpen = false;
-              //ToggleFloatingLayer('FloatingLayer',0);
+              isOpen = false
           }
       });
+
       shower.on("mouseup", function () {
 
           var area = $("#svgcontent");
@@ -462,7 +466,6 @@ methodDraw.addExtension("shapes", function() {
 
                   area.attr("viewBox", vb.join(" "));
                   isOpen = false;
-                  //ToggleFloatingLayer('FloatingLayer',0);
                   return;
               }
               var height = $("#menu_bar").height();
@@ -475,23 +478,10 @@ methodDraw.addExtension("shapes", function() {
               keyboard.css({
                   'opacity': "1"
               });
-              $("#FloatingLayer").css({
-                top: keyboard.position().top-35
-              });
-              //ToggleFloatingLayer('FloatingLayer',1);
               isOpen = true;
-          } else {
-            if (isOpen) {
-              //ToggleFloatingLayer('FloatingLayer',0);
-              isOpen = false;
-            }
-            else {
-              //ToggleFloatingLayer('FloatingLayer', 1);
-              isOpen = true;
-            }
-          }
-      });
+          } else isOpen = !isOpen;
 
+      });
 
       $("#svgcanvas").bind("mouseup", function (e) {
 
@@ -523,8 +513,7 @@ methodDraw.addExtension("shapes", function() {
       // Do mouseup on parent element rather than each button
       $('#shape_buttons').mouseup(function(evt) {
         var btn = $(evt.target).closest('div.tool_button');
-        if (!btn[0]) return;
-        if (!btn[0].mathdata) return;
+
         if(!btn.length) return;
 
         var copy = btn.children().clone().attr({width: 24, height: 24});
@@ -541,6 +530,22 @@ methodDraw.addExtension("shapes", function() {
    		//alert(btn[0].data);
       //alert(cur_lib.id);
       //alert(btn[0].mathdata);
+          if (cur_shape_id === "shift") {
+              on = !on;
+
+                          if (on) {
+                              $("#shape_buttons .tool_button text").each(function(i, item) {
+                                  item.innerHTML = item.innerHTML.toUpperCase();
+
+                              });
+                          } else {
+                              $("#shape_buttons .tool_button text").each(function(i, item) {
+                                  item.innerHTML = item.innerHTML.toLowerCase();
+
+                              });
+                          }
+                          return;
+          }
       if (!on) canv.keyPressed(btn[0].mathdata.charAt(0));
       else {
           canv.keyPressed(btn[0].mathdata.charAt(0).toUpperCase());
