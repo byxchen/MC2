@@ -25,6 +25,7 @@ angular.module('Controllers',["ngRoute"])
 	$scope.form.roomId = $routeParams.roomId;
 	$scope.isJoin = !!$routeParams.roomId;
 	$scope.roomId = $routeParams.roomId;
+	$scope.trackId = $location.search().trackId;
 
 	// redirection if user logged in.
 	if($rootScope.loggedIn && $routeParams.roomId){

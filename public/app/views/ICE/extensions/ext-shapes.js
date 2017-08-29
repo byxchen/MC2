@@ -453,6 +453,7 @@ methodDraw.addExtension("shapes", function() {
               isOpen = false
           }
       });
+
       shower.on("mouseup", function () {
 
           var area = $("#svgcontent");
@@ -478,14 +479,9 @@ methodDraw.addExtension("shapes", function() {
                   'opacity': "1"
               });
               isOpen = true;
-          } else if (isOpen) {
-              isOpen = false;
-            } else {
-              isOpen = true;
-            }
+          } else isOpen = !isOpen;
 
       });
-
 
       $("#svgcanvas").bind("mouseup", function (e) {
 

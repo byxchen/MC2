@@ -10,6 +10,10 @@ var ios = io.listen(server);				// listening sockets
 var formidable = require('formidable');		// file upload module
 var util = require('util');
 const uuidv4 = require('uuid/v4');
+const SMTPConnection = require('nodemailer/lib/smtp-connection');
+var connection = new SMTPConnection({host: "smtp.gmail.com", secure: true, requireTLS: true});
+const AdminView = require("./AdminView");
+var AdminController =  new AdminView(ios, app);
 
 // Initializing Variables
 //var nickname = [];
@@ -159,7 +163,7 @@ ios.on('connection', function(socket){
     });
 });
 
-var testList = [{utorid: "test", email:"example@email.com"}];
+var testList = [{utorid: "chenzi22", email:"wannie.chen@mail.utoronto.ca"}];
 var urls = {};
 
 function generateURLs() {
@@ -171,6 +175,25 @@ function generateURLs() {
 }
 
 generateURLs();
+
+app.get("/v1/api/test/sendTrackingEmail", function(req, res) {
+	connection.connect(function () {
+        connection.login({credentials: {user: "", pass: ""}}, function (err) {
+            Promise.all(Object.keys(urls).map(function (id) {
+                return new Promise(function (resolve, rej) {
+                    connection.send({from: "", to: urls[id].email}, "test confirmation: http://127.0.0.1/register/"+id, function (err, info) {
+                        resolve(info);
+                    });
+                });
+
+            })).then(function (details) {
+                connection.quit();
+                res.json({success: true, details: details});
+            });
+
+        });
+    });
+});
 
 app.get("/v1/api/register/:code", function (req, res) {
 	var resp = urls[req.params.code];
