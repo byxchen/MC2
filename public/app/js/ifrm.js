@@ -41,6 +41,13 @@ function downloadLogs(){
 	hiddenElement.click();
 }
 
+function PDFDL(){
+	var doc = new jsPDF();
+
+	doc.text(chatLog, 10, 10);
+	doc.save('MC2-LOG.pdf');
+}
+
 function simulateFullScreen(){
 	var doc = window.document;
     var docEl = doc.documentElement;
