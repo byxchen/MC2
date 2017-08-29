@@ -3594,7 +3594,8 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
             //console.log("x", x, "y", y, pushYElems);
             if (pushYElems.length > 0 && Math.abs(x - pushYElems[0].x) < 25) {
               //console.log("set y");
-              targetY = pushYElems[0].y;
+              if(Math.abs(y - pushYElems[0].y) < 20)
+                targetY = pushYElems[0].y;
             }
             removeSnapPoints();
             placeMathCursor(targetX, targetY);
