@@ -251,6 +251,20 @@ svgedit.select.Selector.prototype.resize = function() {
       's':  [nbax + (nbaw)/2, nbay + nbah].map(Math.round)
     };
 
+    if (svgedit.browser.isTouch()) {
+      var gripOffset = 10;
+      this.gripCoords = {
+        'nw': [nbax, nbay].map(Math.round).map(function(a) {return a + gripOffset}),
+        'ne': [nbax+nbaw, nbay].map(Math.round).map(function(a) {return a + gripOffset}),
+        'sw': [nbax, nbay+nbah].map(Math.round).map(function(a) {return a + gripOffset}),
+        'se': [nbax+nbaw, nbay+nbah].map(Math.round).map(function(a) {return a + gripOffset}),
+        'n':  [nbax + (nbaw)/2, nbay].map(Math.round).map(function(a) {return a + gripOffset}),
+        'w':  [nbax, nbay + (nbah)/2].map(Math.round).map(function(a) {return a + gripOffset}),
+        'e':  [nbax + nbaw, nbay + (nbah)/2].map(Math.round).map(function(a) {return a + gripOffset}),
+        's':  [nbax + (nbaw)/2, nbay + nbah].map(Math.round).map(function(a) {return a + gripOffset})
+      };
+    }
+
     for(var dir in this.gripCoords) {
       var coords = this.gripCoords[dir];
       selectedGrips[dir].setAttribute('x', coords[0]);
@@ -371,8 +385,8 @@ svgedit.select.SelectorManager.prototype.initGroup = function() {
     });
     if (svgedit.browser.isTouch()) {
 
-      grip.setAttribute("width", 30.5)
-      grip.setAttribute("height", 30.5)
+      grip.setAttribute("width", 10)
+      grip.setAttribute("height", 10)
       grip.setAttribute("fill-opacity", 0.3)
     }
 
