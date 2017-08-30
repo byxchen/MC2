@@ -3036,36 +3036,38 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
         // while the mouse is down, when mouse goes up, we use this to recalculate
         // the shape's coordinates
         var tlist = getTransformList(selected),
-          hasMatrix = hasMatrixTransform(tlist),
-          box = hasMatrix ? init_bbox : svgedit.utilities.getBBox(selected),
-          left=box.x, top=box.y, width=box.width,
-          height=box.height, dx=(x-start_x), dy=(y-start_y);
-
+        hasMatrix = hasMatrixTransform(tlist),
+        box = hasMatrix ? init_bbox : svgedit.utilities.getBBox(selected),
+        left=box.x, top=box.y, width=box.width,
+        height=box.height, dx=(x-start_x), dy=(y-start_y);
+        
         if(curConfig.gridSnapping){
           //dx = snapToGrid(dx);
           dy = snapToGrid(dy);
           height = snapToGrid(height);
           //width = snapToGrid(width);
         }
-
+        
         // if rotated, adjust the dx,dy values
         var angle = getRotationAngle(selected);
         if (angle) {
           var r = Math.sqrt( dx*dx + dy*dy ),
-            theta = Math.atan2(dy,dx) - angle * Math.PI / 180.0;
+          theta = Math.atan2(dy,dx) - angle * Math.PI / 180.0;
           dx = r * Math.cos(theta);
           dy = r * Math.sin(theta);
         }
-
+        
         // if not stretching in y direction, set dy to 0
         // if not stretching in x direction, set dx to 0
+
         if(current_resize_mode.indexOf("n")==-1 && current_resize_mode.indexOf("s")==-1) {
           dy = 0;
         }
         if(current_resize_mode.indexOf("e")==-1 && current_resize_mode.indexOf("w")==-1) {
           dx = 0;
         }
-
+        
+        console.log(1145);
         var ts = null,
           tx = 0, ty = 0,
           sy = height ? (height+dy)/height : 1,
@@ -3099,7 +3101,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
         //   if(sx == 1) sx = sy;
         //   else sy = sx;
         // }
-        scale.setScale(Math.abs(sx),Math.abs(sx));
+        scale.setScale(Math.abs(sx),Math.abs(sy));
 
         translateBack.setTranslate(left+tx,top+ty);
         if(hasMatrix) {
@@ -9486,6 +9488,7 @@ this.moveCursor = function(dx, dy) {
       });
       if (pushElems.length > 0 && isLeft * (x - pushElems[0].x) < 25) {
         w.setAttribute('x', pushElems[0].x);
+        w.setAttribute('opacity', 1);
         //w.setAttribute('y', pushElems[0].y);
         return;
       }
@@ -9530,6 +9533,7 @@ this.moveCursor = function(dx, dy) {
           i++;
         }
         if (i < pushElems.length && isTop * (y - pushElems[i].y) < 25) {
+          w.setAttribute('opacity', 1);
           w.setAttribute('y', pushElems[i].y);
           return;
         }
@@ -9537,6 +9541,7 @@ this.moveCursor = function(dx, dy) {
     }
     w.setAttribute('x', x + dx);
     w.setAttribute('y', y + dy);
+    w.setAttribute('opacity', 1);
   }
 };
 
@@ -9550,6 +9555,7 @@ this.moveCursorAbs = function(x,y) {
     var newY = Number(w.getAttribute('y')) + y;
     w.setAttribute('x', newX);
     w.setAttribute('y', newY);
+    w.setAttribute('opacity', 1);
   }
 };
 
@@ -10052,6 +10058,7 @@ var moveCursorAbs = this.moveCursorAbs;
     parentNewText.appendChild(cloneNewText);
     newText = cloneNewText;
     math_cursor.setAttribute('x', bbox.x + bbox.width + 1);
+    math_cursor.setAttribute('opacity', 1);
 		//selectOnly([newText]);
 		//clearSelection();
     //addToSelection([newText]);
