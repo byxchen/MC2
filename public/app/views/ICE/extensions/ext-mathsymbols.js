@@ -259,7 +259,7 @@ methodDraw.addExtension("mathsymbols", function() {
       else
           scale.setScale(sx, sy);
 
-  scale.setScale(sx,sy);
+ scale.setScale(Math.abs(sx),Math.abs(sy));
   translateBack.setTranslate(left+tx, top+ty);
   var N = tlist.numberOfItems;
   tlist.appendItem(translateBack);
@@ -348,7 +348,7 @@ methodDraw.addExtension("mathsymbols", function() {
           if(/[a-z]/.test(current_d)) {
             current_d = cur_lib.data[cur_shape_id] = canv.pathActions.convertPath(cur_shape);
             cur_shape.setAttribute('d', current_d);
-            canv.pathActions.fixEnd(cur_shape);
+            //canv.pathActions.fixEnd(cur_shape);
           }
 
           if (x < 0 || y < 0) {
@@ -360,10 +360,10 @@ methodDraw.addExtension("mathsymbols", function() {
           canv.recalculateDimensions(cur_shape);
           var tlist = canv.getTransformList(cur_shape);
           lastBBox = cur_shape.getBBox();
-          /*totalScale = {
+          totalScale = {
             sx: 1,
             sy: 1
-          };*/
+          };
           canv.setMode('select');
 
           canv.selectOnly([cur_shape]);
@@ -528,8 +528,9 @@ methodDraw.addExtension("mathsymbols", function() {
     },
     mouseMove: function(opts) {
       var mode = canv.getMode();
-      if(mode !== mode_id) return;
-
+      if(mode !== mode_id) {
+        return;
+      }
       var zoom = canv.getZoom();
       var evt = opts.event;
 
