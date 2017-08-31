@@ -99,14 +99,12 @@ methodDraw.addExtension("shapes", function() {
           "l": "l,N,250,75,225",
           "z": "z,N,250,75,225",
           "x": "x,N,250,75,225",
-        "c": "c,N,250,75,225",
+          "c": "c,N,250,75,225",
           "v": "v,N,250,75,225",
           "b": "b,N,250,75,225",
-          "n": "n,N,250,75,225",
-
-
-
+          "n": "n,N,250,75,225",         
           "m": "m,N,250,75,225",
+          "backspace":"\u232B,N,225,20,215",
           "shift": "shift,N,220,10,235",
           "space": " ,N,250,75,225",
 
@@ -114,6 +112,8 @@ methodDraw.addExtension("shapes", function() {
           "up": "\u21e7,N,250,75,225",
           "right": "\u21e8,N,250,75,225",
           "down": "\u21e9,N,250,75,225",
+
+          
 
 
       },
@@ -346,7 +346,7 @@ methodDraw.addExtension("shapes", function() {
             }
             wrapper.append(icon_btn);
             // Store for later use
-            if (id === 'p' || id === 'l' || id === 'm' || id === 'down') {
+            if (id === 'p' || id === 'l' || id === 'backspace' || id === 'down') {
                 // if (id === 'down') {
                 //     var shift = $('<div class="tool_button loaded" id="shapelib_shift" title="shift" style="background-color: rgb(235, 240, 239);flex-grow: 30;max-width: 80px;"><svg xmlns="http://www.w3.org/2000/svg" width="70" height="25"><svg viewBox="0 0 620 330"><text id="mb" font-family="monospace" font-size="220" y="235" x="10" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">shift</text></svg></svg></div>');
                 //         shift.bind('mouseup', function () {
