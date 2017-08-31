@@ -265,7 +265,7 @@ function overlap(index, wall, ls) {
 }
 
 function hor(ls, s) {
-    if (ls[s].type === "fraction" || (ls[s].type === "bracket" && ls[s].bracketType == BRACKET_TYPES.OPEN)) {
+    if (ls[s].type === "fraction" || (ls[s].type === "bracket" && ls[s].bracketType == BRACKET_TYPES.OPEN || ls[s].type === SYMBOL_TYPES.OPERATOR)) {
         var wall = ls[s].getWallCopy();
         var newWall = wall;
         newWall.left = ls[s].maxX;
