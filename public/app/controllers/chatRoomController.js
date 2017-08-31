@@ -1,5 +1,5 @@
 var textarea = document.getElementById("textArea");
-var chatLog = "Chatroom created -- " + Date()+"\n";
+var chatLog = "";
 
 
 angular.module('Controllers')
@@ -60,10 +60,9 @@ angular.module('Controllers')
 	} else {
         $socket.emit('join-room', {roomId: $routeParams.roomId}, function(data) {
         	$scope.messeges.push(data);
+            chatLog += "Chatroom "+$routeParams.roomId+" created -- " + Date()+"\n";
 		});
 	}
-
-
 
 // ================================== Online Members List ===============================
 	$socket.emit('get-online-members',function(data){
