@@ -27,6 +27,40 @@ angular.module('Controllers',["ngRoute"])
 	$scope.roomId = $routeParams.roomId;
 	$scope.trackId = $location.search().trackId;
 
+	$scope.isLoading = true;
+
+	if ($location.search().token) {
+
+        $socket.emit('start_admin_session', {token: $location.search().token}, function (data) {
+			if (data.success) {
+				$rootScope.loggedIn = true;
+                $rootScope.username = data.username;
+                $rootScope.initials = data.username.substring(0, 2);
+                $rootScope.userAvatar = 'avatar1.jpg';
+
+                $location.path('/v1/ChatRoom/'+$routeParams.roomId);
+            }
+            $scope.isLoading = false;
+
+        });
+	} else {
+        $socket.emit('check-session', function (data) {
+            if (data.username) {
+            	console.log(data);
+                $rootScope.loggedIn = true;
+                $rootScope.username = data.username;
+                $rootScope.initials = data.username.substring(0, 2);
+                $rootScope.userAvatar = data.userAvatar;
+
+                $location.path('/v1/ChatRoom/'+data.room);
+            }
+            $scope.isLoading = false;
+            $scope.$apply();
+        });
+	}
+
+
+
 	// redirection if user logged in.
 	if($rootScope.loggedIn && $routeParams.roomId){
 		$location.path('/v1/ChatRoom/'+$routeParams.roomId);

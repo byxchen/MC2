@@ -12,6 +12,26 @@ var util = require('util');
 const uuidv4 = require('uuid/v4');
 const SMTPConnection = require('nodemailer/lib/smtp-connection');
 var connection = new SMTPConnection({host: "smtp.gmail.com", secure: true, requireTLS: true});
+const AdminView = require("./AdminView");
+
+var session = require('express-session')({
+    secret: 'AdminView',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        secure: false,
+        sameSite: true
+    }
+});
+app.use(session);
+var sharedsession = require("express-socket.io-session");
+ios.use(sharedsession(session, {
+    autoSave:true
+}));
+
+var AdminController =  new AdminView(ios, app);
+
 
 // Initializing Variables
 //var nickname = [];
@@ -68,15 +88,40 @@ function findRoom(roomId) {
 	return ios.sockets.adapter.rooms[roomId];
 }
 
+ios.timeOuts = {};
+
 //sockets handling
-ios.on('connection', function(socket){	
+ios.on('connection', function(socket){
+
+    if (socket.handshake.session.id) clearInterval(ios.timeOuts[socket.handshake.session.id]);
+
+    function setSessionVar(variable, value) {
+		socket.handshake.session[variable] = value;
+		socket.handshake.session.save();
+    }
+
+    function setSessionVars(object) {
+		for (var variable in object) {
+			socket.handshake.session[variable] = object[variable];
+		}
+        socket.handshake.session.save();
+    }
+
+	socket.on("check-session", function (callback) {
+		if (!socket.handshake.session.username) callback({});
+		else callback({username: socket.handshake.session.username, avatar: socket.handshake.session.userAvatar, room: socket.handshake.session.connectedRoom});
+    });
 
 	socket.on("join-room", function(data, callback) {
-		if (socket.username) {
-			socket.leave(socket.connectedRoom, function () {
+		if (socket.handshake.session.username) {
+			socket.leave(socket.handshake.session.connectedRoom, function () {
                 socket.join(data.roomId, function () {
-                    socket.connectedRoom = data.roomId;
+                    setSessionVar('connectedRoom', data.roomId);
                     //console.log(socket.username+" joined room "+ data.roomId);
+					if (socket.handshake.session.isAdmin) {
+                        ios.sockets.adapter.rooms[data.roomId].admin = socket;
+					} else if (ios.sockets.adapter.rooms[data.roomId].admin)
+						ios.sockets.adapter.rooms[data.roomId].admin.emit("new message", {username: "[System]", msg: socket.handshake.session.username+ " has joined the room.", msgTime: new Date(), type: "system"});
                     callback({msg: "You have joined room "+ data.roomId+".", type: "system"});
                 });
             });
@@ -97,8 +142,7 @@ ios.on('connection', function(socket){
 			{
 				callback({success:false, message: "Use different username."});
 			} else {
-				socket.username = data.username;
-				socket.userAvatar = data.userAvatar;
+				setSessionVars({username: data.username, userAvatar: data.userAvatar});
 				//nickname[data.username] = socket;
 				// socket.join(data.roomId, function () {
                  //    socket.connectedRoom = data.roomId;
@@ -111,7 +155,7 @@ ios.on('connection', function(socket){
 	// sending online members list
 	socket.on('get-online-members', function(data){
 		var online_member = [];
-		var i = ios.sockets.adapter.rooms[socket.connectedRoom];
+		var i = ios.sockets.adapter.rooms[socket.handshake.session.connectedRoom];
 		if (!i) return ios.sockets.emit('online-members', online_member);
 		for (var clientId in i.sockets) {
             temp1 = {"username": ios.sockets.connected[clientId].username, "userAvatar":ios.sockets.connected[clientId].userAvatar};
@@ -123,32 +167,41 @@ ios.on('connection', function(socket){
 	// sending new message
 	socket.on('send-message', function(data, callback){
 		data.type = "chat";
-		if (socket.username) {
+		if (socket.handshake.session.username) {
 			if(data.hasMsg){
-                ios.sockets.to(socket.connectedRoom).emit('new message', data);
-				callback({success:true});	
+                ios.sockets.to(socket.handshake.session.connectedRoom).emit('new message', data);
+				callback({success:true});
 			}else if(data.hasFile){
 				if(data.istype == "image"){
-					socket.to(socket.connectedRoom).emit('new message image', data);
+					socket.to(socket.handshake.session.connectedRoom).emit('new message image', data);
 					callback({success:true});
 				} else if(data.istype == "music"){
-					socket.to(socket.connectedRoom).emit('new message music', data);
+					socket.to(socket.handshake.session.connectedRoom).emit('new message music', data);
 					callback({success:true});
 				} else if(data.istype == "PDF"){
-					socket.to(socket.connectedRoom).emit('new message PDF', data);
+					socket.to(socket.handshake.session.connectedRoom).emit('new message PDF', data);
 					callback({success:true});
 				}
 			}else{
 				callback({ success:false});
 			}
-		}		
+		}
 	});
 	
 	// disconnect user handling 
 	socket.on('disconnect', function () {
 		//delete nickname[socket.username];
 
-        delete socket.username;
+        //delete socket.username;
+
+
+        if (socket.handshake.session.connectedRoom && ios.sockets.adapter.rooms[socket.handshake.session.connectedRoom] && ios.sockets.adapter.rooms[socket.handshake.session.connectedRoom].admin)
+            ios.sockets.adapter.rooms[socket.handshake.session.connectedRoom].admin.emit("new message", {username: "[System]", msg: socket.handshake.session.username+ " has left the room.", msgTime: new Date(), type: "system"});
+
+		//logout user after gone for 5min
+		ios.timeOuts[socket.handshake.session.id] = setInterval(function () {
+			setSessionVars({username: null, userAvatar: null, connectedRoom: null});
+        }, 300000);
 
         var online_member = [];
         var i = ios.sockets.adapter.rooms[socket.connectedRoom];
@@ -202,10 +255,6 @@ app.get("/v1/api/register/:code", function (req, res) {
 app.post("/v1/api/register", function (req, res) {
     console.log(req.body);
     res.json({});
-});
-
-app.get("/register/:code", function (req, res) {
-	res.sendfile("public/register/index.html");
 });
 
 // route for uploading images asynchronously

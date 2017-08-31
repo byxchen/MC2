@@ -1,5 +1,5 @@
 var textarea = document.getElementById("textArea");
-var chatLog = "Chatroom created -- " + Date();
+var chatLog = "Chatroom created -- " + Date()+"\n";
 
 
 angular.module('Controllers')
@@ -160,6 +160,7 @@ angular.module('Controllers')
 		// Updates chatlog with relevant message history
 		chatLog += "\r";
 		chatLog += "[" + data.msgTime + "] " + data.username + ": " + data.msg;
+		chatLog += "\n";
 	});
 
 // ====================================== Image Sending Code ==============================
