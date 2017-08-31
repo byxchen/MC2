@@ -50,7 +50,7 @@ angular.module('Controllers',["ngRoute"])
                 $rootScope.loggedIn = true;
                 $rootScope.username = data.username;
                 $rootScope.initials = data.username.substring(0, 2);
-                $rootScope.userAvatar = data.userAvatar;
+                $rootScope.userAvatar = data.avatar;
 
                 $location.path('/v1/ChatRoom/'+data.room);
             }
