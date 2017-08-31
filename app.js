@@ -173,13 +173,14 @@ ios.on('connection', function(socket){
 				callback({success:true});
 			}else if(data.hasFile){
 				if(data.istype == "image"){
-					socket.to(socket.handshake.session.connectedRoom).emit('new message image', data);
+
+                    ios.sockets.to(socket.handshake.session.connectedRoom).emit('new message image', data);
 					callback({success:true});
 				} else if(data.istype == "music"){
-					socket.to(socket.handshake.session.connectedRoom).emit('new message music', data);
+                    ios.sockets.to(socket.handshake.session.connectedRoom).emit('new message music', data);
 					callback({success:true});
 				} else if(data.istype == "PDF"){
-					socket.to(socket.handshake.session.connectedRoom).emit('new message PDF', data);
+                    ios.sockets.to(socket.handshake.session.connectedRoom).emit('new message PDF', data);
 					callback({success:true});
 				}
 			}else{

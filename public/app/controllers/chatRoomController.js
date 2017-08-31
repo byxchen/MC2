@@ -170,7 +170,7 @@ angular.module('Controllers')
     //  opens the sent image on gallery_icon click
     $scope.openClickImage = function(msg){
 		if(!msg.ownMsg){
-		$http.post($rootScope.baseUrl + "/v1/getfile",msg).success(function (response){
+		$http.post("/v1/getfile",msg).success(function (response){
 	    	if(!response.isExpired){
 	    		msg.showme = false;
 	    		msg.serverfilename = msg.serverfilename;
@@ -190,6 +190,11 @@ angular.module('Controllers')
     // recieving new image message
     $socket.on("new message image", function(data){
 		$scope.showme = true;
+		if (data.serverfilename) {
+            var paths = data.serverfilename.split("\\");
+
+            data.serverfilename = paths[paths.length - 1];
+        }
 		if(data.username == $rootScope.username){
 			data.ownMsg = true;	
 			data.dwimgsrc = "app/images/spin.gif";	
@@ -245,7 +250,7 @@ angular.module('Controllers')
 			if($scope.messeges[i].hasFile){
 				if ($scope.messeges[i].istype === "image") {
 					if($scope.messeges[i].dwid === search_id){
-						$http.post($rootScope.baseUrl + "/v1/getfile",$scope.messeges[i]).success(function (response){
+						$http.post("/v1/getfile",$scope.messeges[i]).success(function (response){
 					    	if(!response.isExpired){
 					    		var linkID = "#" + search_id + "A";
 					    		$(linkID).find('i').click();
@@ -301,7 +306,7 @@ angular.module('Controllers')
 				fd.append('dwid', DWid);
 				fd.append('msgTime', dateString);
 				fd.append('filename', file.name);
-				$http.post($rootScope.baseUrl +"/v1/uploadImage", fd, {
+				$http.post("/v1/uploadImage", fd, {
 		            transformRequest: angular.identity,
 		            headers: { 'Content-Type': undefined }
 		        }).then(function (response) {
@@ -318,7 +323,7 @@ angular.module('Controllers')
 
     //  opens the sent music file on music_icon click on new window
     $scope.openClickMusic = function(msg){
-    	$http.post($rootScope.baseUrl + "/v1/getfile",msg).success(function (response){
+    	$http.post("/v1/getfile",msg).success(function (response){
 	    	if(!response.isExpired){
 	    		window.open($rootScope.baseUrl +'/'+response.serverfilename, "_blank");
 	    	}else{	    		
@@ -373,7 +378,7 @@ angular.module('Controllers')
 			if($scope.messeges[i].hasFile){
 				if ($scope.messeges[i].istype === "music") {
 					if($scope.messeges[i].dwid === search_id){
-						$http.post($rootScope.baseUrl + "/v1/getfile",$scope.messeges[i]).success(function (response){
+						$http.post("/v1/getfile",$scope.messeges[i]).success(function (response){
 					    	if(!response.isExpired){
 					    		var linkID = "#" + search_id + "A";
 					    		$(linkID).find('i').click();
@@ -463,7 +468,7 @@ angular.module('Controllers')
 
     //  download the document file on doc_icon click 
     $scope.openClickPDF = function(msg){
-    	$http.post($rootScope.baseUrl + "/v1/getfile",msg).success(function (response){
+    	$http.post("/v1/getfile",msg).success(function (response){
 	    	if(!response.isExpired){
 	    		window.open($rootScope.baseUrl+'/'+response.serverfilename, "_blank");
 	    	}else{
@@ -534,7 +539,7 @@ angular.module('Controllers')
 			if($scope.messeges[i].hasFile){
 				if ($scope.messeges[i].istype === "PDF") {
 					if($scope.messeges[i].dwid === search_id){
-						$http.post($rootScope.baseUrl + "/v1/getfile",$scope.messeges[i]).success(function (response){
+						$http.post("/v1/getfile",$scope.messeges[i]).success(function (response){
 					    	if(!response.isExpired){
 					    		var linkID = "#" + search_id + "A";
 					    		$(linkID).find('i').click();
