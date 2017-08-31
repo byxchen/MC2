@@ -1,4 +1,4 @@
-try {
+
     var constants = require("./constants.js");
     var crypto = require("crypto");
 
@@ -16,9 +16,6 @@ try {
         }
         return next();
     };
-} catch (e) {
-    console.log("Could not initiate modules, check dependencies.");
-}
 
 function AdminView(socketController, expressApp) {
     this.ios = socketController;
@@ -55,7 +52,6 @@ var User = function(user){
 
 var user = new User({username: "test", password: "test"});
 MongoClient.connect(constants.dbUrl, function (err, db) {
-
         db.collection("users").insertOne(user, function (err2, newUser) {
             db.close();
         });
