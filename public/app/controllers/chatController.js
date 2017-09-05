@@ -16,14 +16,13 @@ angular.module('Controllers')
         $scope.controller = {
             status: "Offline",
             people: 0,
-            roomName: "test",
             sendResult: null,
-            token: $rootScope.user ? $rootScope.user.token : null
+            connected: false
         };
 
         $scope.startController = function() {
-            
-            setInterval(function () {
+            if ($rootScope.chatController) clearInterval($rootScope.chatController);
+            $rootScope.chatController = setInterval(function () {
                 $socket.emit("admin_get_status", {token: $scope.controller.token}, function (data) {
                     $scope.controller.people = data.online;
                     $scope.controller.status = data.status;
@@ -31,6 +30,8 @@ angular.module('Controllers')
                 });
             }, 1000);
         };
+
+        $scope.settings = {};
 
         $scope.Actions = {
             chatFullscreen: function () {
@@ -50,25 +51,33 @@ angular.module('Controllers')
             },
             getSessionToken: function () {
                 $.ajax({
-                    url: "/v1/api/chat/token",
+                    url: "/v1/api/chat/start",
                     success: function (result) {
-                        $scope.controller.token = result.token;
+                        $scope.controller.connected = true;
                         $scope.$apply();
                     }
                 })
             }
         };
 
-        if (!$rootScope.user) {
+
             $.ajax({
                 url: "/v1/api/session/current",
                 success: function (result) {
                     $rootScope.user = result;
-                    $scope.controller.token = result.token;
+                    $scope.controller.connected = result.connected;
 
                     $scope.$apply();
                 }
-            })
-        }
+            });
+
+        $.ajax({
+            url: "/v1/api/settings/chat",
+            success: function (result) {
+                $scope.settings = result;
+                $scope.$apply();
+            }
+        })
+
     });
 

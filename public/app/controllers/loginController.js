@@ -52,7 +52,8 @@ angular.module('Controllers',["ngRoute"])
                 $rootScope.initials = data.username.substring(0, 2);
                 $rootScope.userAvatar = data.avatar;
 
-                $location.path('/v1/ChatRoom/'+data.room);
+                if ($routeParams.roomId) $location.path('/v1/ChatRoom/'+$routeParams.roomId);
+                else $location.path('/v1/ChatRoom/'+data.room);
             }
             $scope.isLoading = false;
             $scope.$apply();
