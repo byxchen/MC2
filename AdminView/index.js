@@ -5,6 +5,7 @@
     var bodyParser = require("body-parser");
     const uuidv4 = require('uuid/v4');
     const moment = require('moment');
+    var csv = require('csv');
 
     var MongoClient = require('mongodb').MongoClient;
     var ObjectID = require("mongodb").ObjectID;
@@ -50,12 +51,35 @@ var User = function(user){
     this.saltedHash = hash.digest('base64');
 };
 
-var user = new User({username: "test", password: "test"});
-MongoClient.connect(constants.dbUrl, function (err, db) {
-        db.collection("users").insertOne(user, function (err2, newUser) {
-            db.close();
-        });
-});
+var ChatSetting = function (settings) {
+    if (!settings) {
+        this.roomName = null;
+        this.invite = false;
+    }
+    else {
+        this.roomName = settings.roomName;
+        this.invite = settings.invite;
+    }
+
+};
+
+// var user = new User({username: "test", password: "test"});
+// var settings = {
+//     user: user.username,
+//     chat: new ChatSetting()
+// };
+//
+// MongoClient.connect(constants.dbUrl, function (err, db) {
+//         db.collection("users").insertOne(user, function (err2, newUser) {
+//             db.close();
+//         });
+// });
+//
+//     MongoClient.connect(constants.dbUrl, function (err, db) {
+//         db.collection("settings").insertOne(settings, function (err2, newUser) {
+//             db.close();
+//         });
+//     });
 
 AdminView.prototype.setupApi = function () {
     this.app.post("/v1/api/login", function (req, res) {
@@ -75,15 +99,104 @@ AdminView.prototype.setupApi = function () {
     });
 
     this.app.get("/v1/api/session/current", function (req, res) {
-        return res.json({username: req.session.user ? req.session.user.username : null, token: req.session.user ? req.session.user.chatToken : null});
+        return res.json({username: req.session.user ? req.session.user.username : null, connected: req.session.connected});
     });
 
-    this.app.get("/v1/api/chat/token", function (req, res) {
-        req.session.user.roomName = "test";
-        req.session.user.chatToken = uuidv4();
-        this.controlSessionIds[req.session.user.chatToken] = req.session.user;
-        res.json({token: req.session.user.chatToken});
+    this.app.get("/logout", function (req, res) {
+        req.session.destroy(function (err) {
+            if (err) return res.status(err.code).end(err);
+
+            return res.redirect("/");
+
+        });
+    });
+
+    this.app.get("/v1/api/chat/start", function (req, res) {
+        MongoClient.connect(constants.dbUrl, function (err, db) {
+            db.collection("settings").findOne({user: req.session.user.username}, function (err, settings) {
+                req.session.user.roomName = settings.chat.roomName;
+                req.session.username = req.session.user.username;
+                req.session.connected = true;
+                req.session.isAdmin = true;
+                req.session.userAvatar = 'avatar1.jpg';
+                res.json({roomName: settings.chat.roomName});
+            });
+        });
     }.bind(this));
+
+    this.app.get("/v1/api/students", function (req, res) {
+        MongoClient.connect(constants.dbUrl, function (err, db) {
+            db.collection("students").findOne({owner: req.session.user.username}, function (err, list) {
+                if (!list) return res.json([]);
+                res.json(list.students);
+                db.close();
+            });
+
+        });
+    });
+
+    this.app.post("/v1/api/students", function (req, res) {
+        csv.parse(Buffer.from(req.body.csv, "base64"), {columns: true}, function(err, data) {
+            MongoClient.connect(constants.dbUrl, function (err, db) {
+
+                db.collection("students").findOne({owner: req.session.user.username}, function (err, list) {
+                    if (list) {
+                        db.collection("students").updateOne({owner: req.session.user.username}, {
+                            $set: {students: data}
+                        }, function (err, result) {
+                            res.json(result.students);
+                            db.close();
+                        })
+                    }
+                    else {
+                        var entry = {
+                            owner: req.session.user.username,
+                            students: data
+                        };
+                        db.collection("students").insertOne(entry, function (err, result) {
+                            res.json(result.students);
+                            db.close();
+                        });
+                    }
+                });
+
+            });
+        });
+    });
+    
+    this.app.get("/v1/api/settings/:type", function (req, res) {
+        MongoClient.connect(constants.dbUrl, function (err, db) {
+            db.collection("settings").findOne({user: req.session.user.username}, function (err, settings) {
+                res.json(settings[req.params.type]);
+            });
+        });
+
+    });
+
+    this.app.post("/v1/api/settings/:type", function (req, res) {
+        MongoClient.connect(constants.dbUrl, function (err, db) {
+
+                try {
+                    switch (req.params.type) {
+                        case "chat":
+                            var newSettings = new ChatSetting(req.body.settings);
+                            console.log(req.body.settings);
+                            console.log(newSettings);
+                            db.collection("settings").updateOne({user: req.session.user.username}, {$set: {chat: newSettings}}, function (err, result) {
+                                res.json(newSettings);
+
+                            });
+                            break;
+                        default:
+                            return res.status(404).json({status: 404, message: "No such settings"});
+                    }
+                } catch (e) {
+                    return res.status(500).json({status: 500, message: "Server error, could not resolve request"});
+                }
+
+            });
+
+    });
 };
 
 AdminView.prototype.setupSocket = function () {
@@ -116,11 +229,15 @@ AdminView.prototype.setupSocket = function () {
         }.bind(this));
 
         socket.on("admin_get_status", function (data, callback) {
-            if (this.controlSessionIds[data.token]) {
-                var user = this.controlSessionIds[data.token];
-                if (!this.ios.sockets.adapter.rooms[user.roomName]) return callback({online: 0});
-                callback({online: this.ios.sockets.adapter.rooms[user.roomName].length, status: "Online"})
-            } else callback({status: "Offline"});
+            socket.handshake.session.reload(function (err) {
+
+                if (socket.handshake.session.isAdmin) {
+                    var user = socket.handshake.session.user;
+                    if (!this.ios.sockets.adapter.rooms[user.roomName]) return callback({status: "Offline", online: 0});
+                    callback({online: this.ios.sockets.adapter.rooms[user.roomName].length, status: "Online"})
+                } else callback({status: "Offline", online: "0"});
+            }.bind(this));
+
         }.bind(this));
     }.bind(this));
 };
