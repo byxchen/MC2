@@ -419,25 +419,6 @@ methodDraw.addExtension("shapes", function() {
             wrapper.append(icon_btn);
             // Store for later use
             if (id === 'p' || id === 'l' || id === 'm' || id === 'down') {
-                // if (id === 'down') {
-                //     var shift = $('<div class="tool_button loaded" id="shapelib_shift" title="shift" style="background-color: rgb(235, 240, 239);flex-grow: 30;max-width: 80px;"><svg xmlns="http://www.w3.org/2000/svg" width="70" height="25"><svg viewBox="0 0 620 330"><text id="mb" font-family="monospace" font-size="220" y="235" x="10" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">shift</text></svg></svg></div>');
-                //         shift.bind('mouseup', function () {
-                //             on = !on;
-                //
-                //             if (on) {
-                //                 $("#shape_buttons .tool_button text").each(function(i, item) {
-                //                     item.innerHTML = item.innerHTML.toUpperCase();
-                //
-                //                 });
-                //             } else {
-                //                 $("#shape_buttons .tool_button text").each(function(i, item) {
-                //                     item.innerHTML = item.innerHTML.toLowerCase();
-                //
-                //                 });
-                //             }
-                //         });
-                //     wrapper.prepend(shift);
-                // }
 
                 cur_lib.buttons.push(wrapper[0]);
                 wrapper = $("<div class='qwerty-wrapper'>");
@@ -581,6 +562,137 @@ methodDraw.addExtension("shapes", function() {
           })
       });
 
+        function groupSymbol(cur_shape_id, current_d, bb_min_x, bb_min_y, bb_max_x, bb_max_y) {
+//    var mode = canv.getMode();
+//    if(mode !== mode_id) return;
+
+            var x = start_x = bb_min_x;
+            var y = start_y = bb_min_y;
+            var cur_style = canv.getStyle();
+            var sw = 1;
+            if (cur_shape_id == 'root' || cur_shape_id == 'fraction' ) sw=5;
+
+            cur_shape = canv.addSvgElementFromJson({
+                "element": "path",
+                "curStyles": true,
+                "attr": {
+                    "d": current_d,
+                    "stroke-width": sw,
+                    "fill": 'black',
+                    "stroke": 'black',
+                    "cursor": 'move',
+                    //  "style": 'pointer-events:all',
+                    "id": canv.getNextId() + "_" + cur_shape_id,
+                    "opacity": cur_style.opacity / 2,
+                    "style": "pointer-events:inherit"
+                }
+            });
+            //cur_shape.setAttribute("d", current_d);
+            // Make sure shape uses absolute values
+            if(/[a-z]/.test(current_d)) {
+                current_d = cur_lib.data[cur_shape_id] = canv.pathActions.convertPath(cur_shape);
+                cur_shape.setAttribute('d', current_d);
+                canv.pathActions.fixEnd(cur_shape);
+            }
+
+            cur_shape.setAttribute('transform', "translate(" + x + "," + y + ") scale(0.005) translate(" + -x + "," + -y + ")");
+//      console.time('b');
+            canv.recalculateDimensions(cur_shape);
+            var tlist = canv.getTransformList(cur_shape);
+            lastBBox = cur_shape.getBBox();
+            totalScale = {
+                sx: 1,
+                sy: 1
+            };
+            //  return {
+            //    started: true
+            //  }
+
+
+//  var mode = canv.getMode();
+//  if(mode !== mode_id) return;
+
+            var zoom = canv.getZoom();
+//    var evt = opts.event
+
+            var x = bb_max_x/zoom;
+            var y = bb_max_y/zoom;
+
+            var tlist = canv.getTransformList(cur_shape),
+                box = cur_shape.getBBox(),
+                left = box.x, top = box.y, width = box.width,
+                height = box.height;
+            var dx = (x-start_x), dy = (y-start_y);
+
+            var newbox = {
+                'x': Math.min(start_x,x),
+                'y': Math.min(start_y,y),
+                'width': Math.abs(x-start_x),
+                'height': Math.abs(y-start_y)
+            };
+
+            var ts = null,
+                tx = 0, ty = 0,
+                sy = height ? (height+dy)/height : 1,
+                sx = width ? (width+dx)/width : 1;
+
+            var sx = newbox.width / lastBBox.width;
+            var sy = newbox.height / lastBBox.height;
+
+            sx = sx || 1;
+            sy = sy || 1;
+
+            // Not perfect, but mostly works...
+
+            if(x < start_x) {
+                tx = lastBBox.width;
+            }
+            if(y < start_y) ty = lastBBox.height;
+
+            // update the transform list with translate,scale,translate
+            var translateOrigin = svgroot.createSVGTransform(),
+                scale = svgroot.createSVGTransform(),
+                translateBack = svgroot.createSVGTransform();
+
+            translateOrigin.setTranslate(-(left+tx), -(top+ty));
+            /* if(evt.shiftKey) {
+             replaced = true
+             var max = Math.min(Math.abs(sx), Math.abs(sy));
+             sx = max * (sx < 0 ? -1 : 1);
+             sy = max * (sy < 0 ? -1 : 1);
+             if (totalScale.sx != totalScale.sy) {
+             var multiplierX = (totalScale.sx > totalScale.sy) ? 1 : totalScale.sx/totalScale.sy;
+             var multiplierY = (totalScale.sy > totalScale.sx) ? 1 : totalScale.sy/totalScale.sx;
+             sx *= multiplierY
+             sy *= multiplierX
+             }
+             } */
+            totalScale.sx *= sx;
+            totalScale.sy *= sy;
+
+            if (sx === Infinity || sy === Infinity)
+                scale.setScale(1, 1);
+            else
+                scale.setScale(sx, sy);
+
+            scale.setScale(Math.abs(sx),Math.abs(sy));
+            translateBack.setTranslate(left+tx, top+ty);
+            var N = tlist.numberOfItems;
+            tlist.appendItem(translateBack);
+            tlist.appendItem(scale);
+            tlist.appendItem(translateOrigin);
+
+            canv.recalculateDimensions(cur_shape);
+            lastBBox = cur_shape.getBBox();
+            canv.runExtensions('elementChanged', {
+                elems: [cur_shape]
+            });
+            canv.ungroupSelectedElement();
+            canv.addToSelection([cur_shape]);
+            canv.groupSelectedElements('g', false);
+            canv.groupedElement = canv.getSelectedElems()[0];
+        }
+
 
       // Do mouseup on parent element rather than each button
       $('#shape_buttons').mouseup(function(evt) {
@@ -601,30 +713,160 @@ methodDraw.addExtension("shapes", function() {
         //alert(cur_shape_id);
    		//alert(btn[0].data);
       //alert(cur_lib.id);
-      //alert(btn[0].mathdata);
+          //alert(btn[0].mathdata);
           if (cur_shape_id === "shift") {
               on = !on;
 
-                          if (on) {
-                              $("#shape_buttons .tool_button text").each(function(i, item) {
-                                  item.innerHTML = item.innerHTML.toUpperCase();
+              if (on) {
+                  $("#shape_buttons .tool_button text").each(function (i, item) {
+                      item.innerHTML = item.innerHTML.toUpperCase();
 
-                              });
-                          } else {
-                              $("#shape_buttons .tool_button text").each(function(i, item) {
-                                  item.innerHTML = item.innerHTML.toLowerCase();
+                  });
+              } else {
+                  $("#shape_buttons .tool_button text").each(function (i, item) {
+                      item.innerHTML = item.innerHTML.toLowerCase();
 
-                              });
-                          }
-                          return;
+                  });
+              }
+              return;
           }
-      if (!on) canv.keyPressed(btn[0].mathdata.charAt(0));
-      else {
-          canv.keyPressed(btn[0].mathdata.charAt(0).toUpperCase());
-          $("#shape_buttons .tool_button text").each(function(i, item) {
-              item.innerHTML = item.innerHTML.toLowerCase();
+          if (!btn[0].mathdata) {
+              canv.setMode(mode_id);
 
-          });
+              cur_shape_id = btn[0].id.substr((mode_id+'_').length);
+              current_d = cur_lib.data[cur_shape_id];
+
+              var selectedElements = canv.getSelectedElems();
+              if (selectedElements.length == 0) {
+                  var mode = canv.getMode();
+                  if(mode !== mode_id) return;
+                  var x = start_x = document.getElementById('math_cursor').getAttribute('x');
+                  var y = start_y = document.getElementById('math_cursor').getAttribute('y');
+                  var cur_style = canv.getStyle();
+                  cur_shape = canv.addSvgElementFromJson({
+                      "element": "path",
+                      "curStyles": true,
+                      "attr": {
+                          "d": current_d,
+                          "id": canv.getNextId() + "_" + cur_shape_id,
+                          "opacity": cur_style.opacity / 2,
+                          "cursor": 'move',
+                          "style": "pointer-events:inherit",
+                          "stroke-width": 1
+                      }
+                  });
+                  //cur_shape.setAttribute("d", current_d);
+                  if (cur_shape_id == 'fraction' || cur_shape_id == 'root') cur_shape.setAttribute("stroke-width", 5); //**MDP
+                  if (cur_shape_id == 'sum' || cur_shape_id == 'lbracket' || cur_shape_id == 'rbracket') cur_shape.setAttribute("fill", 'black'); //**MDP
+
+                  // Make sure shape uses absolute values
+                  if(/[a-z]/.test(current_d)) {
+                      current_d = cur_lib.data[cur_shape_id] = canv.pathActions.convertPath(cur_shape);
+                      cur_shape.setAttribute('d', current_d);
+                      //canv.pathActions.fixEnd(cur_shape);
+                  }
+
+                  if (x < 0 || y < 0) {
+                      x = y = 10;
+                  }
+
+                  cur_shape.setAttribute('transform', "translate(" + x + "," + y + ") scale(0.2) translate(" + -x + "," + -y + ")");
+                  //      console.time('b');
+                  canv.recalculateDimensions(cur_shape);
+                  var tlist = canv.getTransformList(cur_shape);
+                  lastBBox = cur_shape.getBBox();
+                  totalScale = {
+                      sx: 1,
+                      sy: 1
+                  };
+                  canv.setMode('select');
+
+                  canv.selectOnly([cur_shape]);
+
+                  cur_shape = null;
+                  current_d = null;
+                  $('.tools_flyout').fadeOut();
+                  return;
+              }
+
+              //MDP(
+              if ((cur_shape_id == "root" || cur_shape_id == "integral" || cur_shape_id == "sum" || cur_shape_id == "lbracket" || cur_shape_id == "fraction") && selectedElements.length > 0) {
+                  var bb_min_x = Infinity;
+                  var bb_min_y = Infinity;
+                  var bb_max_x = 0;
+                  var bb_max_y = 0;
+                  var i = 0;
+                  for (i=0; i < selectedElements.length && selectedElements[i] != null; i++) {
+                      var selected = svgedit.utilities.getBBox(selectedElements[i]);
+                      if (bb_min_x > selected.x) bb_min_x = selected.x;
+                      if (bb_min_y > selected.y) bb_min_y = selected.y;
+                      if (bb_max_x < selected.x + selected.width) bb_max_x = selected.x + selected.width;
+                      if (bb_max_y < selected.y + selected.height) bb_max_y = selected.y + selected.height;
+                  }
+
+                  if (cur_shape_id == "root") {
+                      bb_min_x = bb_min_x - 10 - 0.1 * (bb_max_x - bb_min_x);
+                      bb_min_y = bb_min_y - 10;
+                      bb_max_x = bb_max_x + 10;
+                      bb_max_y = bb_max_y + 10;
+                  }
+
+                  if (cur_shape_id == "sum") {
+                      bb_max_x = bb_min_x-5;
+                      bb_min_x = bb_min_x-40;
+                      var y_midpoint = (bb_max_y+bb_min_y)/2;
+                      bb_min_y = bb_min_y - 5;
+                      bb_max_y = bb_max_y + 5;
+                  }
+
+                  if (cur_shape_id == "integral") {
+                      bb_max_x = bb_min_x-5;
+                      bb_min_x = bb_min_x-25;
+                      var y_midpoint = (bb_max_y + bb_min_y)/2;
+                      bb_min_y = bb_min_y - 5;
+                      bb_max_y = bb_max_y + 5;
+                  }
+
+                  if (cur_shape_id == "fraction") {
+                      bb_min_x = bb_min_x-5;
+                      bb_max_x = bb_max_x+5;
+                      bb_min_y = bb_max_y+10;
+                      bb_max_y = bb_min_y;
+                  }
+
+                  if (cur_shape_id == "lbracket") {
+                      bbmaxx = bb_min_x-5;
+                      bbminx = bbmaxx-10;
+                      bbminy = bb_min_y-5;
+                      bbmaxy = bb_max_y+5;
+
+                      groupSymbol(cur_shape_id, current_d, bbminx, bbminy, bbmaxx, bbmaxy);
+
+                      bb_min_x = bb_max_x+5;
+                      bb_max_x = bb_min_x+10;
+                      bb_min_y = bb_min_y-5;
+                      bb_max_y = bb_max_y+5;
+
+                      cur_shape_id = "rbracket";
+                      current_d = cur_lib.data[cur_shape_id];
+                  }
+
+                  groupSymbol(cur_shape_id, current_d, bb_min_x, bb_min_y, bb_max_x, bb_max_y);
+                  canv.setMode('select');
+                  document.getElementById("tool_select").click();
+              }
+              //MDP)
+              cur_shape = null;
+              current_d = null;
+              $('.tools_flyout').fadeOut();
+          }
+          if (!on) canv.keyPressed(btn[0].mathdata.charAt(0));
+          else {
+              canv.keyPressed(btn[0].mathdata.charAt(0).toUpperCase());
+              $("#shape_buttons .tool_button text").each(function (i, item) {
+                  item.innerHTML = item.innerHTML.toLowerCase();
+
+              });
           on = false;
       }
           //ToggleFloatingLayer('FloatingLayer',1);
