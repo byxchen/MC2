@@ -77,7 +77,8 @@ app.use(function(req, res, next) {
 
 function findClient(clients, username) {
 	for (var clientId in clients) {
-		if (ios.sockets.connected[clientId].username === username) {
+
+		if (ios.sockets.connected[clientId].handshake.session.username === username) {
 			return ios.sockets.connected[clientId];
 		}
 	}
@@ -93,7 +94,7 @@ ios.timeOuts = {};
 //sockets handling
 ios.on('connection', function(socket){
 
-    if (socket.handshake.session.id) clearInterval(ios.timeOuts[socket.handshake.session.id]);
+    if (socket.handshake.session.id) clearTimeout(ios.timeOuts[socket.handshake.session.id]);
 
     function setSessionVar(variable, value) {
 		socket.handshake.session[variable] = value;
@@ -173,13 +174,14 @@ ios.on('connection', function(socket){
 				callback({success:true});
 			}else if(data.hasFile){
 				if(data.istype == "image"){
-					socket.to(socket.handshake.session.connectedRoom).emit('new message image', data);
+
+                    ios.sockets.to(socket.handshake.session.connectedRoom).emit('new message image', data);
 					callback({success:true});
 				} else if(data.istype == "music"){
-					socket.to(socket.handshake.session.connectedRoom).emit('new message music', data);
+                    ios.sockets.to(socket.handshake.session.connectedRoom).emit('new message music', data);
 					callback({success:true});
 				} else if(data.istype == "PDF"){
-					socket.to(socket.handshake.session.connectedRoom).emit('new message PDF', data);
+                    ios.sockets.to(socket.handshake.session.connectedRoom).emit('new message PDF', data);
 					callback({success:true});
 				}
 			}else{
@@ -199,9 +201,10 @@ ios.on('connection', function(socket){
             ios.sockets.adapter.rooms[socket.handshake.session.connectedRoom].admin.emit("new message", {username: "[System]", msg: socket.handshake.session.username+ " has left the room.", msgTime: new Date(), type: "system"});
 
 		//logout user after gone for 5min
-		ios.timeOuts[socket.handshake.session.id] = setInterval(function () {
-			setSessionVars({username: null, userAvatar: null, connectedRoom: null});
-        }, 300000);
+
+		ios.timeOuts[socket.handshake.session.id] = setTimeout(function () {
+			setSessionVars({username: null, userAvatar: null, connectedRoom: null, connected: false});
+        }, 15000);
 
         var online_member = [];
         var i = ios.sockets.adapter.rooms[socket.connectedRoom];
