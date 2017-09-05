@@ -29,21 +29,7 @@ angular.module('Controllers',["ngRoute"])
 
 	$scope.isLoading = true;
 
-	if ($location.search().token) {
 
-        $socket.emit('start_admin_session', {token: $location.search().token}, function (data) {
-			if (data.success) {
-				$rootScope.loggedIn = true;
-                $rootScope.username = data.username;
-                $rootScope.initials = data.username.substring(0, 2);
-                $rootScope.userAvatar = 'avatar1.jpg';
-
-                $location.path('/v1/ChatRoom/'+$routeParams.roomId);
-            }
-            $scope.isLoading = false;
-
-        });
-	} else {
         $socket.emit('check-session', function (data) {
             if (data.username) {
             	console.log(data);
@@ -58,7 +44,7 @@ angular.module('Controllers',["ngRoute"])
             $scope.isLoading = false;
             $scope.$apply();
         });
-	}
+
 
 
 

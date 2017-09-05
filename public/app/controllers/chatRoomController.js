@@ -44,7 +44,7 @@ angular.module('Controllers')
         }
     };
 })
-.controller('chatRoomCtrl', function ($scope, $rootScope, $socket, $location, $http, Upload, $timeout, sendImageService, $routeParams){		// Chat Page Controller
+.controller('chatRoomCtrl', function ($scope, $rootScope, $socket, $location, $http, Upload, $timeout, sendImageService, $routeParams, $window){		// Chat Page Controller
 	// Varialbles Initialization.
 	$scope.isMsgBoxEmpty = false;
 	$scope.isFileSelected = false;
@@ -115,7 +115,11 @@ angular.module('Controllers')
         		angular.element(document.querySelector("#slidememberlist")).removeClass("slideout_inner_trans");        		
         	}
         }        
-    };   
+    };
+
+    $scope.logout = function () {
+		$window.open("/logout", "_self");
+    };
 
 // ====================================== Messege Sending Code ============================
 	// sending text message function

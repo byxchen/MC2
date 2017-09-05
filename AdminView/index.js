@@ -102,6 +102,15 @@ AdminView.prototype.setupApi = function () {
         return res.json({username: req.session.user ? req.session.user.username : null, connected: req.session.connected});
     });
 
+    this.app.get("/logout", function (req, res) {
+        req.session.destroy(function (err) {
+            if (err) return res.status(err.code).end(err);
+
+            return res.redirect("/");
+
+        });
+    });
+
     this.app.get("/v1/api/chat/start", function (req, res) {
         MongoClient.connect(constants.dbUrl, function (err, db) {
             db.collection("settings").findOne({user: req.session.user.username}, function (err, settings) {
