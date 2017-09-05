@@ -9527,7 +9527,6 @@ this.moveCursor = function(dx, dy) {
       if (pushElems.length > 0 && isTop * (y - pushElems[0].y) < 25) {
         //w.setAttribute('x', pushElems[0].y);
         var i = 0;
-        console.log(y - pushElems[i].y);
         while (pushElems.length > i && isTop * (y - pushElems[i].y <= 1)) {
           y - pushElems[i].y
           i++;
@@ -9841,13 +9840,14 @@ var moveCursorAbs = this.moveCursorAbs;
     }
     var eqns = document.querySelectorAll('[id^="svg_eqn_"]');
     var seqns = [];
+    var math_cursorB = getBBox(math_cursor);
     for (var i = 0; i < eqns.length; i++) {
       var eqn = getBBox(eqns[i]);
-      if (eqn.x + eqn.width > math_cursor.getAttribute('x')) {
+      if (eqn.x + eqn.width > math_cursorB.x + math_cursorB.width) {
         continue;
-      } else if (eqn.y + (eqn.height/2) > math_cursor.getAttribute('y') + 25) {
+      } else if (eqn.y > math_cursorB.y + (math_cursorB.height/2)) {
         continue;
-      } else if (eqn.y + (eqn.height/2) < math_cursor.getAttribute('y')) {
+      } else if (eqn.y + eqn.height < math_cursorB.y + (math_cursorB.height/2)) {
         continue;
       } else {
         seqns.push(eqns[i]);
@@ -9855,6 +9855,7 @@ var moveCursorAbs = this.moveCursorAbs;
     }
 
     if(seqns.length == 0) {
+      moveCursor(-1, 0);
       return;
     }
     seqns.sort(function(a, b) {
@@ -9869,7 +9870,7 @@ var moveCursorAbs = this.moveCursorAbs;
     } else {
       math_cursor.setAttribute('x', getBBox(t).x);
       selectOnly([t], false);
-      this.deleteSelectedElements();
+      canvas.deleteSelectedElements();
     }
 
   };
@@ -9939,6 +9940,12 @@ var moveCursorAbs = this.moveCursorAbs;
 
     if (key=='') {
       lastKeyPress = '';
+      return;
+    }
+
+    if (key=="\u232B") {
+      lastKeyPress = '';
+      removeNearestToCursor()
       return;
     }
     var shortcuts = keyHash[key];
