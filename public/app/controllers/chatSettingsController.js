@@ -2,6 +2,7 @@ angular.module('Controllers')
     .controller("chatSettingsController", function ($scope, $rootScope, $routeParams) {
         $rootScope.tabActive = "cs";
 
+        $scope.settings = {};
 
         $scope.block = {
             roomName: true
@@ -10,6 +11,7 @@ angular.module('Controllers')
         $.ajax({
             url: "/v1/api/settings/chat",
             success: function (result) {
+                $scope.settings = result;
                 $scope.$apply();
                 console.log(result);
             }
@@ -28,6 +30,7 @@ angular.module('Controllers')
                 $.ajax({
                     method: "POST",
                     url: "/v1/api/settings/chat",
+                    data: JSON.stringify({settings: $scope.settings}),
                     processData: false,
                     contentType: "application/json",
                     success: function (result) {
