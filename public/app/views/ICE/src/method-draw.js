@@ -2204,6 +2204,8 @@ var SOTP = 0;
       var clickConvert = function(){
         if (toolButtonClick('#tool_convert')) {
           getBST();
+          if($(window).width() <= 732)
+            clickSwap();
         }
       };
 
@@ -3317,7 +3319,7 @@ var SOTP = 0;
       var Actions = function() {
         // sel:'selector', fn:function, evt:'event', key:[key, preventDefault, NoDisableInInput]
         var tool_buttons = [
-          {sel:'#tool_swap', fn: clickSwap, evt: 'click', key: [modKey + 'return', true]},
+          {sel:'#tool_swap', fn: clickConvert, evt: 'click', key: [modKey + 'return', true]},
           {sel:'#tool_select', fn: clickSelect, evt: 'click', kAy: ['V', true]},
           {sel:'#tool_selectpath', fn: clickSwapCursor, evt: 'click', kAy: ['V', true]},
           {sel:'#tool_undobutton', fn: clickUndo, evt: 'click', kAy: ['U', true]},
@@ -4321,7 +4323,7 @@ var SOTP = 0;
     };
 
     Editor.placeMathCursor = function() {
-      svgCanvas.placeMathCursor(200, 200);
+      svgCanvas.placeMathCursor(50, 50);
     };
 
     return Editor;
