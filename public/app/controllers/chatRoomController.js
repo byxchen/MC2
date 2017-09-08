@@ -54,21 +54,38 @@ angular.module('Controllers')
 	$scope.users = [];
 	$scope.messeges = [];
 
+	$scope.hideSettings = true;
+	$scope.settingTimeout = null;
+
+	$scope.onSettingsClick = function () {
+
+        $scope.hideSettings = !$scope.hideSettings;
+
+
+    };
+
+	$(document).bind("mouseup", function (e) {
+		var setting = $(".chat-settings")[0];
+		if (e.target !== setting && !setting.contains(e.target)) {
+			$scope.hideSettings = true;
+			$scope.$apply();
+		}
+    });
+
 	// redirection if user is not logged in.
 	if(!$rootScope.loggedIn){
 		$location.path('/v1/'+$routeParams.roomId);
 	} else {
         $socket.emit('join-room', {roomId: $routeParams.roomId}, function(data) {
-        	$scope.messeges.push(data);
+        	//$scope.messeges.push(data);
             chatLog += "Chatroom "+$routeParams.roomId+" created -- " + Date()+"\n";
 		});
 	}
 
 // ================================== Online Members List ===============================
-	$socket.emit('get-online-members',function(data){
-	});
-	$socket.on("online-members", function(data){			
-			$scope.users = data;
+
+	$socket.on("online-members", function(data){
+		$scope.users = data;
 	});
 
 // ================================== Common Functions ==================================    
@@ -105,6 +122,8 @@ angular.module('Controllers')
 	// toggle online member list mobile
  	$scope.custom = true;
     $scope.toggleCustom = function() {
+        $socket.emit('get-online-members',function(data){
+        });
         $scope.custom = $scope.custom === false ? true: false;	
         if(!$scope.custom){
         	if(!angular.element(document.querySelector("#slidememberlist")).hasClass("slideout_inner_trans")){
@@ -148,16 +167,26 @@ angular.module('Controllers')
 		}else{
 			$scope.isMsgBoxEmpty = true;
 		}
-	}
+	};
+
+	$socket.on("new message multi", function (data) {
+		data.forEach(function (message) {
+
+			message.ownMsg = (message.username === $rootScope.username);
+
+            $scope.messeges.push(message);
+            // Updates chatlog with relevant message history
+            chatLog += "\r";
+            chatLog += "[" + message.msgTime + "] " + message.username + ": " + message.msg;
+            chatLog += "\n";
+        });
+    });
 
 	// recieving new text message
 	$socket.on("new message", function(data){
+		console.log(data);
 
-		if(data.username == $rootScope.username){
-			data.ownMsg = true;	
-		}else{
-			data.ownMsg = false;
-		}
+        data.ownMsg = (data.username === $rootScope.username);
 
 		$scope.messeges.push(data);
 		// Updates chatlog with relevant message history

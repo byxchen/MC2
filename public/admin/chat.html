@@ -29,8 +29,8 @@
         </div>
         <div class="chat-room-frame">
             <div class="create-room" ng-if="!controller.connected" ng-click="Actions.getSessionToken();">Start room session</div>
-            <div class="fullscreen-button" ng-if="controller.connected" ng-click="Actions.chatFullscreen()">Fullscreen</div>
-            <iframe iframe-on-load="startController()" ng-if="controller.connected" src={{"/#/v1/ChatRoom/"+settings.roomName}} frameborder="0" scrolling="no" style="width: 100%; height: 100%">
+
+            <iframe iframe-on-load="startController()" ng-if="controller.connected" src={{"/#/v1/ChatRoom/"+settings.roomName}} allowfullscreen="allowfullscreen" frameborder="0" scrolling="no" style="width: 100%; height: 100%">
 
             </iframe>
         </div>

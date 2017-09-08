@@ -37,18 +37,26 @@
                 src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
                 <div class="box-tools pull-right">
                   <!-- Any File Select Button -->
-                  <!--
-                    <button class="btn btn-box-tool mobile glyphicon glyphicon-fullscreen" id="goFS" onclick="simulateFullScreen();"></button>
-                  -->
+
+                  <button class="btn btn-box-tool glyphicon glyphicon-fullscreen" id="goFS" onclick="simulateFullScreen();"></button>
+
                   <button class="btn btn-box-tool mobile" data-widget="" onclick="swapFrame();">f(x)</button>
                   <button class="btn btn-box-tool mobile" data-widget="" onclick="downloadLogs();">⇲</button>
                   <button class="btn btn-box-tool mobile" data-widget="" ngf-select ng-model="Files"><i class="glyphicon glyphicon-paperclip"></i></button>
                   <!-- online member list mobile -->
-                  <button class="btn btn-box-tool mobile toggle-contact-icon" data-toggle="tooltip" data-widget="chat-pane-toggle" title="Contacts" ng-click="toggleCustom()"><i class="fa fa-comments"></i></button>
+                  <button class="btn btn-box-tool toggle-contact-icon" data-toggle="tooltip" data-widget="chat-pane-toggle" title="Contacts" ng-click="toggleCustom()"><i class="fa fa-comments"></i></button>
+
+                  <div class="chat-settings" ng-click="onSettingsClick()">
+                    <div class="chat-menu" ng-class="{'hidden': hideSettings}">
+
+                      <div id="downloadLogsButton" class="btn-flat" onclick="PDFDL();">DL</div>
+                      <div id="downloadLogsButton" class=" btn-flat" onclick="imageOpen();">IMG</div>
+                      <div class="btn-flat" ng-click="logout()">Logout</div>
+                    </div>
+                  </div>
                 </div>
-                  <button class="btn-warning btn-flat pull-right" ng-click="logout()">Logout</button>
-                  <button id="downloadLogsButton" class="btn-warning btn-flat pull-right" onclick="PDFDL();">DL</button>
-                  <button id="downloadLogsButton" class="btn-warning btn-flat pull-right" onclick="imageOpen();">IMG</button>
+
+
               </div><!-- /.box-header -->
               <div id="chat_body_div" class="box-body">
                 <!-- Conversations are loaded here -->
@@ -158,7 +166,7 @@
                           <a href>
                             <img class='contacts-list-img' ng-src='app/css/dist/img/{{user.userAvatar}}'/>
                             <div class='contacts-list-info'>
-                                <span class="ol-memeber-name" style="line-height:2.6; padding:5px; font-weight : 600; color : #333;">{{ user.username }}</span>
+                                <span class="ol-memeber-name" style="line-height:2.6; padding:5px; font-weight : 600; color : #333;">{{ user.username }}{{user.utorid ? ' ('+user.utorid+')' : ""}}</span>
                             </div><!-- /.contacts-list-info -->
                           </a>
                         </li><!-- End Contact Item -->

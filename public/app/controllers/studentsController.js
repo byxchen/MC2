@@ -59,7 +59,9 @@ angular.module('Controllers')
                     processData: false,
                     contentType: "application/json",
                     success: function (result) {
-                        $scope.Actions.getStudentList();
+                        $scope.students = result;
+                        $scope.hideImport = true;
+                        $scope.$apply();
                     }
                 })
             }
