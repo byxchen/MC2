@@ -10,8 +10,7 @@ var ios = io.listen(server);				// listening sockets
 var formidable = require('formidable');		// file upload module
 var util = require('util');
 const uuidv4 = require('uuid/v4');
-const SMTPConnection = require('nodemailer/lib/smtp-connection');
-var connection = new SMTPConnection({host: "smtp.gmail.com", secure: true, requireTLS: true});
+
 const AdminView = require("./AdminView");
 
 var session = require('express-session')({
@@ -94,7 +93,10 @@ ios.timeOuts = {};
 //sockets handling
 ios.on('connection', function(socket){
 
-    if (socket.handshake.session.id) clearTimeout(ios.timeOuts[socket.handshake.session.id]);
+    if (socket.handshake.session.id) {
+    	console.log("clearing timeout: "+socket.handshake.session.id);
+    	clearTimeout(ios.timeOuts[socket.handshake.session.id]);
+    }
 
     function setSessionVar(variable, value) {
 		socket.handshake.session[variable] = value;
@@ -123,12 +125,20 @@ ios.on('connection', function(socket){
                         ios.sockets.adapter.rooms[data.roomId].admin = socket;
 					} else if (ios.sockets.adapter.rooms[data.roomId].admin)
 						ios.sockets.adapter.rooms[data.roomId].admin.emit("new message", {username: "[System]", msg: socket.handshake.session.username+ " has joined the room.", msgTime: new Date(), type: "system"});
-                    callback({msg: "You have joined room "+ data.roomId+".", type: "system"});
+
+					var room = findRoom(data.roomId);
+					if (!room.messageHistory) room.messageHistory = [];
+
+					var history = room.messageHistory.slice();
+					history.push({msg: "You have joined room "+ data.roomId+".", type: "system"});
+					socket.emit('new message multi', history);
+					callback({});
                 });
             });
 
 		} else {
-            callback({msg: "Error failed to joined room "+ data.roomId+".", type: "system"});
+            socket.emit('new message', {msg: "Error failed to joined room "+ data.roomId+".", type: "system"});
+            callback({});
 		}
     });
 
@@ -144,11 +154,16 @@ ios.on('connection', function(socket){
 				callback({success:false, message: "Use different username."});
 			} else {
 				setSessionVars({username: data.username, userAvatar: data.userAvatar});
+
+				if (data.trackId) {
+					setSessionVar("utorid", clients.trackingIds[data.trackId].utorid);
+				}
 				//nickname[data.username] = socket;
 				// socket.join(data.roomId, function () {
                  //    socket.connectedRoom = data.roomId;
                  //    console.log(socket.username+" joined room "+ data.roomId);
                 // });
+
             	callback({success:true});
 			}
 	});
@@ -158,17 +173,24 @@ ios.on('connection', function(socket){
 		var online_member = [];
 		var i = ios.sockets.adapter.rooms[socket.handshake.session.connectedRoom];
 		if (!i) return ios.sockets.emit('online-members', online_member);
+
 		for (var clientId in i.sockets) {
-            temp1 = {"username": ios.sockets.connected[clientId].username, "userAvatar":ios.sockets.connected[clientId].userAvatar};
+            temp1 = {"username": ios.sockets.connected[clientId].handshake.session.username, "userAvatar":ios.sockets.connected[clientId].handshake.session.userAvatar};
+
+            if (socket.handshake.session.isAdmin) {
+            	temp1.utorid = ios.sockets.connected[clientId].handshake.session.utorid;
+			}
             online_member.push(temp1);
 		}
-		ios.sockets.emit('online-members', online_member);
+		socket.emit('online-members', online_member);
 	});
 
 	// sending new message
 	socket.on('send-message', function(data, callback){
+
 		data.type = "chat";
 		if (socket.handshake.session.username) {
+			findRoom(socket.handshake.session.connectedRoom).messageHistory.push(data);
 			if(data.hasMsg){
                 ios.sockets.to(socket.handshake.session.connectedRoom).emit('new message', data);
 				callback({success:true});
@@ -202,62 +224,21 @@ ios.on('connection', function(socket){
 
 		//logout user after gone for 5min
 
+		clearTimeout(ios.timeOuts[socket.handshake.session.id]);
 		ios.timeOuts[socket.handshake.session.id] = setTimeout(function () {
+			console.log("deleting session: "+socket.handshake.session.id);
 			setSessionVars({username: null, userAvatar: null, connectedRoom: null, connected: false});
         }, 15000);
 
         var online_member = [];
-        var i = ios.sockets.adapter.rooms[socket.connectedRoom];
+        var i = ios.sockets.adapter.rooms[socket.handshake.session.connectedRoom];
         if (!i) return ios.sockets.emit('online-members', online_member);
         for (var clientId in i.sockets) {
             temp1 = {"username": ios.sockets.connected[clientId].username, "userAvatar":ios.sockets.connected[clientId].userAvatar};
             online_member.push(temp1);
         }
-        ios.sockets.emit('online-members', online_member);
+        ios.sockets.to(socket.handshake.session.connectedRoom).emit('online-members', online_member);
     });
-});
-
-var testList = [{utorid: "chenzi22", email:"wannie.chen@mail.utoronto.ca"}];
-var urls = {};
-
-function generateURLs() {
-	testList.forEach(function (item, i) {
-		var rand = uuidv4();
-		urls[rand] = item;
-		console.log(rand);
-    });
-}
-
-generateURLs();
-
-app.get("/v1/api/test/sendTrackingEmail", function(req, res) {
-	connection.connect(function () {
-        connection.login({credentials: {user: "", pass: ""}}, function (err) {
-            Promise.all(Object.keys(urls).map(function (id) {
-                return new Promise(function (resolve, rej) {
-                    connection.send({from: "", to: urls[id].email}, "test confirmation: http://127.0.0.1/#/v1/test?trackId="+id, function (err, info) {
-                        resolve(info);
-                    });
-                });
-
-            })).then(function (details) {
-                connection.quit();
-                res.json({success: true, details: details});
-            });
-
-        });
-    });
-});
-
-app.get("/v1/api/register/:code", function (req, res) {
-	var resp = urls[req.params.code];
-	if (!resp) return res.status(404).json({status: 404, message: "Requested registration id cannot be found."});
-	res.json(resp);
-});
-
-app.post("/v1/api/register", function (req, res) {
-    console.log(req.body);
-    res.json({});
 });
 
 // route for uploading images asynchronously

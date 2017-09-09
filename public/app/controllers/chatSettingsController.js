@@ -34,7 +34,10 @@ angular.module('Controllers')
                     processData: false,
                     contentType: "application/json",
                     success: function (result) {
-
+                        $scope.block = {
+                            roomName: true
+                        };
+                        $scope.$apply();
                     }
                 })
             }

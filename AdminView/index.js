@@ -1,22 +1,24 @@
+var constants = require("./constants.js");
+var crypto = require("crypto");
 
-    var constants = require("./constants.js");
-    var crypto = require("crypto");
+var bodyParser = require("body-parser");
+const uuidv4 = require('uuid/v4');
+const moment = require('moment');
+var csv = require('csv');
 
-    var bodyParser = require("body-parser");
-    const uuidv4 = require('uuid/v4');
-    const moment = require('moment');
-    var csv = require('csv');
+var MongoClient = require('mongodb').MongoClient;
+var ObjectID = require("mongodb").ObjectID;
 
-    var MongoClient = require('mongodb').MongoClient;
-    var ObjectID = require("mongodb").ObjectID;
+var sessionRedirect = function (req, res, next) {
+    if (!req.session.user && req.originalUrl !== "/favicon.ico") {
+        req.session.redirectTo = req.originalUrl;
+        return res.redirect("/login");
+    }
+    return next();
+};
 
-    var sessionRedirect = function (req, res, next) {
-        if (!req.session.user && req.originalUrl !== "/favicon.ico") {
-            req.session.redirectTo = req.originalUrl;
-            return res.redirect("/login");
-        }
-        return next();
-    };
+const SMTPConnection = require('nodemailer/lib/smtp-connection');
+var connection = new SMTPConnection({host: constants.smtp.host, secure: true, requireTLS: true});
 
 function AdminView(socketController, expressApp) {
     this.ios = socketController;
@@ -111,7 +113,66 @@ AdminView.prototype.setupApi = function () {
         });
     });
 
-    this.app.get("/v1/api/chat/start", function (req, res) {
+
+
+    function generateURLs(list) {
+        var urls = {};
+        list.forEach(function (item, i) {
+            var rand = uuidv4();
+            urls[rand] = item;
+        });
+        return urls;
+    }
+
+    var checkAuth = function (req, res, next) {
+        var denied = {code: 401, message: "You do not have access to this resource"};
+        if (!req.session.user) return res.status(401).json(denied);
+        else return next();
+    };
+
+    this.app.get("/v1/api/admin/sendEmail", checkAuth, function(req, res) {
+        MongoClient.connect(constants.dbUrl, function (err, db) {
+            db.collection("students").findOne({owner: req.session.user.username}, function (err, list) {
+                var urls = generateURLs(list.students);
+                console.log(req.session.connectedRoom);
+                this.ios.sockets.adapter.rooms[req.session.connectedRoom].trackingIds = urls;
+                connection.connect(function () {
+                    connection.login({
+                        credentials: {
+                            user: constants.smtp.username,
+                            pass: constants.smtp.password
+                        }
+                    }, function (err) {
+                        Promise.all(Object.keys(urls).map(function (id) {
+                            return new Promise(function (resolve, rej) {
+                                connection.send({
+                                    from: constants.smtp.username,
+                                    to: urls[id].email
+                                }, "test confirmation: http://127.0.0.1:8080/#/v1/"+req.session.connectedRoom+"?trackId=" + id, function (err, info) {
+                                    resolve(info);
+                                });
+                            });
+
+                        })).then(function (details) {
+                            connection.quit();
+                            res.json({success: true, details: details});
+                        });
+
+                    });
+                });
+            }.bind(this));
+        }.bind(this));
+    }.bind(this));
+
+    this.app.get("/v1/api/room/:roomName/track/:code", function (req, res) {
+        if (!this.ios.sockets.adapter.rooms[req.params.roomName]) return res.status(404).json({status: 404, message: "Requested registration id cannot be found."});
+        else if (!this.ios.sockets.adapter.rooms[req.params.roomName].trackingIds) return res.status(404).json({status: 404, message: "Requested registration id cannot be found."});
+        var resp = this.ios.sockets.adapter.rooms[req.params.roomName].trackingIds[req.params.code];
+        if (!resp) return res.status(404).json({status: 404, message: "Requested registration id cannot be found."});
+        res.json(resp);
+    }.bind(this));
+
+    this.app.get("/v1/api/chat/start", checkAuth, function (req, res) {
         MongoClient.connect(constants.dbUrl, function (err, db) {
             db.collection("settings").findOne({user: req.session.user.username}, function (err, settings) {
                 req.session.user.roomName = settings.chat.roomName;
@@ -124,7 +185,7 @@ AdminView.prototype.setupApi = function () {
         });
     }.bind(this));
 
-    this.app.get("/v1/api/students", function (req, res) {
+    this.app.get("/v1/api/students", checkAuth, function (req, res) {
         MongoClient.connect(constants.dbUrl, function (err, db) {
             db.collection("students").findOne({owner: req.session.user.username}, function (err, list) {
                 if (!list) return res.json([]);
@@ -135,7 +196,7 @@ AdminView.prototype.setupApi = function () {
         });
     });
 
-    this.app.post("/v1/api/students", function (req, res) {
+    this.app.post("/v1/api/students", checkAuth, function (req, res) {
         csv.parse(Buffer.from(req.body.csv, "base64"), {columns: true}, function(err, data) {
             MongoClient.connect(constants.dbUrl, function (err, db) {
 
@@ -144,7 +205,7 @@ AdminView.prototype.setupApi = function () {
                         db.collection("students").updateOne({owner: req.session.user.username}, {
                             $set: {students: data}
                         }, function (err, result) {
-                            res.json(result.students);
+                            res.json(data);
                             db.close();
                         })
                     }
@@ -154,7 +215,7 @@ AdminView.prototype.setupApi = function () {
                             students: data
                         };
                         db.collection("students").insertOne(entry, function (err, result) {
-                            res.json(result.students);
+                            res.json(data);
                             db.close();
                         });
                     }
@@ -164,7 +225,7 @@ AdminView.prototype.setupApi = function () {
         });
     });
     
-    this.app.get("/v1/api/settings/:type", function (req, res) {
+    this.app.get("/v1/api/settings/:type", checkAuth, function (req, res) {
         MongoClient.connect(constants.dbUrl, function (err, db) {
             db.collection("settings").findOne({user: req.session.user.username}, function (err, settings) {
                 res.json(settings[req.params.type]);
@@ -173,7 +234,7 @@ AdminView.prototype.setupApi = function () {
 
     });
 
-    this.app.post("/v1/api/settings/:type", function (req, res) {
+    this.app.post("/v1/api/settings/:type", checkAuth, function (req, res) {
         MongoClient.connect(constants.dbUrl, function (err, db) {
 
                 try {
@@ -214,23 +275,9 @@ AdminView.prototype.setupSocket = function () {
             socket.handshake.session.save();
         }
 
-        socket.on("start_admin_session", function (data, callback) {
-            console.log(this.controlSessionIds);
-            if (this.controlSessionIds[data.token]) {
-                var user = this.controlSessionIds[data.token];
-
-                setSessionVars({username: user.username, userAvatar: 'avatar1.jpg'});
-
-                setSessionVar("isAdmin", true);
-
-
-                callback({success: true, username: user.username});
-            } else callback({success: false});
-        }.bind(this));
-
         socket.on("admin_get_status", function (data, callback) {
             socket.handshake.session.reload(function (err) {
-
+                if (err) return callback();
                 if (socket.handshake.session.isAdmin) {
                     var user = socket.handshake.session.user;
                     if (!this.ios.sockets.adapter.rooms[user.roomName]) return callback({status: "Offline", online: 0});

@@ -24,6 +24,10 @@ angular.module('Controllers')
             if ($rootScope.chatController) clearInterval($rootScope.chatController);
             $rootScope.chatController = setInterval(function () {
                 $socket.emit("admin_get_status", {token: $scope.controller.token}, function (data) {
+                    if (!data) {
+                        console.log("Failed to retrieve status...aborting.");
+                        return clearInterval($rootScope.chatController);
+                    }
                     $scope.controller.people = data.online;
                     $scope.controller.status = data.status;
 
@@ -41,7 +45,7 @@ angular.module('Controllers')
             },
             sendTrackEmails: function () {
                 $.ajax({
-                    url: "/v1/api/test/sendTrackingEmail",
+                    url: "/v1/api/admin/sendEmail",
                     success: function (result) {
                         $scope.controller.sendResult = result;
 
@@ -66,7 +70,7 @@ angular.module('Controllers')
                 success: function (result) {
                     $rootScope.user = result;
                     $scope.controller.connected = result.connected;
-
+                    console.log(result);
                     $scope.$apply();
                 }
             });
