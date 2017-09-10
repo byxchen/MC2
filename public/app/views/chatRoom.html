@@ -44,7 +44,7 @@
                   <button class="btn btn-box-tool mobile" data-widget="" onclick="downloadLogs();">⇲</button>
                   <button class="btn btn-box-tool mobile" data-widget="" ngf-select ng-model="Files"><i class="glyphicon glyphicon-paperclip"></i></button>
                   <!-- online member list mobile -->
-                  <button class="btn btn-box-tool toggle-contact-icon" data-toggle="tooltip" data-widget="chat-pane-toggle" title="Contacts" ng-click="toggleCustom()"><i class="fa fa-comments"></i></button>
+                  <button style="display: inline-block;" class="btn btn-box-tool toggle-contact-icon" data-toggle="tooltip" data-widget="chat-pane-toggle" title="Contacts" ng-click="toggleCustom()"><i class="fa fa-comments"></i></button>
 
                   <div class="chat-settings" ng-click="onSettingsClick()">
                     <div class="chat-menu" ng-class="{'hidden': hideSettings}">
@@ -64,7 +64,7 @@
                   <!-- Message. Default to the left -->
                   <div ng-repeat="messege in messeges" ng-class="{'direct-chat-msg' : true, 'right' : messege.ownMsg, 'wordwrap' : true}" >
                     {{console.log(messege.type)}}
-                    <div class="system-message" ng-if="messege.type === 'system'">
+                    <div class="system-message" ng-class="{'error': messege.error}" ng-if="messege.type === 'system'">
                       {{messege.msg}}
                     </div>
                     <div ng-if="messege.type === 'chat'">
@@ -277,28 +277,7 @@
               </div><!-- /.box-footer-->
               </div><!-- /.box -->
             </div>
-            <div class="col-sm-3 toggle-contact-list">
-              <div class="box box-warning direct-chat direct-chat-warning">  
-              <div class="box-header with-border">
-                <h3 class="box-title">Online Members</h3>
-              </div><!-- /.box-header -->
-              <div class="box-body">
-                <!-- Contacts are loaded here -->
-                <div class="direct-chat-messages ol-members">
-                  <ul class='contacts-list'>
-                    <li ng-repeat="user in users">
-                      <a href>
-                        <img class='contacts-list-img' ng-src='app/css/dist/img/{{user.userAvatar}}'/>
-                        <div class='contacts-list-info'>
-                            <span class="ol-memeber-name" style="line-height:2.6; padding:5px; font-weight : 600; color : #333;">{{ user.username }}</span>
-                        </div><!-- /.contacts-list-info -->
-                      </a>
-                    </li><!-- End Contact Item -->
-                  </ul><!-- /.contatcts-list -->
-                </div><!--/.direct-chat-messages-->
-              </div><!-- /.box-body -->
-            </div><!-- /.box -->
-          </div>       
+
             <script src="app/js/chatroomPlus.js"></script>     
       </div>
     </section><!-- /.content -->  

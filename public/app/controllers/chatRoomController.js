@@ -140,6 +140,11 @@ angular.module('Controllers')
 		$window.open("/logout", "_self");
     };
 
+
+    $socket.on("disconnect", function () {
+    	$scope.messeges.push({msg: "Disconnected from chat room.", error: true, type: "system"});
+    });
+
 // ====================================== Messege Sending Code ============================
 	// sending text message function
 
