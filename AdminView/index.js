@@ -287,6 +287,7 @@ AdminView.prototype.setupSocket = function () {
         socket.on('send-message', function(data, callback) {
             var room = findRoom(socket.handshake.session.connectedRoom);
             data.type = "chat";
+            if (socket.handshake.session.username && room.admin) {
                 MongoClient.connect(constants.dbUrl, function (err, db) {
                     db.collection("chatHistory").updateOne({sessionId: room.sessionId, owner: room.admin.handshake.session.username}, {$push: {messages: data}}, {upsert: true}, function (err, result) {
 
