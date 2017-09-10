@@ -44,8 +44,7 @@
 
 /* ============================= login Page =============================*/
 .error {
-	color: #df3320;
-	text-align: center;
+	color: #df3320 !important;
 }
 .avatar{
 	height : 65px; 

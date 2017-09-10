@@ -25,6 +25,7 @@ function AdminView(socketController, expressApp) {
     this.app = expressApp;
 
     this.controlSessionIds = {};
+    this.ios.tracking = {};
 
     this.app.use(bodyParser.json());
 
@@ -132,42 +133,44 @@ AdminView.prototype.setupApi = function () {
 
     this.app.get("/v1/api/admin/sendEmail", checkAuth, function(req, res) {
         MongoClient.connect(constants.dbUrl, function (err, db) {
-            db.collection("students").findOne({owner: req.session.user.username}, function (err, list) {
-                var urls = generateURLs(list.students);
-                console.log(req.session.connectedRoom);
-                this.ios.sockets.adapter.rooms[req.session.connectedRoom].trackingIds = urls;
-                connection.connect(function () {
-                    connection.login({
-                        credentials: {
-                            user: constants.smtp.username,
-                            pass: constants.smtp.password
-                        }
-                    }, function (err) {
-                        Promise.all(Object.keys(urls).map(function (id) {
-                            return new Promise(function (resolve, rej) {
-                                connection.send({
-                                    from: constants.smtp.username,
-                                    to: urls[id].email
-                                }, "test confirmation: http://127.0.0.1:8080/#/v1/"+req.session.connectedRoom+"?trackId=" + id, function (err, info) {
-                                    resolve(info);
+            db.collection("settings").findOne({user: req.session.user.username}, function (err, settings) {
+                db.collection("students").findOne({owner: req.session.user.username}, function (err, list) {
+                    var urls = generateURLs(list.students);
+                    this.ios.tracking[settings.chat.roomName] = {trackingIds: urls};
+                    connection.connect(function () {
+                        connection.login({
+                            credentials: {
+                                user: constants.smtp.username,
+                                pass: constants.smtp.password
+                            }
+                        }, function (err) {
+                            Promise.all(Object.keys(urls).map(function (id) {
+                                return new Promise(function (resolve, rej) {
+                                    connection.send({
+                                        from: constants.smtp.username,
+                                        to: urls[id].email
+                                    }, "test confirmation: http://127.0.0.1:8080/#/v1/"+settings.chat.roomName+"?trackId=" + id, function (err, info) {
+                                        resolve(info);
+                                    });
                                 });
+
+                            })).then(function (details) {
+                                connection.quit();
+                                res.json({success: true, details: details});
                             });
 
-                        })).then(function (details) {
-                            connection.quit();
-                            res.json({success: true, details: details});
                         });
-
                     });
-                });
+                }.bind(this));
             }.bind(this));
+
         }.bind(this));
     }.bind(this));
 
     this.app.get("/v1/api/room/:roomName/track/:code", function (req, res) {
-        if (!this.ios.sockets.adapter.rooms[req.params.roomName]) return res.status(404).json({status: 404, message: "Requested registration id cannot be found."});
-        else if (!this.ios.sockets.adapter.rooms[req.params.roomName].trackingIds) return res.status(404).json({status: 404, message: "Requested registration id cannot be found."});
-        var resp = this.ios.sockets.adapter.rooms[req.params.roomName].trackingIds[req.params.code];
+        if (!this.ios.tracking[req.params.roomName]) return res.status(404).json({status: 404, message: "Requested registration id cannot be found."});
+        else if (!this.ios.tracking[req.params.roomName].trackingIds) return res.status(404).json({status: 404, message: "Requested registration id cannot be found."});
+        var resp = this.ios.tracking[req.params.roomName].trackingIds[req.params.code];
         if (!resp) return res.status(404).json({status: 404, message: "Requested registration id cannot be found."});
         res.json(resp);
     }.bind(this));
@@ -177,6 +180,7 @@ AdminView.prototype.setupApi = function () {
             db.collection("settings").findOne({user: req.session.user.username}, function (err, settings) {
                 req.session.user.roomName = settings.chat.roomName;
                 req.session.username = req.session.user.username;
+                req.session.settings = settings;
                 req.session.connected = true;
                 req.session.isAdmin = true;
                 req.session.userAvatar = 'avatar1.jpg';
@@ -228,6 +232,7 @@ AdminView.prototype.setupApi = function () {
     this.app.get("/v1/api/settings/:type", checkAuth, function (req, res) {
         MongoClient.connect(constants.dbUrl, function (err, db) {
             db.collection("settings").findOne({user: req.session.user.username}, function (err, settings) {
+                if (!settings) return res.json({});
                 res.json(settings[req.params.type]);
             });
         });
@@ -243,7 +248,7 @@ AdminView.prototype.setupApi = function () {
                             var newSettings = new ChatSetting(req.body.settings);
                             console.log(req.body.settings);
                             console.log(newSettings);
-                            db.collection("settings").updateOne({user: req.session.user.username}, {$set: {chat: newSettings}}, function (err, result) {
+                            db.collection("settings").updateOne({user: req.session.user.username}, {$set: {chat: newSettings}}, {upsert: true}, function (err, result) {
                                 res.json(newSettings);
 
                             });
@@ -261,6 +266,10 @@ AdminView.prototype.setupApi = function () {
 };
 
 AdminView.prototype.setupSocket = function () {
+    var findRoom = function(roomId) {
+        return this.ios.sockets.adapter.rooms[roomId];
+    }.bind(this);
+
     this.ios.on('connection', function(socket){
 
         function setSessionVar(variable, value) {
@@ -274,6 +283,19 @@ AdminView.prototype.setupSocket = function () {
             }
             socket.handshake.session.save();
         }
+
+        socket.on('send-message', function(data, callback) {
+            var room = findRoom(socket.handshake.session.connectedRoom);
+            data.type = "chat";
+            if (socket.handshake.session.username && room.admin) {
+                MongoClient.connect(constants.dbUrl, function (err, db) {
+                    db.collection("chatHistory").updateOne({sessionId: room.sessionId, owner: room.admin.handshake.session.username}, {$push: {messages: data}}, {upsert: true}, function (err, result) {
+
+                    });
+                });
+
+            }
+        });
 
         socket.on("admin_get_status", function (data, callback) {
             socket.handshake.session.reload(function (err) {

@@ -93,10 +93,10 @@ ios.timeOuts = {};
 //sockets handling
 ios.on('connection', function(socket){
 
-    if (socket.handshake.session.id) {
-    	console.log("clearing timeout: "+socket.handshake.session.id);
-    	clearTimeout(ios.timeOuts[socket.handshake.session.id]);
-    }
+    // if (socket.handshake.session.id) {
+    // 	console.log("clearing timeout: "+socket.handshake.session.id);
+    // 	clearTimeout(ios.timeOuts[socket.handshake.session.id]);
+    // }
 
     function setSessionVar(variable, value) {
 		socket.handshake.session[variable] = value;
@@ -116,17 +116,25 @@ ios.on('connection', function(socket){
     });
 
 	socket.on("join-room", function(data, callback) {
+        data.roomId = data.roomId.toLowerCase();
 		if (socket.handshake.session.username) {
 			socket.leave(socket.handshake.session.connectedRoom, function () {
                 socket.join(data.roomId, function () {
                     setSessionVar('connectedRoom', data.roomId);
                     //console.log(socket.username+" joined room "+ data.roomId);
+
+                    var room = findRoom(data.roomId);
+
 					if (socket.handshake.session.isAdmin) {
                         ios.sockets.adapter.rooms[data.roomId].admin = socket;
+						if (!room.sessionId) room.sessionId = uuidv4();
+						room.inviteOnly = socket.handshake.session.settings.chat.invite;
+
 					} else if (ios.sockets.adapter.rooms[data.roomId].admin)
 						ios.sockets.adapter.rooms[data.roomId].admin.emit("new message", {username: "[System]", msg: socket.handshake.session.username+ " has joined the room.", msgTime: new Date(), type: "system"});
 
-					var room = findRoom(data.roomId);
+
+
 					if (!room.messageHistory) room.messageHistory = [];
 
 					var history = room.messageHistory.slice();
@@ -144,6 +152,7 @@ ios.on('connection', function(socket){
 
 	// creating new user if nickname doesn't exists
 	socket.on('new user', function(data, callback){
+		data.roomId = data.roomId.toLowerCase();
         var clients = ios.sockets.adapter.rooms[data.roomId];
 
         if (!clients && data.isJoin) return callback({success: false, message: "Room does not exist."});
@@ -153,11 +162,15 @@ ios.on('connection', function(socket){
 			{
 				callback({success:false, message: "Use different username."});
 			} else {
-				setSessionVars({username: data.username, userAvatar: data.userAvatar});
-
 				if (data.trackId) {
-					setSessionVar("utorid", clients.trackingIds[data.trackId].utorid);
+					if (!ios.tracking[data.roomId] || !ios.tracking[data.roomId].trackingIds || !ios.tracking[data.roomId].trackingIds[data.trackId]) {
+						return callback({success: false, message: "Invalid tracking id."});
+					}
+					setSessionVar("utorid", ios.tracking[data.roomId].trackingIds[data.trackId].utorid);
+				} else if (data.isJoin && clients.inviteOnly) {
+					return callback({success: false, message: "Room is invite only"});
 				}
+				setSessionVars({username: data.username, userAvatar: data.userAvatar});
 				//nickname[data.username] = socket;
 				// socket.join(data.roomId, function () {
                  //    socket.connectedRoom = data.roomId;
@@ -224,11 +237,11 @@ ios.on('connection', function(socket){
 
 		//logout user after gone for 5min
 
-		clearTimeout(ios.timeOuts[socket.handshake.session.id]);
-		ios.timeOuts[socket.handshake.session.id] = setTimeout(function () {
-			console.log("deleting session: "+socket.handshake.session.id);
-			setSessionVars({username: null, userAvatar: null, connectedRoom: null, connected: false});
-        }, 15000);
+        // clearTimeout(ios.timeOuts[socket.handshake.session.id]);
+        // ios.timeOuts[socket.handshake.session.id] = setTimeout(function () {
+			// console.log("deleting session: "+socket.handshake.session.id);
+			// setSessionVars({username: null, userAvatar: null, connectedRoom: null, connected: false});
+        // }, 300000);
 
         var online_member = [];
         var i = ios.sockets.adapter.rooms[socket.handshake.session.connectedRoom];

@@ -35,6 +35,10 @@ angular.module('Controllers')
             }, 1000);
         };
 
+        $socket.on("disconnect", function () {
+            if ($rootScope.chatController) clearInterval($rootScope.chatController);
+        });
+
         $scope.settings = {};
 
         $scope.Actions = {
